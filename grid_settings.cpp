@@ -1,13 +1,24 @@
 #include "grid_settings.h"
+#include <QDebug>
+
+GridSettings::GridSettings(QRectF rect)
+{
+
+}
+
+unsigned int GridSettings::countRows()
+{
 
 
-GridSettings::GridSettings(double x, double y, double z,
-                     double width, double height,
-                     double dx, double dy) :
-    x{x}, y{y}, z{z},
-    width{width}, height{height},
-    dx{dx}, dy{dy}
+    return static_cast<unsigned int>( this->getRect().width() / getDeltaX() );
+}
 
+unsigned int GridSettings::countColumns()
+{
+    return static_cast<unsigned int>( this->getRect().height() / getDeltaY() );
+}
+
+GridSettings::GridSettings()
 {
 
 }

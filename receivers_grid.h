@@ -2,8 +2,12 @@
 #define RECEIVERS_GRID_H
 
 #include "grid_settings.h"
-#include "receiver.h"
+#include "single_receiver.h"
+#include "my_personal_tools.h"
 #include <vector>
+#include <QPainter>
+
+
 
 
 using namespace std;
@@ -11,13 +15,26 @@ using namespace std;
 class ReceiversGrid
 {
 public:
-    explicit ReceiversGrid(const GridSettings *settings = nullptr);
-    bool setGrid(const GridSettings *settings);
+    ReceiversGrid();
+    ReceiversGrid(const GridSettings &gridSettings);
+    void setGrid(const GridSettings &gridSettings);
+    void paintGrid(QPainter *painter);
+
 
 private:
 
+    std::vector< std::vector<SingleReceiver *> > matrix;
+    GridSettings gridSettings;
+    void setMatrixOfReceivers(unsigned int n, unsigned int m);
+    QRectF receiverRect(SingleReceiver * receiver);
 
 
 };
+
+
+
+
+
+
 
 #endif // RECEIVERSGRID_H

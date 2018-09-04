@@ -1,34 +1,27 @@
 #ifndef GRID_SETTINGS_H
 #define GRID_SETTINGS_H
-
+#include<QRectF>
 
 class GridSettings
 {
 public:
-    explicit GridSettings(double x=0.0, double y=0.0, double z=0.0,
-                       double width=0.0, double height=0.0,
-                       double dx=0.0, double dy=0.0);
+    GridSettings();
+    explicit GridSettings(QRectF rect);
 
-    void setX(double x){ this->x=x; }
-    void setY(double y){ this->y=y; }
-    void setZ(double z){ this->z=z; }
-    void setWidth(double width){ this->width=width; }
-    void setHeight(double height){ this->height=height; }
-    void setDeltaX(double dx){ this->dx=dx; }
-    void setDeltaY(double dy){ this->dy=dy; }
+    void setRect(const QRectF &newRect){ this->rectGrid = newRect; }
+    void setDeltaX(const double &dx=10){ this->dx=dx; }
+    void setDeltaY(const double &dy=10){ this->dy=dy; }
 
-    double getX(){ return x; }
-    double getY(){ return y; }
-    double getZ(){ return z; }
-    double getWidth(){ return width; }
-    double getHeight(){ return height; }
-    double getDeltaX(){ return dx; }
-    double setDeltaY(){ return dy; }
+    QRectF getRect() const { return this->rectGrid; }
+    double getDeltaX() const { return dx; }
+    double getDeltaY() const { return dy; }
+    unsigned int countRows();
+    unsigned int countColumns();
 
 private:
-    double x, y, z;
-    double width, height;
-    double dx, dy;
+    QRectF rectGrid;
+    double dx=10, dy=10;
+
 };
 
 #endif // NOISEGRID_H

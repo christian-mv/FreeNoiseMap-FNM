@@ -2,8 +2,9 @@
 #define WIDGET_H
 
 #include <QWidget>
-//#include <QRectF>
+
 #include "grid_settings.h"
+#include "receivers_grid.h"
 
 
 class Widget : public QWidget
@@ -18,10 +19,13 @@ protected:
     void paintEvent(QPaintEvent *event);
 
 private:
-    GridSettings noiseGridSettings;
     void drawMyGrid();
     void drawNoiseCell(QPainter *painter, QColor color, QRectF rect);
     void drawMargin(int dx1=10, int dy1=10, int dx2=10, int dy2=10);
+    GridSettings myGrid;
+    ReceiversGrid receivers;
+
+
 };
 
 #endif // WIDGET_H

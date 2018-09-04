@@ -25,17 +25,17 @@ CONFIG += c++14
 SOURCES += \
         main.cpp \
         widget.cpp \
-    receiver.cpp \
     grid_settings.cpp \
     receivers_grid.cpp \
-    dynamic_matrix.cpp
+    my_personal_tools.cpp \
+    single_receiver.cpp
 
 HEADERS += \
         widget.h \
-    receiver.h \
     grid_settings.h \
     receivers_grid.h \
-    dynamic_matrix.h
+    my_personal_tools.h \
+    single_receiver.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

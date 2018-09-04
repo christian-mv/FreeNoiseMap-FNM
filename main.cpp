@@ -1,16 +1,12 @@
 #include "widget.h"
 #include <QApplication>
-#include "dynamic_matrix.h"
-
+#include "my_personal_tools.h"
+#include <QtDebug>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     Widget w;
-    w.show();
-
-    MATRIX_OF_DOUBLES matriz = DynamicMatrix::createMatrixOfDoubles(5,10);
-
-
+//    w.show();
     return a.exec();
 }
