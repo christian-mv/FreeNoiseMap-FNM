@@ -6,7 +6,7 @@
 #include "grid_settings.h"
 #include "receivers_grid.h"
 
-
+// wigget is a temporal class for testing
 class Widget : public QWidget
 {
     Q_OBJECT
