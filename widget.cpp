@@ -12,7 +12,8 @@ Widget::Widget(QWidget *parent)
 //    px.fill(Qt::white);
 //    QPainter painter(&px);
 
-
+    setAttribute(Qt::WA_StaticContents); // avoid painting when resizing window
+    setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     myGrid.setRect(QRectF(-200, -200, 400, 400));
     myGrid.setDeltaX(100 );
     myGrid.setDeltaY(100);

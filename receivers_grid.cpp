@@ -64,21 +64,40 @@ void ReceiversGrid::paintGrid(QPainter *painter)
     painter->setRenderHint(QPainter::Antialiasing, true);
 //    QPen pen(Qt::NoPen);
 //    painter->setPen(pen);
-    painter->setBrush(QBrush(QColor(Qt::green)));
+//    painter->setBrush(QBrush(QColor(Qt::darkGreen)));
 
     // calculate single rectangles
+    QColor decibelColor;
     for(auto row: matrix){
         for(auto data: row){
-
+            setNoiseColor(data, &decibelColor);
+            painter->setBrush(QBrush(decibelColor));
             painter->drawRect(receiverRect(data));
-            painter->drawText(receiverRect(data),
-                              "( x: " + QString::number(data->get_x())+" , y: " +
-                              QString::number(data->get_y()) + " ) ");
+
+            // next block draws text on each rectangle (optional)
+            painter->save();
+            painter->scale(1, -1);
+
+            painter->drawText(static_cast<int>(receiverRect(data).x()),
+                              static_cast<int>(-receiverRect(data).center().y()),
+                              "(x:" + QString::number(data->get_x())+" , y:" +
+                              QString::number(data->get_y()) + ") ");
+            painter->restore();
         }
     }
 
     painter->restore();
 }
+
+void ReceiversGrid::setNoiseColor(const SingleReceiver *receiver,
+                                  QColor *colorDecibell)
+{
+    if(receiver->get_Leq() <= 30){ // dB units
+        colorDecibell->setRgb(0, 153, 0, 255);
+    }
+}
+
+
 
 QRectF  ReceiversGrid::receiverRect(SingleReceiver * receiver)
 {
