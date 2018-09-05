@@ -3,22 +3,22 @@
 #include <QVector>
 
 
+
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
-    QPixmap px(1000, 1000);
-    px.fill(Qt::white);
-    QPainter painter(&px);
-//    painter.setRenderHint(QPainter::Antialiasing, true);
-    QPen pen(Qt::black);
-    pen.setWidth(1);
-//    painter.setPen(Qt::NoPen);
-    myGrid.setRect(QRectF(px.rect()));
-    myGrid.setDeltaX(150);
-    myGrid.setDeltaY(150);
+//    QPixmap px(1000, 1000);
+
+//    px.fill(Qt::white);
+//    QPainter painter(&px);
+
+
+    myGrid.setRect(QRectF(-200, -200, 400, 400));
+    myGrid.setDeltaX(100 );
+    myGrid.setDeltaY(100);
     receivers.setGrid(myGrid);
-    receivers.paintGrid(&painter);
-    px.save("/home/locomotion/test.jpg", "JPG");
+
+//    px.save("../test.jpg", "JPG");
 }
 
 Widget::~Widget()
@@ -29,13 +29,15 @@ Widget::~Widget()
 void Widget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
-
-
-    this->drawMargin();
-
-
     QPainter painter(this);
+//    // translate the painter
+    painter.translate(this->myGrid.getRect().center());
+    qreal zoom = 0.8;
+    qreal side = qMin(width(), height());
 
+    painter.scale(zoom*side/width(), -zoom*side/height());
+    this->drawMargin();
+    receivers.paintGrid(&painter);
 
 //    painter.setRenderHint(QPainter::Antialiasing, true);
 //    QPen pen(Qt::black);

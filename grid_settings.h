@@ -15,11 +15,16 @@ public:
     QRectF getRect() const { return this->rectGrid; }
     double getDeltaX() const { return dx; }
     double getDeltaY() const { return dy; }
+    double getLeft() const {return rectGrid.left();}
+    double getRight() const {return rectGrid.right();}
+    double getTop() const {return rectGrid.top();}
+    double getBottom() const {return rectGrid.bottom();}
+
     unsigned int countRows();
     unsigned int countColumns();
 
 private:
-    QRectF rectGrid;
+    QRectF rectGrid; //represent the extension of the coordinate system
     double dx=10, dy=10;
 
 };

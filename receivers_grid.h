@@ -28,13 +28,7 @@ private:
     void setMatrixOfReceivers(unsigned int n, unsigned int m);
     QRectF receiverRect(SingleReceiver * receiver);
 
-
 };
-
-
-
-
-
 
 
 #endif // RECEIVERSGRID_H

@@ -19,14 +19,17 @@ void ReceiversGrid::setGrid(const GridSettings &gridSettings)
     unsigned int nRows = this->gridSettings.countRows();
     unsigned int nColumns = this->gridSettings.countColumns();
 
-    qDebug()<<nRows<<" , "<<nColumns;
+
     setMatrixOfReceivers(nRows, nColumns); // set this->matrix memeber
 //    qDebug()<<matrix.size();
     for(unsigned int i = 0; i < nRows; i++){
         for(unsigned int j = 0; j < nColumns; j++){
-            qDebug()<<i<<" , "<<j;
-            matrix.at(j).at(i) = new SingleReceiver(i*gridSettings.getDeltaX(),
-                                                    j*gridSettings.getDeltaY()); //matrix.[i][j];
+//            qDebug()<<i<<" , "<<j;
+            matrix.at(j).at(i) = new SingleReceiver(gridSettings.getLeft()
+                                                    + i*gridSettings.getDeltaX()
+                                                    , gridSettings.getTop()
+                                                    +j*gridSettings.getDeltaY()); //matrix.[i][j];
+            qDebug()<<matrix.at(j).at(i)->get_x()<<" , " <<matrix.at(j).at(i)->get_y();
         }
     }
 
@@ -35,13 +38,10 @@ void ReceiversGrid::setGrid(const GridSettings &gridSettings)
 
 void ReceiversGrid::setMatrixOfReceivers(unsigned int n, unsigned int m)
 {
-
     matrix.resize(m);
     for(unsigned int i = 0 ; i < m ; ++i){
         matrix[i].resize(n);
     }
-
-
 }
 
 void ReceiversGrid::paintGrid(QPainter *painter)
@@ -49,9 +49,16 @@ void ReceiversGrid::paintGrid(QPainter *painter)
 
     painter->save();
 
-    // set painter to cartesian coordinates based on gridSettings area
-    painter->translate(this->gridSettings.getRect().bottomLeft());
-    painter->scale(1.0, -1.0);
+////    // translate the painter
+//    painter->translate(this->gridSettings.getRect().center());
+//    painter->scale(1, -1);
+
+//    // set logical coordinates according to gridSettings area
+    qDebug()<<gridSettings.getRect().toRect();
+    painter->setWindow(gridSettings.getRect().toRect());
+//    painter->setViewport(gridSettings.getRect().toRect());
+
+
 
     // set paint properties
     painter->setRenderHint(QPainter::Antialiasing, true);
@@ -70,11 +77,7 @@ void ReceiversGrid::paintGrid(QPainter *painter)
         }
     }
 
-
-
-
     painter->restore();
-
 }
 
 QRectF  ReceiversGrid::receiverRect(SingleReceiver * receiver)
