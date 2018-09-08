@@ -10,7 +10,7 @@ public:
     void set_x(const double &x){this->x = x;}
     void set_y(const double &y){this->y = y;}
     void set_z(const double &z){this->z = z;}
-    void set_Leq(const double &z){this->z = z;}
+    void set_Leq(const double &Leq){this->Leq = Leq;}
 
     double get_x() const {return x;}
     double get_y() const {return y;}

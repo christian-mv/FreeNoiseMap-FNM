@@ -5,6 +5,8 @@
 
 #include "grid_settings.h"
 #include "receivers_grid.h"
+#include "pointsource.h"
+#include <vector>
 
 // wigget is a temporal class for testing
 class Widget : public QWidget
@@ -17,6 +19,7 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *event);
+    void paintRasterOnQimage(QPainter *painter, int zoom=1);
 
 private:
     void drawMyGrid();
@@ -24,6 +27,8 @@ private:
     void drawMargin(int dx1=10, int dy1=10, int dx2=10, int dy2=10);
     GridSettings myGrid;
     ReceiversGrid receivers;
+    vector<PointSource *> pointSources;
+    QImage *image;
 
 
 };

@@ -6,6 +6,10 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include "pointsource.h"
+#include "single_receiver.h"
+#include "receivers_grid.h"
+
 
 
 namespace  MyPersonalTools
@@ -13,6 +17,16 @@ namespace  MyPersonalTools
     MATRIX_OF_DOUBLES createMatrixOfDoubles(unsigned int m, unsigned int n);
     void initSeed(); // initializes the seed only once
     int intRandom(int min, int max);
+
+    void P2P(PointSource *pointSource, SingleReceiver *receiver);
+
+    double distanceBetweenPoints(double x1, double y1, double z1,
+                                 double x2, double y2, double z2);
+
+    void calculateNoiseFromSources(const vector<PointSource *> *sources,
+                                   ReceiversGrid * receivers);
+
+    double sumdB(const double &Leq1, const double &Leq2);
 };
 
 #endif // DYNAMIC_MATRIX_H

@@ -28,14 +28,16 @@ SOURCES += \
     grid_settings.cpp \
     receivers_grid.cpp \
     my_personal_tools.cpp \
-    single_receiver.cpp
+    single_receiver.cpp \
+    pointsource.cpp
 
 HEADERS += \
         widget.h \
     grid_settings.h \
     receivers_grid.h \
     my_personal_tools.h \
-    single_receiver.h
+    single_receiver.h \
+    pointsource.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
