@@ -19,11 +19,13 @@ Widget::Widget(QWidget *parent)
     setAttribute(Qt::WA_StaticContents); // avoid painting when resizing window
     setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     myGrid.setRect(QRectF(-100, -100, 200, 200));
-    myGrid.setDeltaX(0.3);
-    myGrid.setDeltaY(0.3);
+    myGrid.setDeltaX(1);
+    myGrid.setDeltaY(1);
     receivers.setGrid(myGrid);;
     pointSources.clear();
     pointSources.push_back(new PointSource(0,0,0,85));
+    pointSources.push_back(new PointSource(20,20,0,85));
+    pointSources.push_back(new PointSource(-20,-20,0,85));
 
 //    // adding random sources:
 //    int nSources=3;
@@ -42,7 +44,7 @@ Widget::Widget(QWidget *parent)
 //    }
 
     MyPersonalTools::calculateNoiseFromSources(&pointSources, &receivers);
-    paintRasterOnQimage(&painter,1);
+    paintRasterOnQimage(&painter,0.8);
 
 
     image->save("../test.png", "PNG");
@@ -63,8 +65,11 @@ void Widget::paintEvent(QPaintEvent *event)
 
 }
 
-void Widget::paintRasterOnQimage(QPainter *painter, int zoom)
+void Widget::paintRasterOnQimage(QPainter *painter, double zoom)
 {
+    if(zoom<0.1){
+        zoom=0.1; // limit the zoomm to positive values greater than 0.1
+    }
     painter->translate(this->myGrid.getRect().center());
 
     qreal side = qMin(painter->device()->width(), painter->device()->height());
@@ -89,7 +94,7 @@ void Widget::drawMargin(int dx1, int dy1, int dx2, int dy2)
 
     painter.setRenderHint(QPainter::Antialiasing, true);
     QPen pen(Qt::black);
-    pen.setWidth(1);
+    pen.setWidth(5);
     painter.setPen(pen);
     QRectF myMargin = rect().adjusted(dx1, dy1, -dx2, -dy2);
     painter.drawRect(myMargin);

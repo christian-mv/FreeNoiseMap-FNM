@@ -29,7 +29,9 @@ SOURCES += \
     receivers_grid.cpp \
     my_personal_tools.cpp \
     single_receiver.cpp \
-    pointsource.cpp
+    pointsource.cpp \
+    gradientcolor.cpp \
+    linear_interpolator.cpp
 
 HEADERS += \
         widget.h \
@@ -37,7 +39,9 @@ HEADERS += \
     receivers_grid.h \
     my_personal_tools.h \
     single_receiver.h \
-    pointsource.h
+    pointsource.h \
+    gradientcolor.h \
+    linear_interpolator.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

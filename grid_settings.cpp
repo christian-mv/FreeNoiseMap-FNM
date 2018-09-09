@@ -3,7 +3,7 @@
 
 GridSettings::GridSettings(QRectF rect)
 {
-
+    setRect(rect);
 }
 
 unsigned int GridSettings::countRows()

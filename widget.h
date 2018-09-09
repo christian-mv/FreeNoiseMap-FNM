@@ -19,7 +19,7 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *event);
-    void paintRasterOnQimage(QPainter *painter, int zoom=1);
+    void paintRasterOnQimage(QPainter *painter, double zoom=1.0);
 
 private:
     void drawMyGrid();
