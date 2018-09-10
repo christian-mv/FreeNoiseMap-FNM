@@ -3,7 +3,6 @@
 
 #include <tuple>
 #include <vector>
-#include "linear_interpolator.h"
 #define STEP tuple<double, double, double, double>
 #define COLOR_RGB tuple<double, double, double>
 

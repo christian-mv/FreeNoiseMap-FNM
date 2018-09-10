@@ -77,7 +77,6 @@ void ReceiversGrid::paintGrid(QPainter *painter)
 //    painter->scale(1, -1);
 
 //    // set logical coordinates according to gridSettings area
-//    qDebug()<<gridSettings.getRect().toRect();
     painter->setWindow(gridSettings.getRect().toRect());
 //    painter->setViewport(gridSettings.getRect().toRect());
 
@@ -85,31 +84,38 @@ void ReceiversGrid::paintGrid(QPainter *painter)
 
     // set paint properties
 //    painter->setRenderHint(QPainter::Antialiasing, true);
-    QPen pen(Qt::NoPen);
-    painter->setPen(pen);
+//    QPen pen(Qt::NoPen);
+//    painter->setPen(pen);
 
 
     // calculate single rectangles
     QColor decibelColor;
-    for(auto row: matrix){
-        for(auto receiver: row){
+    SingleReceiver interpolatedReceiver;
+    SingleReceiver *r;
+    for(int i = 0; i<matrix.size(); i++){
+        for(int j = 0; j<matrix.at(i).size(); j++){
 
-            setNoiseColor(receiver, &decibelColor);
-            painter->setBrush(QBrush(decibelColor));                       
+            r = matrix.at(i).at(j);
 
-            painter->drawRect(receiverRect(receiver));
+            setNoiseColor(r, &decibelColor);
+            painter->setBrush(QBrush(decibelColor));
 
-//            // next block draws text on each rectangle (optional)
+            painter->drawRect(receiverRect(r));
+
+
+            painter->drawEllipse(r->get_x(), r->get_y(), 1,1);
+
+
+            // next block draws text on each rectangle (optional)
 //            painter->save();
 //            painter->scale(1, -1);
 
-//            painter->drawText(static_cast<int>(receiverRect(receiver).x()),
-//                              static_cast<int>(-receiverRect(receiver).center().y()),
-//                              "(x:" + QString::number(receiver->get_x())+" , y:" +
-//                              QString::number(receiver->get_y()) + ") ");
+//            painter->drawText(receiverRect(r).center(), "0");
 //            painter->restore();
         }
     }
+
+
 
     painter->restore();
 }
@@ -170,12 +176,38 @@ void ReceiversGrid::setNoiseColor(const SingleReceiver *receiver, QColor * color
 
 QRectF  ReceiversGrid::receiverRect(SingleReceiver * receiver)
 {
-    return QRectF(receiver->get_x() /*- gridSettings.getDeltaX()/2.0*/,
-                      receiver->get_y() /*- gridSettings.getDeltaY()/2.0*/,
-                      gridSettings.getDeltaX(),
-                      gridSettings.getDeltaY()
-                      );
+    unsigned int n = gridSettings.getInterpolatorFactor();
+    double dx = gridSettings.getDeltaX();
+    double dy = gridSettings.getDeltaY();
+
+    return QRectF(receiver->get_x() - (dx/2.0)/n,
+                      receiver->get_y() - (dy/2.0)/n,
+                      dx/n,
+                      dy/n
+                  );
 }
+
+void ReceiversGrid::interpolateGrid(unsigned int factor)
+{
+
+//    double dx = gridSettings.getDeltaX();
+//    double dy = gridSettings.getDeltay();
+//    SingleReceiver * r;
+
+//    for(int i = 0; i<matrix.size(); i++){
+//        for(int j = 0; j<matrix.at(i).size(); j++){
+//            r = matrix.at(i).at(j);
+//            matrix.at(i).insert(matrix.at(i).begin()+j,
+//                                new SingleReceiver(r->get_x()+dx,
+//                                                   r->get_y()+dy,r->get_z(),
+//                                                   r->get_Leq()));
+//        }
+//    }
+}
+
+
+
+
 
 
 

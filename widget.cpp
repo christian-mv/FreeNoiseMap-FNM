@@ -19,8 +19,9 @@ Widget::Widget(QWidget *parent)
     setAttribute(Qt::WA_StaticContents); // avoid painting when resizing window
     setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     myGrid.setRect(QRectF(-100, -100, 200, 200));
-    myGrid.setDeltaX(1);
-    myGrid.setDeltaY(1);
+    myGrid.setDeltaX(50);
+    myGrid.setDeltaY(50);
+    myGrid.setInterpolationFactor(2);
     receivers.setGrid(myGrid);;
     pointSources.clear();
     pointSources.push_back(new PointSource(0,0,0,85));
@@ -44,7 +45,7 @@ Widget::Widget(QWidget *parent)
 //    }
 
     MyPersonalTools::calculateNoiseFromSources(&pointSources, &receivers);
-    paintRasterOnQimage(&painter,0.8);
+    paintRasterOnQimage(&painter,0.5);
 
 
     image->save("../test.png", "PNG");

@@ -31,6 +31,9 @@ private:
     void setMatrixOfReceivers(unsigned int n, unsigned int m);
     QRectF receiverRect(SingleReceiver * receiver);
     GradientColor gradientColor;
+    void interpolateGrid(unsigned int factor);
+
+
 
 };
 

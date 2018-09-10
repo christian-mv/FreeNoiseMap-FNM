@@ -3,6 +3,7 @@
 
 GridSettings::GridSettings(QRectF rect)
 {
+    GridSettings(); // default parameters
     setRect(rect);
 }
 
@@ -20,5 +21,8 @@ unsigned int GridSettings::countColumns()
 
 GridSettings::GridSettings()
 {
-
+    // grid is 10x10 mt by default
+    setDeltaX(10);
+    setDeltaY(10);
+    setInterpolationFactor(1); // 1 means not interpolated
 }
