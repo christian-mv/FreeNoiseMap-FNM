@@ -21,8 +21,9 @@ public:
     void setGradient(const GradientColor gradientColor);
     void paintGrid(QPainter *painter);
 
-    void setNoiseColor(const SingleReceiver* receiver, QColor * colorDecibell);
+    void setNoiseColor(const double Leq, QColor * colorDecibell);
     std::vector< std::vector<SingleReceiver *> > matrix;
+    GridSettings getGridSettings()const {return this->gridSettings;}
 
 
 private:
@@ -30,8 +31,9 @@ private:
     GridSettings gridSettings;
     void setMatrixOfReceivers(unsigned int n, unsigned int m);
     QRectF receiverRect(SingleReceiver * receiver);
+    QRectF receiverRect(const double x, const double y);
     GradientColor gradientColor;
-    void interpolateGrid(unsigned int factor);
+
 
 
 

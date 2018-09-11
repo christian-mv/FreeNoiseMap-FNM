@@ -8,6 +8,7 @@ using namespace std;
 ReceiversGrid::ReceiversGrid()
 {
     // Defining default gradien.
+    gradientColor.addStep(0.0/255.0,      255.0/255.0,      0.0/255.0,      20.0);
     gradientColor.addStep(0.0/255.0,      255.0/255.0,      0.0/255.0,      35.0);
     gradientColor.addStep(85.0/255.0,     170.0/255.0,      0.0/255.0,      40.0);
     gradientColor.addStep(255.0/255.0,    255.0/255.0,      0.0/255.0,      45.0);
@@ -18,6 +19,8 @@ ReceiversGrid::ReceiversGrid()
     gradientColor.addStep(85.0/255.0,     0/255.0,          127.0/255.0,    70.0);
     gradientColor.addStep(0.0/255.0,      0/255.0,          150.0/255.0,    75.0);
     gradientColor.addStep(0.0/255.0,      0.0/255.0,        113.0/255.0,    80.0);
+    gradientColor.addStep(0.0/255.0,      0.0/255.0,        113.0/255.0,    120.0);
+
 
     gradientColor.sortStepsAscending();
 
@@ -69,49 +72,53 @@ void ReceiversGrid::setMatrixOfReceivers(unsigned int n, unsigned int m)
 void ReceiversGrid::paintGrid(QPainter *painter)
 {
 
+    MyPersonalTools::interpolateGrid(this);
 
     painter->save();
 
-////    // translate the painter
-//    painter->translate(this->gridSettings.getRect().center());
-//    painter->scale(1, -1);
-
 //    // set logical coordinates according to gridSettings area
     painter->setWindow(gridSettings.getRect().toRect());
-//    painter->setViewport(gridSettings.getRect().toRect());
+
 
 
 
     // set paint properties
 //    painter->setRenderHint(QPainter::Antialiasing, true);
-//    QPen pen(Qt::NoPen);
-//    painter->setPen(pen);
+    QPen pen(Qt::NoPen);
+    painter->setPen(pen);
 
 
     // calculate single rectangles
     QColor decibelColor;
+    QBrush brush;
     SingleReceiver interpolatedReceiver;
     SingleReceiver *r;
+    double dx = gridSettings.getDeltaX()/gridSettings.getInterpolatorFactor();
+    double dy = gridSettings.getDeltaY()/gridSettings.getInterpolatorFactor();
+    double Leqx_temp; // here store interpolated Leq on x axes.
+    double Leqy_temp; // here store interpolated Leq on y axes.
+
+
+
     for(int i = 0; i<matrix.size(); i++){
         for(int j = 0; j<matrix.at(i).size(); j++){
 
             r = matrix.at(i).at(j);
 
-            setNoiseColor(r, &decibelColor);
+            setNoiseColor(r->get_Leq(), &decibelColor);
             painter->setBrush(QBrush(decibelColor));
-
             painter->drawRect(receiverRect(r));
 
-
-            painter->drawEllipse(r->get_x(), r->get_y(), 1,1);
+//             if(!r->isInterpolated())
+//                painter->drawEllipse(r->get_x(), r->get_y(), 1,1); // central points on rectangles
 
 
             // next block draws text on each rectangle (optional)
-//            painter->save();
-//            painter->scale(1, -1);
+            //            painter->save();
+            //            painter->scale(1, -1);
 
-//            painter->drawText(receiverRect(r).center(), "0");
-//            painter->restore();
+            //            painter->drawText(receiverRect(r).center(), "0");
+            //            painter->restore();
         }
     }
 
@@ -120,10 +127,8 @@ void ReceiversGrid::paintGrid(QPainter *painter)
     painter->restore();
 }
 
-void ReceiversGrid::setNoiseColor(const SingleReceiver *receiver, QColor * colorDecibell)
+void ReceiversGrid::setNoiseColor(const double Leq, QColor * colorDecibell)
 {
-
-    double Leq = receiver->get_Leq();
     tuple<double, double, double> colorTuple;
 
     colorTuple = gradientColor.colorAt(Leq);
@@ -131,43 +136,42 @@ void ReceiversGrid::setNoiseColor(const SingleReceiver *receiver, QColor * color
                           static_cast<int>( 255*std::get<1>(colorTuple) ),
                           static_cast<int>( 255*std::get<2>(colorTuple) ),
                           255);
-//    qDebug()<<colorDecibell;
 
 
-
-//    if(Leq <= 35){ // dB units
-//        colorDecibell->setRgb(0, 255, 0, 255);
-//    }
-//    else if(35<Leq && Leq<=40){
-//        colorDecibell->setRgb(85, 170, 0, 255);
-//    }
-//    else if(40<Leq && Leq<=45){
-//        colorDecibell->setRgb(255, 255, 0, 255);
-//    }
-//    else if(45<Leq && Leq<=50){
-//        colorDecibell->setRgb(197, 131, 0, 255);
-//    }
-//    else if(50<Leq && Leq<=55){
-//        colorDecibell->setRgb(255, 92, 11, 255);
-//    }
-//    else if(55<Leq && Leq<=60){
-//        colorDecibell->setRgb(255, 0, 0, 255);
-//    }
-//    else if(60<Leq && Leq<=65){
-//        colorDecibell->setRgb(156, 0, 0, 255);
-//    }
-//    else if(65<Leq && Leq<=70){
-//        colorDecibell->setRgb(85, 0, 127, 255);
-//    }
-//    else if(70<Leq && Leq<=75){
-//        colorDecibell->setRgb(0, 0, 150, 255);
-//    }
-//    else if(75<Leq && Leq<=80){
-//        colorDecibell->setRgb(0, 0, 113, 255);
-//    }
-//    else if(80<Leq){
-//        colorDecibell->setRgb(0, 0, 0, 255);
-//    }
+/*    if(Leq <= 35){ // dB units
+        colorDecibell->setRgb(0, 255, 0, 255);
+    }
+    else if(35<Leq && Leq<=40){
+        colorDecibell->setRgb(85, 170, 0, 255);
+    }
+    else if(40<Leq && Leq<=45){
+        colorDecibell->setRgb(255, 255, 0, 255);
+    }
+    else if(45<Leq && Leq<=50){
+        colorDecibell->setRgb(197, 131, 0, 255);
+    }
+    else if(50<Leq && Leq<=55){
+        colorDecibell->setRgb(255, 92, 11, 255);
+    }
+    else if(55<Leq && Leq<=60){
+        colorDecibell->setRgb(255, 0, 0, 255);
+    }
+    else if(60<Leq && Leq<=65){
+        colorDecibell->setRgb(156, 0, 0, 255);
+    }
+    else if(65<Leq && Leq<=70){
+        colorDecibell->setRgb(85, 0, 127, 255);
+    }
+    else if(70<Leq && Leq<=75){
+        colorDecibell->setRgb(0, 0, 150, 255);
+    }
+    else if(75<Leq && Leq<=80){
+        colorDecibell->setRgb(0, 0, 113, 255);
+    }
+    else if(80<Leq){
+        colorDecibell->setRgb(0, 0, 0, 255);
+    }
+*/
 }
 
 
@@ -176,34 +180,27 @@ void ReceiversGrid::setNoiseColor(const SingleReceiver *receiver, QColor * color
 
 QRectF  ReceiversGrid::receiverRect(SingleReceiver * receiver)
 {
+
+    return receiverRect(receiver->get_x(), receiver->get_y());
+}
+
+
+QRectF ReceiversGrid::receiverRect(const double x, const double y)
+{
     unsigned int n = gridSettings.getInterpolatorFactor();
     double dx = gridSettings.getDeltaX();
     double dy = gridSettings.getDeltaY();
 
-    return QRectF(receiver->get_x() - (dx/2.0)/n,
-                      receiver->get_y() - (dy/2.0)/n,
+    return QRectF(x - (dx/2.0)/n,
+                      y - (dy/2.0)/n,
                       dx/n,
                       dy/n
                   );
 }
 
-void ReceiversGrid::interpolateGrid(unsigned int factor)
-{
 
-//    double dx = gridSettings.getDeltaX();
-//    double dy = gridSettings.getDeltay();
-//    SingleReceiver * r;
 
-//    for(int i = 0; i<matrix.size(); i++){
-//        for(int j = 0; j<matrix.at(i).size(); j++){
-//            r = matrix.at(i).at(j);
-//            matrix.at(i).insert(matrix.at(i).begin()+j,
-//                                new SingleReceiver(r->get_x()+dx,
-//                                                   r->get_y()+dy,r->get_z(),
-//                                                   r->get_Leq()));
-//        }
-//    }
-}
+
 
 
 

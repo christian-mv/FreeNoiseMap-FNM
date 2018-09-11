@@ -18,34 +18,35 @@ Widget::Widget(QWidget *parent)
 
     setAttribute(Qt::WA_StaticContents); // avoid painting when resizing window
     setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-    myGrid.setRect(QRectF(-100, -100, 200, 200));
-    myGrid.setDeltaX(50);
-    myGrid.setDeltaY(50);
-    myGrid.setInterpolationFactor(2);
+    myGrid.setRect(QRectF(50, 20, 200, 200));
+    myGrid.setDeltaX(5);
+    myGrid.setDeltaY(5);
+    myGrid.setInterpolationFactor(5);
     receivers.setGrid(myGrid);;
     pointSources.clear();
-    pointSources.push_back(new PointSource(0,0,0,85));
-    pointSources.push_back(new PointSource(20,20,0,85));
-    pointSources.push_back(new PointSource(-20,-20,0,85));
+    pointSources.push_back(new PointSource(100,100,0,90));
 
-//    // adding random sources:
-//    int nSources=3;
-//    int min_x = static_cast<int>(myGrid.getLeft());
-//    int max_x = static_cast<int>(myGrid.getRight());
-//    int min_y = static_cast<int>(myGrid.getBottom());
-//    int max_y = static_cast<int>(myGrid.getTop());
-//    int min_z = -5;
-//    int max_z = 5;
 
-//    for(int i=0; i<nSources; i++){
-//        pointSources.push_back(new PointSource(MyPersonalTools::intRandom(min_x, max_x),
-//                                               MyPersonalTools::intRandom(-min_y, -max_y),
-//                                               MyPersonalTools::intRandom(min_z, max_z),
-//                                               MyPersonalTools::intRandom(80, 86)));
-//    }
+    // adding random sources:
+    int nSources=3;
+    int min_x = static_cast<int>(myGrid.getLeft());
+    int max_x = static_cast<int>(myGrid.getRight());
+    int min_y = static_cast<int>(myGrid.getTop());
+    int max_y = static_cast<int>(myGrid.getBottom());
+    int min_z = -5;
+    int max_z = 5;
+    qDebug()<<myGrid.getTop();
+
+
+    for(int i=0; i<nSources; i++){
+        pointSources.push_back(new PointSource(MyPersonalTools::intRandom(min_x, max_x),
+                                               MyPersonalTools::intRandom(-min_y, -max_y),
+                                               MyPersonalTools::intRandom(min_z, max_z),
+                                               MyPersonalTools::intRandom(80, 90)));
+    }
 
     MyPersonalTools::calculateNoiseFromSources(&pointSources, &receivers);
-    paintRasterOnQimage(&painter,0.5);
+    paintRasterOnQimage(&painter,0.8);
 
 
     image->save("../test.png", "PNG");
@@ -71,7 +72,7 @@ void Widget::paintRasterOnQimage(QPainter *painter, double zoom)
     if(zoom<0.1){
         zoom=0.1; // limit the zoomm to positive values greater than 0.1
     }
-    painter->translate(this->myGrid.getRect().center());
+    painter->translate(this->myGrid.getRect().bottomLeft());
 
     qreal side = qMin(painter->device()->width(), painter->device()->height());
 

@@ -19,6 +19,8 @@ public:
     double get_y() const {return y;}
     double get_z() const {return z;}
     double get_Leq() const {return Leq;}
+    bool isInterpolated(){return interpolated;}
+
 private:
     double x, y, z; // in meters units
     double Leq; // in dB(A) units

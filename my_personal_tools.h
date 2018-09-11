@@ -27,6 +27,16 @@ namespace  MyPersonalTools
                                    ReceiversGrid * receivers);
 
     double sumdB(const double &Leq1, const double &Leq2);
+
+    void interpolationValueAt(
+                            const double &t1,
+                            const double &y1,
+                            const double &t2,
+                                  double &y2,
+                            const double &t3,
+                            const double &y3);
+
+    void interpolateGrid(ReceiversGrid *);
 };
 
 #endif // DYNAMIC_MATRIX_H
