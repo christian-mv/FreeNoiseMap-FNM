@@ -3,7 +3,7 @@ Multi-platform, free environmental noise modelling software
 
 This software is intend to produce noise contours:
 
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/scontourAreas.png)
+![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/contourAreas.png)
 
 
 FNM also represent the results in a gradient color scale:
@@ -30,18 +30,11 @@ Factor 4:
 
 ![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation4.png)
 
-Factor 5:
-
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation5.png)
-
-Factor 6:
-
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation6.png)
 
 
 FNM let user to enter several sources to the model:
 
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/scontourAreas.png)
+![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/contourAreas.png)
 
 
 
