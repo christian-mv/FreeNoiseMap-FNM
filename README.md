@@ -1,4 +1,4 @@
-# Free-Noise
+# FNM
 Multi-platform, free environmental noise modelling software  
 
 This software is intended to produce noise contours:
