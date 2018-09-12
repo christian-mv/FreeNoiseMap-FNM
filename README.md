@@ -1,7 +1,7 @@
 # Free-Noise
 Multi-platform, free environmental noise modelling software  
 
-This software is intend to produce noise contours:
+This software is intended to produce noise contours:
 
 ![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/contourAreas.png)
 
@@ -34,9 +34,13 @@ Factor 4:
 
 FNM let user to enter several sources to the model:
 
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/contourAreas.png)
+![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/addingSeveralSources)
 
 
+
+
+
+## FNM still under construction ##
 
 
 
