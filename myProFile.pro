@@ -36,10 +36,10 @@ HEADERS += \
         widget.h \
     grid_settings.h \
     receivers_grid.h \
-    my_personal_tools.h \
     single_receiver.h \
     pointsource.h \
-    gradientcolor.h
+    gradientcolor.h \
+    noise_engine.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

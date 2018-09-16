@@ -1,6 +1,6 @@
 #include "widget.h"
 #include <QApplication>
-#include "my_personal_tools.h"
+#include "noise_engine.h"
 #include <QtDebug>
 #include <QScrollArea>
 #include "gradientcolor.h"
@@ -8,9 +8,10 @@
 void addRandomSources(vector<PointSource *> &pointSources, const GridSettings &myGrid)
 {
     pointSources.push_back(new PointSource(100,100,0,90));
+    pointSources.push_back(new PointSource(150,150,0,90));
 
 //// random sources
-//    int nSources=2;
+//    int nSources=3;
 //    int min_x = static_cast<int>(myGrid.getLeft());
 //    int max_x = static_cast<int>(myGrid.getRight());
 //    int min_y = static_cast<int>(myGrid.getTop());
@@ -20,10 +21,10 @@ void addRandomSources(vector<PointSource *> &pointSources, const GridSettings &m
 //    qDebug()<<myGrid.getTop();
 
 //    for(int i=0; i<nSources; i++){
-//        pointSources.push_back(new PointSource(MyPersonalTools::intRandom(min_x, max_x),
-//                                               MyPersonalTools::intRandom(-min_y, -max_y),
-//                                               MyPersonalTools::intRandom(min_z, max_z),
-//                                               MyPersonalTools::intRandom(80, 85)));
+//        pointSources.push_back(new PointSource(NoiseEngine::intRandom(min_x, max_x),
+//                                               NoiseEngine::intRandom(-min_y, -max_y),
+//                                               NoiseEngine::intRandom(min_z, max_z),
+//                                               NoiseEngine::intRandom(80, 85)));
 //    }
 }
 
@@ -38,34 +39,41 @@ int main(int argc, char *argv[])
     ReceiversGrid receivers;
     vector<PointSource *> pointSources;
 
-    QImage *image;
-    image = new QImage(1260,468, QImage::Format_ARGB32);
 
-    image->fill(Qt::transparent);
-    QPainter painter(image);
 
-    myGrid.setRect(QRectF(50, 20, 220, 220));
+
+    myGrid.setRect(QRectF(50, 50, 200, 200));
     myGrid.setDeltaX(1);
     myGrid.setDeltaY(1);
     myGrid.setInterpolationFactor(5);
     receivers.setGrid(myGrid);
 
-    MyPersonalTools::calculateNoiseFromSources(&pointSources, &receivers);
-
-    double zoom = 1;
-    if(zoom<0.1){
-        zoom=0.1; // limit the zoomm to positive values greater than 0.1
-    }
-    painter.translate(myGrid.getRect().bottomLeft());
-
-    qreal side = qMin(painter.device()->width(), painter.device()->height());
-
-    painter.scale(zoom*side/painter.device()->width(), -zoom*side/painter.device()->height());
+    addRandomSources(pointSources, myGrid);
 
 
 
+    NoiseEngine::calculateNoiseFromSources(&pointSources, &receivers);
 
-    image->save("../test.png", "PNG");
+
+
+    qreal side = qMin(myGrid.getRect().width(), myGrid.getRect().height());
+    qreal side2 = qMax(w.width(), w.height());
+
+
+
+
+    QImage image(static_cast<int>( side2*myGrid.getRect().width()/side ),
+                 static_cast<int>( side2*myGrid.getRect().height()/side ),
+                 QImage::Format_ARGB32);
+
+    image.fill(Qt::transparent);
+
+    receivers.paintGrid(image, myGrid);
+
+
+    image.save("../test.png", "PNG");
+
+    w.setImage(&image);
 
     w.show();
     return a.exec();

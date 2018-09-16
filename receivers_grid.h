@@ -19,11 +19,12 @@ public:
     ReceiversGrid(const GridSettings &gridSettings);
     void setGrid(const GridSettings &gridSettings);
     void setGradient(const GradientColor gradientColor);
-    void paintGrid(QPainter *painter);
+    void paintGrid(QImage &image, const GridSettings &myGrid);
 
     void setNoiseColor(const double Leq, QColor * colorDecibell);
     std::vector< std::vector<SingleReceiver *> > matrix;
     GridSettings getGridSettings()const {return this->gridSettings;}
+
 
 
 private:

@@ -1,5 +1,5 @@
 #include "receivers_grid.h"
-#include "my_personal_tools.h"
+#include "noise_engine.h"
 #include <QtDebug>
 #include <tuple>
 #include <QtWidgets>
@@ -69,22 +69,36 @@ void ReceiversGrid::setMatrixOfReceivers(unsigned int n, unsigned int m)
     }
 }
 
-void ReceiversGrid::paintGrid(QPainter *painter)
+void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid)
 {
 
-    MyPersonalTools::interpolateGrid(this);
+    NoiseEngine::interpolateGrid(this);
 
-    painter->save();
+
+    QPainter painter(&image);
+
+    painter.translate(myGrid.getRect().bottomLeft());
+
+    painter.translate(-myGrid.getRect().left() + myGrid.getDeltaX()/2,
+                      myGrid.getRect().top() - myGrid.getDeltaY()/2);
+
+
+
+
+    painter.scale(1, -1);
+
+
+    painter.save();
 
 //    // set logical coordinates according to gridSettings area
-    painter->setWindow(gridSettings.getRect().toRect());
+    painter.setWindow(gridSettings.getRect().toRect());
 
 
 
     // set paint properties
 //    painter->setRenderHint(QPainter::Antialiasing, true);
     QPen pen(Qt::NoPen);
-    painter->setPen(pen);
+    painter.setPen(pen);
 
 
     // calculate single rectangles
@@ -110,19 +124,31 @@ void ReceiversGrid::paintGrid(QPainter *painter)
             r = matrix.at(i).at(j);
 
             setNoiseColor(r->get_Leq(), &decibelColor);
-            painter->setBrush(QBrush(decibelColor));
-            painter->drawRect(receiverRect(r));
-
-//             if(!r->isInterpolated())
-//                painter->drawEllipse(r->get_x(), r->get_y(), 1,1); // central points on rectangles
+            painter.setBrush(QBrush(decibelColor));
+            painter.drawRect(receiverRect(r));
 
 
-            // next block draws text on each rectangle (optional)
-            //            painter->save();
-            //            painter->scale(1, -1);
 
-            //            painter->drawText(receiverRect(r).center(), "0");
-            //            painter->restore();
+//             if(!r->isInterpolated()){
+//                 painter.drawEllipse(r->get_x(), r->get_y(), 1,1); // central points on rectangles
+//             }
+
+
+
+//             // next block draws text on each rectangle (optional)
+//                        painter.save();
+//                        painter.scale(1, -1);
+
+//                        QPen pen(Qt::SolidLine);
+
+//                        painter.setFont(QFont("Times", 4));
+//                        painter.setPen(pen);
+
+//             painter.drawText(static_cast<int>(receiverRect(r).x()),
+//                               static_cast<int>(-receiverRect(r).center().y()),
+//                               "(x:" + QString::number(r->get_x())+" , y:" +
+//                               QString::number(r->get_y()) + ") ");
+//                        painter.restore();
         }
 
         progress.setValue(i);
@@ -130,7 +156,8 @@ void ReceiversGrid::paintGrid(QPainter *painter)
 
 
     progress.setValue( progress.maximum() );
-    painter->restore();
+
+    painter.restore();
 
 }
 

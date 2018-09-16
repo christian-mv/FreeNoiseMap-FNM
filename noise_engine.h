@@ -1,5 +1,5 @@
-#ifndef MY_PERSONAL_TOOLS_H
-#define MY_PERSONAL_TOOLS_H
+#ifndef NOISE_ENGINE_H
+#define NOISE_ENGINE_H
 
 #define MATRIX_OF_DOUBLES std::vector< std::vector<double> >
 
@@ -12,7 +12,7 @@
 
 
 
-namespace  MyPersonalTools
+namespace  NoiseEngine
 {
     MATRIX_OF_DOUBLES createMatrixOfDoubles(unsigned int m, unsigned int n);
     void initSeed(); // initializes the seed only once
@@ -23,7 +23,7 @@ namespace  MyPersonalTools
     double distanceBetweenPoints(double x1, double y1, double z1,
                                  double x2, double y2, double z2);
 
-    void calculateNoiseFromSources(const vector<PointSource *> *sources,
+    bool calculateNoiseFromSources(const vector<PointSource *> *sources,
                                    ReceiversGrid * receivers);
 
     double sumdB(const double &Leq1, const double &Leq2);

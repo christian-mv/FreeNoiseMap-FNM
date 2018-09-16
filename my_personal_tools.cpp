@@ -1,11 +1,11 @@
-#include "my_personal_tools.h"
+#include "noise_engine.h"
 #include <cstdlib>
 #include <ctime>
 #include <math.h>
 #include <QtDebug>
 using namespace std;
 
-namespace  MyPersonalTools
+namespace  NoiseEngine
 {
     MATRIX_OF_DOUBLES createMatrixOfDoubles(unsigned int m, unsigned int n){
         MATRIX_OF_DOUBLES myMatriz;
@@ -47,9 +47,14 @@ namespace  MyPersonalTools
         return sqrt( pow((x2-x1), 2) + pow((y2-y1), 2) + pow((z2-z1), 2));
     }
 
-    void calculateNoiseFromSources(const vector<PointSource *> *sources,
+
+    bool calculateNoiseFromSources(const vector<PointSource *> *sources,
                                    ReceiversGrid *receivers )
     {
+        if(sources->size() == 0){
+            return false;
+        }
+
         for(auto row : receivers->matrix){
             for(auto currentReceiver : row){
                 for(auto currentSource : *sources){
@@ -57,6 +62,7 @@ namespace  MyPersonalTools
                 }
             }
         }
+        return true;
     }
 
     void P2P(PointSource *pointSource, SingleReceiver *receiver)
@@ -121,7 +127,7 @@ namespace  MyPersonalTools
                 if(j<receivers->matrix.at(i).size()-1){
                     for(int k=1; k<factor; k++){
 
-                        MyPersonalTools::interpolationValueAt(r->get_x(),
+                        NoiseEngine::interpolationValueAt(r->get_x(),
                                                               r->get_Leq(),
                                                               r->get_x()+k*dx,
                                                               Leqx_temp,
@@ -157,7 +163,7 @@ namespace  MyPersonalTools
 
                         r = receivers->matrix.at(i).at(j);
 
-                        MyPersonalTools::interpolationValueAt(r->get_y(),
+                        NoiseEngine::interpolationValueAt(r->get_y(),
                                                               r->get_Leq(),
                                                               r->get_y()+k*dy,
                                                               Leqy_temp,

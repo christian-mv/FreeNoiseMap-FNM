@@ -16,15 +16,14 @@ class Widget : public QWidget
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
+    void setImage( QImage *image){this->image = image; this->update();}
 
 protected:
     void paintEvent(QPaintEvent *event);
-    void paintRasterOnQimage(QPainter *painter, double zoom=1.0);
+
 
 private:    
-    GridSettings myGrid;
-    ReceiversGrid receivers;
-    vector<PointSource *> pointSources;
+
     QImage *image;
 
 
