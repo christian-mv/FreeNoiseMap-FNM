@@ -24,24 +24,27 @@ CONFIG += c++14
 
 SOURCES += \
         main.cpp \
-        widget.cpp \
     grid_settings.cpp \
     receivers_grid.cpp \
-    my_personal_tools.cpp \
     single_receiver.cpp \
     pointsource.cpp \
-    gradientcolor.cpp
+    gradientcolor.cpp \
+    mainwindow.cpp \
+    noise_engine.cpp
 
 HEADERS += \
-        widget.h \
     grid_settings.h \
     receivers_grid.h \
     single_receiver.h \
     pointsource.h \
     gradientcolor.h \
-    noise_engine.h
+    noise_engine.h \
+    mainwindow.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+FORMS += \
+    mainwindow.ui

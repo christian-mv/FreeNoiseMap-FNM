@@ -1,8 +1,11 @@
-#include "widget.h"
+#include "mainwindow.h"
 #include <QApplication>
 #include "noise_engine.h"
 #include <QtDebug>
-#include <QScrollArea>
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
+#include <QGraphicsView>
+#include <QPixmap>
 #include "gradientcolor.h"
 
 void addRandomSources(vector<PointSource *> &pointSources, const GridSettings &myGrid)
@@ -33,49 +36,9 @@ void addRandomSources(vector<PointSource *> &pointSources, const GridSettings &m
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    Widget w;
+    MainWindow window;
 
-    GridSettings myGrid;
-    ReceiversGrid receivers;
-    vector<PointSource *> pointSources;
-
-
-
-
-    myGrid.setRect(QRectF(50, 50, 200, 200));
-    myGrid.setDeltaX(1);
-    myGrid.setDeltaY(1);
-    myGrid.setInterpolationFactor(5);
-    receivers.setGrid(myGrid);
-
-    addRandomSources(pointSources, myGrid);
-
-
-
-    NoiseEngine::calculateNoiseFromSources(&pointSources, &receivers);
-
-
-
-    qreal side = qMin(myGrid.getRect().width(), myGrid.getRect().height());
-    qreal side2 = qMax(w.width(), w.height());
-
-
-
-
-    QImage image(static_cast<int>( side2*myGrid.getRect().width()/side ),
-                 static_cast<int>( side2*myGrid.getRect().height()/side ),
-                 QImage::Format_ARGB32);
-
-    image.fill(Qt::transparent);
-
-    receivers.paintGrid(image, myGrid);
-
-
-    image.save("../test.png", "PNG");
-
-    w.setImage(&image);
-
-    w.show();
+    window.show();
     return a.exec();
 
 }

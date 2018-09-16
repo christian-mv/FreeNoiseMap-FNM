@@ -37,6 +37,9 @@ namespace  NoiseEngine
                             const double &y3);
 
     void interpolateGrid(ReceiversGrid *);
+
+    void addRandomSources(vector<PointSource *> &pointSources, const GridSettings &myGrid);
+
 };
 
 #endif // DYNAMIC_MATRIX_H
