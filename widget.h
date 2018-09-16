@@ -21,10 +21,7 @@ protected:
     void paintEvent(QPaintEvent *event);
     void paintRasterOnQimage(QPainter *painter, double zoom=1.0);
 
-private:
-    void drawMyGrid();
-    void drawNoiseCell(QPainter *painter, QColor color, QRectF rect);
-    void drawMargin(int dx1=10, int dy1=10, int dx2=10, int dy2=10);
+private:    
     GridSettings myGrid;
     ReceiversGrid receivers;
     vector<PointSource *> pointSources;

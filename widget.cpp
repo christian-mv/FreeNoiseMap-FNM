@@ -16,8 +16,6 @@ Widget::Widget(QWidget *parent)
     image->fill(Qt::transparent);
     QPainter painter(image);
 
-    setAttribute(Qt::WA_StaticContents); // avoid painting when resizing window
-    setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     myGrid.setRect(QRectF(50, 20, 220, 220));
     myGrid.setDeltaX(1);
     myGrid.setDeltaY(1);
@@ -61,10 +59,12 @@ Widget::~Widget()
 void Widget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
-    this->drawMargin();
+//    this->drawMargin();
 
+    QPainter painter(this);
 
-
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.drawImage(rect(),*image,image->rect());
 }
 
 void Widget::paintRasterOnQimage(QPainter *painter, double zoom)
@@ -81,34 +81,3 @@ void Widget::paintRasterOnQimage(QPainter *painter, double zoom)
 
     receivers.paintGrid(painter);
 }
-
-
-void Widget::drawNoiseCell(QPainter *painter, QColor color, QRectF rect)
-{
-    painter->setBrush(color);
-    painter->drawRect(rect);
-}
-
-
-void Widget::drawMargin(int dx1, int dy1, int dx2, int dy2)
-{
-    QPainter painter(this);
-
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    QPen pen(Qt::black);
-    pen.setWidth(5);
-    painter.setPen(pen);
-    QRectF myMargin = rect().adjusted(dx1, dy1, -dx2, -dy2);
-    painter.drawRect(myMargin);
-
-
-
-//    qreal side = qMin(width(), height());
-
-//    painter.scale(side/width(), side/height());
-
-    painter.drawImage(rect(),*image,image->rect());
-}
-
-
-

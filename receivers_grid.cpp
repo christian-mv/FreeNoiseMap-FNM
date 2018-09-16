@@ -81,7 +81,6 @@ void ReceiversGrid::paintGrid(QPainter *painter)
 
 
 
-
     // set paint properties
 //    painter->setRenderHint(QPainter::Antialiasing, true);
     QPen pen(Qt::NoPen);
@@ -93,10 +92,15 @@ void ReceiversGrid::paintGrid(QPainter *painter)
     QBrush brush;
     SingleReceiver interpolatedReceiver;
     SingleReceiver *r;
-    double dx = gridSettings.getDeltaX()/gridSettings.getInterpolatorFactor();
-    double dy = gridSettings.getDeltaY()/gridSettings.getInterpolatorFactor();
-    double Leqx_temp; // here store interpolated Leq on x axes.
-    double Leqy_temp; // here store interpolated Leq on y axes.
+
+
+    QProgressDialog progress;
+    progress.setWindowModality(Qt::WindowModal);
+//    progress.setWindowTitle(QObject::tr("Pdf converter"));
+    progress.setLabelText(QObject::tr("Painting grid..."));
+    progress.setMinimum(0);
+    progress.setMaximum(matrix.size()- 1);
+    progress.show();
 
 
 
@@ -120,11 +124,14 @@ void ReceiversGrid::paintGrid(QPainter *painter)
             //            painter->drawText(receiverRect(r).center(), "0");
             //            painter->restore();
         }
+
+        progress.setValue(i);
     }
 
 
-
+    progress.setValue( progress.maximum() );
     painter->restore();
+
 }
 
 void ReceiversGrid::setNoiseColor(const double Leq, QColor * colorDecibell)

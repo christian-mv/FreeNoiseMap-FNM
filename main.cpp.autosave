@@ -62,9 +62,6 @@ int main(int argc, char *argv[])
 
     painter.scale(zoom*side/painter.device()->width(), -zoom*side/painter.device()->height());
 
-
-
-
     image->save("../test.png", "PNG");
 
     w.show();
