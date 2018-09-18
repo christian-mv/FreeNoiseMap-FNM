@@ -79,8 +79,8 @@ void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid)
 
     painter.translate(myGrid.getRect().bottomLeft());
 
-    painter.translate(-myGrid.getRect().left() + myGrid.getDeltaX()/2,
-                      myGrid.getRect().top() - myGrid.getDeltaY()/2);
+    painter.translate(-myGrid.getRect().left() /*+ myGrid.getDeltaX()/2*/,
+                      myGrid.getRect().top() /*- myGrid.getDeltaY()/2*/);
 
 
 
@@ -96,7 +96,7 @@ void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid)
 
 
     // set paint properties
-//    painter->setRenderHint(QPainter::Antialiasing, true);
+//    painter.setRenderHint(QPainter::Antialiasing, true);
     QPen pen(Qt::NoPen);
     painter.setPen(pen);
 
@@ -225,8 +225,8 @@ QRectF ReceiversGrid::receiverRect(const double x, const double y)
     double dx = gridSettings.getDeltaX();
     double dy = gridSettings.getDeltaY();
 
-    return QRectF(x - (dx/2.0)/n,
-                      y - (dy/2.0)/n,
+    return QRectF(x - (dx/n)/2,
+                      y - (dy/n)/2,
                       dx/n,
                       dy/n
                   );

@@ -30,7 +30,9 @@ SOURCES += \
     pointsource.cpp \
     gradientcolor.cpp \
     mainwindow.cpp \
-    noise_engine.cpp
+    noise_engine.cpp \
+    mygraphicsview.cpp \
+    mygraphicsscene.cpp
 
 HEADERS += \
     grid_settings.h \
@@ -39,7 +41,9 @@ HEADERS += \
     pointsource.h \
     gradientcolor.h \
     noise_engine.h \
-    mainwindow.h
+    mainwindow.h \
+    mygraphicsview.h \
+    mygraphicsscene.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -18,6 +18,8 @@ public:
     double getDeltaY() const { return dy; }
     double getLeft() const {return rectGrid.left();}
     double getRight() const {return rectGrid.right();}
+    double get_x() const {return rectGrid.x();}
+    double get_y() const {return rectGrid.y();}
     double getTop() const {return rectGrid.top();}
     double getBottom() const {return rectGrid.bottom();}
     unsigned int getInterpolatorFactor() const { return interpolationFactor;}

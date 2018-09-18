@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include "noise_engine.h"
 #include <QDebug>
+#include <QDesktopWidget>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -9,10 +11,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    myGrid.setRect(QRectF(50, 50, 200, 200));
+    myGrid.setRect(QRectF(0, 0, 400, 400));
 
-    myGrid.setDeltaX(10);
-    myGrid.setDeltaY(10);
+    myGrid.setDeltaX(5);
+    myGrid.setDeltaY(5);
     myGrid.setInterpolationFactor(5);
     receivers.setGrid(myGrid);
 
@@ -23,9 +25,9 @@ MainWindow::MainWindow(QWidget *parent) :
     NoiseEngine::calculateNoiseFromSources(&pointSources, &receivers);
 
 
-    qDebug()<<myGrid.getRect().width();
+    // create and image which its resolution depends on the screen resolution (tested with 1360X768 screen)
     qreal side = qMin(myGrid.getRect().width(), myGrid.getRect().height());
-    qreal side2 = qMax(width(), height());
+    qreal side2 = qMax(qApp->desktop()->width(), qApp->desktop()->height());
 
 
 
@@ -34,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
                  static_cast<int>( side2*myGrid.getRect().height()/side ),
                  QImage::Format_ARGB32);
 
+
     image.fill(Qt::transparent);
 
     receivers.paintGrid(image, myGrid);
@@ -41,11 +44,30 @@ MainWindow::MainWindow(QWidget *parent) :
 
     image.save("../test.png", "PNG");
 
-    pixmapItem.setPixmap(QPixmap::fromImage(image));
+
+    pixmapItem.setPixmap(QPixmap::fromImage( invertImageOnYAxes(image) ));
+
+    pixmapItem.setScale(side/side2); // to represent the real size in the scene
+
+
     scene.addItem(&pixmapItem);
-    pixmapItem.setPos(0,0);
-    scene.setSceneRect(pixmapItem.boundingRect());
+
+    pixmapItem.setPos(myGrid.get_x(), myGrid.get_y());
+
+
+    scene.setBackgroundBrush(Qt::black);
+
+
+
     ui->graphicsView->setScene(&scene);
+
+//    ui->graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignBottom );
+    ui->graphicsView->centerOn(QPointF(0,0));
+    ui->graphicsView->scale(2,-2); // invert Y axes
+
+
+
+
     ui->graphicsView->show();
 
 }
@@ -53,4 +75,14 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+// this method is necessary to compasate the reflection of Y axes
+QImage MainWindow::invertImageOnYAxes(const QImage &image)
+{
+    QPoint center = image.rect().center();
+    QMatrix matrix;
+    matrix.translate(center.x(), center.y());
+    matrix.scale(1,-1);
+    return image.transformed(matrix);
 }

@@ -8,6 +8,8 @@
 #include "grid_settings.h"
 #include "receivers_grid.h"
 #include "pointsource.h"
+#include <mygraphicsscene.h>
+
 
 
 
@@ -25,11 +27,13 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QGraphicsScene scene;
+    MyGraphicsScene scene;
     QGraphicsPixmapItem pixmapItem;
     GridSettings myGrid;
     ReceiversGrid receivers;
     vector<PointSource *> pointSources;
+    QImage invertImageOnYAxes(const QImage &image);
+
 
 
 };

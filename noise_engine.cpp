@@ -190,7 +190,9 @@ void interpolateGrid(ReceiversGrid *receivers)
 void addRandomSources(vector<PointSource *> &pointSources, const GridSettings &myGrid)
 {
     pointSources.push_back(new PointSource(100,100,0,90));
-    pointSources.push_back(new PointSource(150,150,0,90));
+    pointSources.push_back(new PointSource(150,200,0,90));
+
+    pointSources.push_back(new PointSource(20,50,0,80));
 
     //// random sources
     //    int nSources=3;
