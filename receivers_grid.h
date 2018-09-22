@@ -24,6 +24,7 @@ public:
     void setNoiseColor(const double Leq, QColor * colorDecibell);
     std::vector< std::vector<SingleReceiver *> > matrix;
     GridSettings getGridSettings()const {return this->gridSettings;}
+    void resetNoiseReceiver();
 
 
 

@@ -2,6 +2,7 @@
 #define MYGRAPHICSVIEW_H
 
 #include <QGraphicsView>
+#include <QMouseEvent>
 
 class MyGraphicsView : public QGraphicsView
 {
@@ -9,7 +10,13 @@ public:
     MyGraphicsView(QWidget *parent = nullptr);
 
 protected:
-    void mouseMoveEvent(QMouseEvent *event);
+
+
+
+
+
+
+
 
 };
 

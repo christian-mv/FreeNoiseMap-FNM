@@ -48,22 +48,6 @@ double distanceBetweenPoints(double x1, double y1, double z1, double x2, double 
 }
 
 
-bool calculateNoiseFromSources(const vector<PointSource *> *sources,
-                               ReceiversGrid *receivers )
-{
-    if(sources->size() == 0){
-        return false;
-    }
-
-    for(auto row : receivers->matrix){
-        for(auto currentReceiver : row){
-            for(auto currentSource : *sources){
-                P2P(currentSource, currentReceiver);
-            }
-        }
-    }
-    return true;
-}
 
 void P2P(PointSource *pointSource, SingleReceiver *receiver)
 {

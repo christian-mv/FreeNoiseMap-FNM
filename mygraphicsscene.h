@@ -9,7 +9,8 @@ public:
     MyGraphicsScene();
 
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
+//    void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
+
 };
 
 #endif // MYGRAPHICSSCENE_H

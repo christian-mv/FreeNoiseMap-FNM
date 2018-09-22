@@ -110,7 +110,7 @@ void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid)
 
     QProgressDialog progress;
     progress.setWindowModality(Qt::WindowModal);
-//    progress.setWindowTitle(QObject::tr("Pdf converter"));
+//    progress.setWindowTitle(QObject::tr("NAME APP"));
     progress.setLabelText(QObject::tr("Painting grid..."));
     progress.setMinimum(0);
     progress.setMaximum(matrix.size()- 1);
@@ -206,6 +206,15 @@ void ReceiversGrid::setNoiseColor(const double Leq, QColor * colorDecibell)
         colorDecibell->setRgb(0, 0, 0, 255);
     }
 */
+}
+
+void ReceiversGrid::resetNoiseReceiver()
+{
+    for(auto row: matrix){
+        for(auto receiver: row){
+            receiver->set_Leq(-88);
+        }
+    }
 }
 
 

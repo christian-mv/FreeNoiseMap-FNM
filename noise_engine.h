@@ -23,8 +23,6 @@ namespace  NoiseEngine
     double distanceBetweenPoints(double x1, double y1, double z1,
                                  double x2, double y2, double z2);
 
-    bool calculateNoiseFromSources(const vector<PointSource *> *sources,
-                                   ReceiversGrid * receivers);
 
     double sumdB(const double &Leq1, const double &Leq2);
 

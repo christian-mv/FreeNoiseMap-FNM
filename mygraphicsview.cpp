@@ -1,6 +1,5 @@
 #include "mygraphicsview.h"
 #include <QDebug>
-#include <QMouseEvent>
 #include <QPointF>
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):
@@ -9,7 +8,13 @@ MyGraphicsView::MyGraphicsView(QWidget *parent):
 
 }
 
-void MyGraphicsView::mouseMoveEvent(QMouseEvent *event)
-{
-    qDebug()<<event;
-}
+
+
+
+
+
+
+
+
+
+

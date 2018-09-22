@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>icons/point_source.png</file>
+        <file>icons/edit_mode_cursor.png</file>
+        <file>icons/calculate_grid.png</file>
+        <file>icons/grid.png</file>
+    </qresource>
+</RCC>

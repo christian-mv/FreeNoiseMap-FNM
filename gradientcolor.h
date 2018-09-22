@@ -10,6 +10,7 @@
 using namespace std;
 
 
+
 class GradientColor
 {
 public:
