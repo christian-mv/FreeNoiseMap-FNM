@@ -148,7 +148,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             statusBar()->showMessage(str);
           }
 
-        else if (event->type() == QEvent::GraphicsSceneMousePress && cursor()==this->myCursors["pointSource"])
+        else if (event->type() == QEvent::GraphicsSceneMousePress && ui->graphicsView->cursor()==myCursors["pointSource"])
           {
             QGraphicsSceneMouseEvent *sceneEvent = static_cast<QGraphicsSceneMouseEvent*>(event);
 
@@ -181,19 +181,18 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
 void MainWindow::on_actionAdd_point_source_triggered()
 {
-    setCursor(myCursors["pointSource"]);
-
+    ui->graphicsView->setCursor(myCursors["pointSource"]);
 }
 
 
 void MainWindow::on_actioneditMode_triggered()
 {
-    setCursor(myCursors["arroCursor"]);
+    ui->graphicsView->setCursor(myCursors["arroCursor"]);
 }
 
 void MainWindow::on_actiongrid_triggered()
 {
-    setCursor(myCursors["grid_edit"]);
+    ui->graphicsView->setCursor(myCursors["grid_edit"]);
 }
 
 void MainWindow::on_actioncalculateGrid_triggered()
