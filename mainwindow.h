@@ -7,8 +7,13 @@
 #include <QPixmap>
 #include "grid_settings.h"
 #include "receivers_grid.h"
-#include "pointsource.h"
 #include <mygraphicsscene.h>
+#define VERSION_OF_APP "1.0"
+#define MY_APP_NAME "Free Noise Map"
+
+
+class PointSource;
+class PointSourcePixmapItem;
 
 
 namespace Ui {
@@ -37,12 +42,12 @@ private:
     GridSettings myGrid;
     ReceiversGrid receivers;
     vector<PointSource *> pointSources;
-    QImage invertImageOnYAxes(const QImage &image);
+    vector<PointSourcePixmapItem *> pixmapPointSources;
     QHash<QString, QCursor> myCursors;
+    QImage invertImageOnYAxes(const QImage &image);
     void loadCursors();
     void loadDefaultGrid();
     bool calculateNoiseFromSources();
-
 
 protected:
     bool eventFilter(QObject *target, QEvent *event);

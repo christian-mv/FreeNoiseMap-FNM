@@ -12,12 +12,6 @@ public:
 protected:
 
 
-
-
-
-
-
-
 };
 
 #endif // MYGRAPHICSVIEW_H

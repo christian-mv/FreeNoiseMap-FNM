@@ -2,7 +2,6 @@
 #define POINTSOURCE_H
 
 
-
 class PointSource
 {
 public:

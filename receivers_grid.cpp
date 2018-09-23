@@ -151,6 +151,7 @@ void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid)
 //                        painter.restore();
         }
 
+        qApp->processEvents();
         progress.setValue(i);
     }
 
@@ -240,16 +241,4 @@ QRectF ReceiversGrid::receiverRect(const double x, const double y)
                       dy/n
                   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -4,5 +4,6 @@
         <file>icons/edit_mode_cursor.png</file>
         <file>icons/calculate_grid.png</file>
         <file>icons/grid.png</file>
+        <file>icons/app_icon.png</file>
     </qresource>
 </RCC>

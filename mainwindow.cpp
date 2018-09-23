@@ -1,11 +1,15 @@
 #include "mainwindow.h"
+#include "pointsource.h"
 #include "ui_mainwindow.h"
 #include "noise_engine.h"
+#include "pointsourcepixmapitem.h"
 #include <QDebug>
 #include <QDesktopWidget>
 #include <QMouseEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <QProgressDialog>
+#include <QMessageBox>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -13,7 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
-
+    setWindowIcon(QIcon(":/images/icons/app_icon.png"));
+    setWindowTitle(QString(MY_APP_NAME)+" - v"+QString(VERSION_OF_APP));
 
     loadCursors();
 
@@ -24,10 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     qApp->installEventFilter(this);
     ui->graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop );
     ui->graphicsView->centerOn(QPointF(0,0));
-    ui->graphicsView->scale(1.5,-1.5); // invert Y axes
-
-
-
+    ui->graphicsView->scale(1,-1); // invert Y axes
 
     ui->graphicsView->show();
 
@@ -52,10 +54,10 @@ void MainWindow::loadCursors()
 {
 
     myCursors["pointSource"] = QCursor(
-                QPixmap(":/images/icons/point_source.png").scaled(20,20,Qt::KeepAspectRatio) );
+                QPixmap(":/images/icons/point_source.png").scaled(20,20,Qt::KeepAspectRatio,Qt::SmoothTransformation));
 
     myCursors["grid"] = QCursor(
-                QPixmap(":/images/icons/grid.png").scaled(20,20,Qt::KeepAspectRatio) );
+                QPixmap(":/images/icons/grid.png").scaled(20,20,Qt::KeepAspectRatio,Qt::SmoothTransformation));
 
        myCursors["arrowCursor"] = QCursor(Qt::ArrowCursor);
 
@@ -65,7 +67,7 @@ void MainWindow::loadCursors()
 
 void MainWindow::loadDefaultGrid()
 {
-    myGrid.setRect(QRectF(0, 0, 300, 300));
+    myGrid.setRect(QRectF(0, 0, 800, 500));
     myGrid.setDeltaX(1);
     myGrid.setDeltaY(1);
     myGrid.setInterpolationFactor(1);
@@ -150,11 +152,27 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
           {
             QGraphicsSceneMouseEvent *sceneEvent = static_cast<QGraphicsSceneMouseEvent*>(event);
 
-            pointSources.push_back(new PointSource(
-                                       sceneEvent->scenePos().x(),
-                                       sceneEvent->scenePos().y(),
-                                       1.2,90));
+            PointSource *myPointSource = new PointSource(
+                        sceneEvent->scenePos().x(),
+                        sceneEvent->scenePos().y(),
+                        1.2,90);
+
+            pointSources.push_back(myPointSource);
+
+            // create pixmapItem for the noise source
+
+            QPixmap myPixmap(":/images/icons/point_source.png");
+            myPixmap = myPixmap.scaled(10,10,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+
+
+            PointSourcePixmapItem * myPixmapPointSource = new PointSourcePixmapItem();
+
+            myPixmapPointSource->setPixmap(myPixmap);
+            myPixmapPointSource->setPointSource(myPointSource);
+            scene.addItem(myPixmapPointSource);
+
           }
+
     }
     return false;
 }
@@ -180,9 +198,15 @@ void MainWindow::on_actiongrid_triggered()
 
 void MainWindow::on_actioncalculateGrid_triggered()
 {
-
     receivers.resetNoiseReceiver();
-    calculateNoiseFromSources();
+
+    if(!calculateNoiseFromSources()){
+        QMessageBox::warning(this, tr("My Application"),
+                                       tr("No sources available\n"
+                                          "Please enter noise sources"),QMessageBox::Ok);
+        return;
+    }
+
     receivers.paintGrid(*image, myGrid);
     image->save("../test.png", "PNG");
 
