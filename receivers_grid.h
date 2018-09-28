@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <QPainter>
+#include <QObject>
 #include "grid_settings.h"
 #include "single_receiver.h"
 #include "gradientcolor.h"
@@ -19,8 +20,8 @@ public:
     ReceiversGrid(const GridSettings &gridSettings);
     void setGrid(const GridSettings &gridSettings);
     void setGradient(const GradientColor gradientColor);
-    void paintGrid(QImage &image, const GridSettings &myGrid);
-
+    void paintGrid(QImage &image, const GridSettings &myGrid, QWidget *progressDialogFather = nullptr);
+#include <QObject>
     void setNoiseColor(const double Leq, QColor * colorDecibell);
     std::vector< std::vector<SingleReceiver *> > matrix;
     GridSettings getGridSettings()const {return this->gridSettings;}

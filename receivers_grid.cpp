@@ -69,7 +69,7 @@ void ReceiversGrid::setMatrixOfReceivers(unsigned int n, unsigned int m)
     }
 }
 
-void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid)
+void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QWidget *progressDialogFather)
 {
 
     NoiseEngine::interpolateGrid(this);
@@ -108,9 +108,9 @@ void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid)
     SingleReceiver *r;
 
 
-    QProgressDialog progress;
+    QProgressDialog progress(progressDialogFather);
     progress.setWindowModality(Qt::WindowModal);
-//    progress.setWindowTitle(QObject::tr("NAME APP"));
+    progress.setWindowTitle(progressDialogFather->windowTitle());
     progress.setLabelText(QObject::tr("Painting grid..."));
     progress.setMinimum(0);
     progress.setMaximum(matrix.size()- 1);
@@ -119,6 +119,9 @@ void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid)
 
 
     for(int i = 0; i<matrix.size(); i++){
+
+        if(progress.wasCanceled()){break;}
+
         for(int j = 0; j<matrix.at(i).size(); j++){
 
             r = matrix.at(i).at(j);
@@ -126,8 +129,6 @@ void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid)
             setNoiseColor(r->get_Leq(), &decibelColor);
             painter.setBrush(QBrush(decibelColor));
             painter.drawRect(receiverRect(r));
-
-
 
 //             if(!r->isInterpolated()){
 //                 painter.drawEllipse(r->get_x(), r->get_y(), 1,1); // central points on rectangles

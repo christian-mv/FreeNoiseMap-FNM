@@ -67,10 +67,10 @@ void MainWindow::loadCursors()
 
 void MainWindow::loadDefaultGrid()
 {
-    myGrid.setRect(QRectF(0, 0, 800, 500));
-    myGrid.setDeltaX(1);
-    myGrid.setDeltaY(1);
-    myGrid.setInterpolationFactor(1);
+    myGrid.setRect(QRectF(0, 0, 1000, 600));
+    myGrid.setDeltaX(0.5);
+    myGrid.setDeltaY(0.5);
+    myGrid.setInterpolationFactor(2);
     receivers.setGrid(myGrid);
 
     // create and image which its resolution depends on the screen resolution (tested with 1360X768 screen)
@@ -101,13 +101,9 @@ void MainWindow::loadDefaultGrid()
 
 bool MainWindow::calculateNoiseFromSources()
 {
-    if(pointSources.size() == 0){
-        return false;
-    }
-
     QProgressDialog progress(this);
     progress.setWindowModality(Qt::WindowModal);
-//    progress.setWindowTitle(QObject::tr("NAME APP"));
+    progress.setWindowTitle(this->windowTitle());
     progress.setLabelText(QObject::tr("Calculating..."));
     progress.setMinimum(0);
     progress.setMaximum(receivers.matrix.size()- 1);
@@ -115,6 +111,9 @@ bool MainWindow::calculateNoiseFromSources()
 
 
     for(int i = 0; i<receivers.matrix.size(); i++){
+        if(progress.wasCanceled()){
+            return false;
+        }
         for(auto currentReceiver : receivers.matrix.at(i)){
             for(auto currentSource : pointSources){
                 NoiseEngine::P2P(currentSource, currentReceiver);
@@ -199,16 +198,21 @@ void MainWindow::on_actioncalculateGrid_triggered()
 {
     receivers.resetNoiseReceiver();
 
-    if(!calculateNoiseFromSources()){
+
+    if(pointSources.size() == 0){
         QMessageBox::warning(this, tr("My Application"),
                                        tr("No sources available\n"
                                           "Please enter noise sources"),QMessageBox::Ok);
         return;
     }
 
-    receivers.paintGrid(*image, myGrid);
-    image->save("../test.png", "PNG");
 
+    if(!calculateNoiseFromSources()){
+        return;
+    }
+
+    receivers.paintGrid(*image, myGrid, this);
 
     pixmapItem.setPixmap(QPixmap::fromImage( invertImageOnYAxes(*image) ));
+        image->save("../test.png", "PNG");
 }
