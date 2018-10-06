@@ -49,6 +49,7 @@ private:
     void loadCursors();
     void loadDefaultGrid();
     bool calculateNoiseFromSources(QProgressDialog &progress);
+    void resetPixmapArea();
 
 protected:
     bool eventFilter(QObject *target, QEvent *event);

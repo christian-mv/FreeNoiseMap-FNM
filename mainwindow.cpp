@@ -68,15 +68,24 @@ void MainWindow::loadCursors()
 void MainWindow::loadDefaultGrid()
 {
     myGrid.setRect(QRectF(0, 0, 1000, 600));
-    myGrid.setDeltaX(1);
-    myGrid.setDeltaY(1);
+    myGrid.setDeltaX(5);
+    myGrid.setDeltaY(5);
     myGrid.setInterpolationFactor(2);
     receivers.setGrid(myGrid);
 
-    // create and image which its resolution depends on the screen resolution (tested with 1360X768 screen)
+    resetPixmapArea();
+
+    scene.setBackgroundBrush(Qt::darkGray);
+    scene.addItem(&pixmapItem);
+    pixmapItem.setPos(myGrid.get_x(), myGrid.get_y());
+
+
+}
+
+void MainWindow::resetPixmapArea(){
+
     qreal side = qMin(myGrid.getRect().width(), myGrid.getRect().height());
     qreal side2 = qMax(qApp->desktop()->width(), qApp->desktop()->height());
-
 
     image = new QImage(static_cast<int>( side2*myGrid.getRect().width()/side ),
                  static_cast<int>( side2*myGrid.getRect().height()/side ),
@@ -84,19 +93,9 @@ void MainWindow::loadDefaultGrid()
     image->fill(Qt::white);
 
 
-
-    image->save("../test.png", "PNG");
-
-
     pixmapItem.setPixmap(QPixmap::fromImage( invertImageOnYAxes(*image) ));
 
     pixmapItem.setScale(side/side2); // to represent the real size in the scene
-
-    scene.setBackgroundBrush(Qt::darkGray);
-    scene.addItem(&pixmapItem);
-    pixmapItem.setPos(myGrid.get_x(), myGrid.get_y());
-
-
 }
 
 bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
@@ -186,6 +185,7 @@ void MainWindow::on_actiongrid_triggered()
 
 void MainWindow::on_actioncalculateGrid_triggered()
 {
+    resetPixmapArea();
     receivers.resetNoiseReceiver();
 
 
@@ -201,7 +201,7 @@ void MainWindow::on_actioncalculateGrid_triggered()
     progress.setWindowTitle(this->windowTitle());
     progress.setLabelText(QObject::tr("Calculating..."));
     progress.setMinimum(0);
-    progress.setMaximum(receivers.matrix.size()+1);
+    progress.setMaximum(receivers.matrix.size());
     progress.show();
 
     if(!calculateNoiseFromSources(progress)){
@@ -211,9 +211,7 @@ void MainWindow::on_actioncalculateGrid_triggered()
     progress.setLabelText(QObject::tr("Painting Grid..."));
     receivers.paintGrid(*image, myGrid, progress);
 
-
     progress.setValue(progress.maximum());
-    qApp->processEvents();
 
     pixmapItem.setPixmap(QPixmap::fromImage( invertImageOnYAxes(*image) ));
 

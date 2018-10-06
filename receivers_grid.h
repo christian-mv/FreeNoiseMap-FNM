@@ -27,6 +27,8 @@ public:
     std::vector< std::vector<SingleReceiver *> > matrix;
     GridSettings getGridSettings()const {return this->gridSettings;}
     void resetNoiseReceiver();
+    string gridStatistics();
+
 
 
 
@@ -37,6 +39,8 @@ private:
     QRectF receiverRect(SingleReceiver * receiver);
     QRectF receiverRect(const double x, const double y);
     GradientColor gradientColor;
+    void interpolateGrid();
+    void clearInterpolatedReceivers();
 
 
 

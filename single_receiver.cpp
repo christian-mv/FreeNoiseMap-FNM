@@ -7,3 +7,8 @@ SingleReceiver::SingleReceiver(double in_x, double in_y,
 {
 
 }
+
+SingleReceiver::~SingleReceiver()
+{
+//    qDebug()<<"killing Receiver: "<<this;
+}

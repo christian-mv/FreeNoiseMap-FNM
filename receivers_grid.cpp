@@ -45,9 +45,9 @@ void ReceiversGrid::setGrid(const GridSettings &gridSettings)
         for(unsigned int j = 0; j < nColumns; j++){
 //            qDebug()<<i<<" , "<<j;
             matrix.at(j).at(i) = new SingleReceiver(gridSettings.getLeft()
-                                                    + i*gridSettings.getDeltaX()
-                                                    , gridSettings.getTop()
-                                                    +j*gridSettings.getDeltaY()); //matrix.[i][j];
+                                                    + i*gridSettings.getDeltaX(),
+                                                    gridSettings.getTop()+j*gridSettings.getDeltaY(),
+                                                    false); //matrix.[i][j];
 //            qDebug()<<matrix.at(j).at(i)->get_x()<<" , " <<matrix.at(j).at(i)->get_y();
         }
     }
@@ -72,10 +72,11 @@ void ReceiversGrid::setMatrixOfReceivers(unsigned int n, unsigned int m)
 void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QProgressDialog &progress)
 {
 
-    NoiseEngine::interpolateGrid(this);
+    interpolateGrid();
 
+    // it is necessary redefine the maximum steps of the progress dialog since interpolation
+    // could change the size of matriz
     progress.setMaximum(matrix.size()+1);
-
 
     QPainter painter(&image);
 
@@ -86,12 +87,10 @@ void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QProgre
 
     painter.scale(1, -1);
 
-
     painter.save();
 
 //    // set logical coordinates according to gridSettings area
     painter.setWindow(gridSettings.getRect().toRect());
-
 
 
     // set paint properties
@@ -123,7 +122,6 @@ void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QProgre
 //             }
 
 
-
 //             // next block draws text on each rectangle (optional)
 //                        painter.save();
 //                        painter.scale(1, -1);
@@ -145,7 +143,7 @@ void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QProgre
     }
 
     painter.restore();
-
+    clearInterpolatedReceivers();
 }
 
 void ReceiversGrid::setNoiseColor(const double Leq, QColor * colorDecibell)
@@ -204,8 +202,144 @@ void ReceiversGrid::resetNoiseReceiver()
     }
 }
 
+string ReceiversGrid::gridStatistics()
+{
+    unsigned int countInterpolated = 0;
+    unsigned int countNoInterpolated = 0;
+    for(auto row: matrix){
+        for(auto receiver: row)
+            if(receiver->isInterpolated()){
+                countInterpolated++;
+            }
+            else
+            {
+                countNoInterpolated++;
+            }
+    }
+
+    string result;
+
+    result = "interpolated receivers: " + std::to_string(countInterpolated)
+            +" no interpolated receivers: " + std::to_string(countInterpolated) ;
+
+    return result;
+}
+
+void ReceiversGrid::interpolateGrid()
+{
+    unsigned int factor = getGridSettings().getInterpolatorFactor();
+    if(factor<=1){return;}
+
+    SingleReceiver interpolatedReceiver;
+    SingleReceiver *r;
+    vector<SingleReceiver *> temprow;
+    vector<vector<SingleReceiver *>> tempMatrix; // esto es una matriz intermedia de receptores
+
+    double dx = getGridSettings().getDeltaX()/factor;
+    double dy = getGridSettings().getDeltaY()/factor;
+    double Leqx_temp; // here store interpolated Leq on x axes.
+    double Leqy_temp; // here store interpolated Leq on y axes.
+
+    //  interpolated rectangles on x axes
+    for(int i = 0; i<matrix.size(); i++){
+        for(int j = 0; j<matrix.at(i).size(); j=j+factor){
+
+            r = matrix.at(i).at(j);
+            if(j<matrix.at(i).size()-1){
+                for(int k=1; k<factor; k++){
+
+                    NoiseEngine::interpolationValueAt(r->get_x(),
+                                                      r->get_Leq(),
+                                                      r->get_x()+k*dx,
+                                                      Leqx_temp,
+                                                      matrix.at(i).at(j+1)->get_x(),
+                                                      matrix.at(i).at(j+1)->get_Leq());
 
 
+                    matrix.at(i).insert(matrix.at(i).begin()+j+1,
+                                                   new SingleReceiver(r->get_x()+k*dx,
+                                                                      r->get_y(),
+                                                                      r->get_z(),
+                                                                      Leqx_temp,true));
+                } // for k
+            }// if
+        } // for j
+    } // for i
+
+
+
+
+    // interpolated rectangles on y axes
+
+    std::vector<SingleReceiver *> centinel = matrix.back();
+
+    for(int i = 0; ; i=i+factor){
+
+        if(matrix.at(i) == centinel) // beak when the last row is reached
+        {
+            break;
+        }
+        for(int k=1; k<factor; k++){
+            for(int j = 0; j<matrix.at(i).size(); j++){
+
+                r = matrix.at(i).at(j);
+
+                NoiseEngine::interpolationValueAt(r->get_y(),
+                                                  r->get_Leq(),
+                                                  r->get_y()+k*dy,
+                                                  Leqy_temp,
+                                                  matrix.at(i+1).at(j)->get_y(),
+                                                  matrix.at(i+1).at(j)->get_Leq());
+
+
+                temprow.push_back(new SingleReceiver(r->get_x(),
+                                                     r->get_y()+k*dy,
+                                                     r->get_z(),
+                                                     Leqy_temp,true));
+
+            } // for: k
+
+            tempMatrix.push_back(temprow);
+            temprow.clear();
+
+        }//
+        matrix.insert(matrix.begin()+i,tempMatrix.begin(), tempMatrix.end());
+        tempMatrix.clear();
+    } //
+}
+
+void ReceiversGrid::clearInterpolatedReceivers()
+{
+    // delete full interpolated rows
+    int i = 0;
+    std::vector<SingleReceiver *> row = matrix.at(i);
+    while(row != matrix.back()){
+        // delete rows of full interpolated receivers
+        if(row.at(0)->isInterpolated()){
+            matrix.erase(matrix.begin() + i);
+            row = matrix.at(i);
+            continue;
+        }
+        ++i;
+        row = matrix.at(i);
+    }
+
+    // delete interpolated receivers located in between of no-interpolated receivers
+    for(int i=0; i<matrix.size(); i++){
+        int j = 0;
+        auto tempReceiver = matrix.at(i).at(j);
+        while(tempReceiver != matrix.at(i).back()){
+            if(tempReceiver->isInterpolated()){
+                matrix.at(i).erase(matrix.at(i).begin() + j);
+                tempReceiver = matrix.at(i).at(j);
+                continue;
+            }
+            j++;
+            tempReceiver = matrix.at(i).at(j);
+        }
+    }
+
+}
 
 
 QRectF  ReceiversGrid::receiverRect(SingleReceiver * receiver)

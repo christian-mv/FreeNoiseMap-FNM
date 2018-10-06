@@ -1,6 +1,6 @@
 #ifndef SINGLE_RECEIVER_H
 #define SINGLE_RECEIVER_H
-
+#include <QDebug>
 
 class SingleReceiver
 {
@@ -9,6 +9,7 @@ public:
     explicit SingleReceiver(double in_x=0.0, double in_y=0.0,
                             double in_z=0.0, double in_Leq=-88.0,
                              bool interpolated = false);
+    ~SingleReceiver();
 
     void set_x(const double &x){this->x = x;}
     void set_y(const double &y){this->y = y;}
