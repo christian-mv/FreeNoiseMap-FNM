@@ -14,6 +14,7 @@
 
 class PointSource;
 class PointSourcePixmapItem;
+class QProgressDialog;
 
 
 namespace Ui {
@@ -47,7 +48,7 @@ private:
     QImage invertImageOnYAxes(const QImage &image);
     void loadCursors();
     void loadDefaultGrid();
-    bool calculateNoiseFromSources();
+    bool calculateNoiseFromSources(QProgressDialog &progress);
 
 protected:
     bool eventFilter(QObject *target, QEvent *event);

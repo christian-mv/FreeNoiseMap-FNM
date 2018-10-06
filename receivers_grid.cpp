@@ -69,10 +69,12 @@ void ReceiversGrid::setMatrixOfReceivers(unsigned int n, unsigned int m)
     }
 }
 
-void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QWidget *progressDialogFather)
+void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QProgressDialog &progress)
 {
 
     NoiseEngine::interpolateGrid(this);
+
+    progress.setMaximum(matrix.size()+1);
 
 
     QPainter painter(&image);
@@ -81,9 +83,6 @@ void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QWidget
 
     painter.translate(-myGrid.getRect().left() /*+ myGrid.getDeltaX()/2*/,
                       myGrid.getRect().top() /*- myGrid.getDeltaY()/2*/);
-
-
-
 
     painter.scale(1, -1);
 
@@ -106,17 +105,6 @@ void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QWidget
     QBrush brush;
     SingleReceiver interpolatedReceiver;
     SingleReceiver *r;
-
-
-    QProgressDialog progress(progressDialogFather);
-    progress.setWindowModality(Qt::WindowModal);
-    progress.setWindowTitle(progressDialogFather->windowTitle());
-    progress.setLabelText(QObject::tr("Painting grid..."));
-    progress.setMinimum(0);
-    progress.setMaximum(matrix.size()- 1);
-    progress.show();
-
-
 
     for(int i = 0; i<matrix.size(); i++){
 
@@ -155,9 +143,6 @@ void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QWidget
         qApp->processEvents();
         progress.setValue(i);
     }
-
-
-    progress.setValue( progress.maximum() );
 
     painter.restore();
 

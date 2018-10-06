@@ -68,8 +68,8 @@ void MainWindow::loadCursors()
 void MainWindow::loadDefaultGrid()
 {
     myGrid.setRect(QRectF(0, 0, 1000, 600));
-    myGrid.setDeltaX(0.5);
-    myGrid.setDeltaY(0.5);
+    myGrid.setDeltaX(1);
+    myGrid.setDeltaY(1);
     myGrid.setInterpolationFactor(2);
     receivers.setGrid(myGrid);
 
@@ -99,17 +99,8 @@ void MainWindow::loadDefaultGrid()
 
 }
 
-bool MainWindow::calculateNoiseFromSources()
-{
-    QProgressDialog progress(this);
-    progress.setWindowModality(Qt::WindowModal);
-    progress.setWindowTitle(this->windowTitle());
-    progress.setLabelText(QObject::tr("Calculating..."));
-    progress.setMinimum(0);
-    progress.setMaximum(receivers.matrix.size()- 1);
-    progress.show();
-
-
+bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
+{    
     for(int i = 0; i<receivers.matrix.size(); i++){
         if(progress.wasCanceled()){
             return false;
@@ -123,7 +114,6 @@ bool MainWindow::calculateNoiseFromSources()
         progress.setValue(i);
         qApp->processEvents();
     }
-    progress.setValue( progress.maximum() );
     return true;
 }
 
@@ -206,13 +196,28 @@ void MainWindow::on_actioncalculateGrid_triggered()
         return;
     }
 
+    QProgressDialog progress(this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.setWindowTitle(this->windowTitle());
+    progress.setLabelText(QObject::tr("Calculating..."));
+    progress.setMinimum(0);
+    progress.setMaximum(receivers.matrix.size()+1);
+    progress.show();
 
-    if(!calculateNoiseFromSources()){
+    if(!calculateNoiseFromSources(progress)){
         return;
     }
 
-    receivers.paintGrid(*image, myGrid, this);
+    progress.setLabelText(QObject::tr("Painting Grid..."));
+    receivers.paintGrid(*image, myGrid, progress);
+
+
+    progress.setValue(progress.maximum());
+    qApp->processEvents();
 
     pixmapItem.setPixmap(QPixmap::fromImage( invertImageOnYAxes(*image) ));
-        image->save("../test.png", "PNG");
+
+
+
+//    image->save("../test.png", "PNG");
 }

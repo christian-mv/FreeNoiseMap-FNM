@@ -9,6 +9,7 @@
 #include "single_receiver.h"
 #include "gradientcolor.h"
 
+class  QProgressDialog;
 
 
 using namespace std;
@@ -20,7 +21,7 @@ public:
     ReceiversGrid(const GridSettings &gridSettings);
     void setGrid(const GridSettings &gridSettings);
     void setGradient(const GradientColor gradientColor);
-    void paintGrid(QImage &image, const GridSettings &myGrid, QWidget *progressDialogFather = nullptr);
+    void paintGrid(QImage &image, const GridSettings &myGrid,  QProgressDialog &progress);
 #include <QObject>
     void setNoiseColor(const double Leq, QColor * colorDecibell);
     std::vector< std::vector<SingleReceiver *> > matrix;
