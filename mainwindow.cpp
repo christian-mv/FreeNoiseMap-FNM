@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
+    setCentralWidget(ui->graphicsView);
     setWindowIcon(QIcon(":/images/icons/app_icon.png"));
     setWindowTitle(QString(MY_APP_NAME)+" - v"+QString(VERSION_OF_APP));
 
@@ -27,9 +28,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setScene(&scene);
     ui->graphicsView->setMouseTracking(true); // enabling mouse track on a scene when not pressing mouse
     qApp->installEventFilter(this);
-    ui->graphicsView->setAlignment(Qt::AlignLeft | Qt::AlignTop );
+
     ui->graphicsView->centerOn(QPointF(0,0));
     ui->graphicsView->scale(1,-1); // invert Y axes
+
 
     ui->graphicsView->show();
 
@@ -153,15 +155,19 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             myPixmap = myPixmap.scaled(10,10,Qt::KeepAspectRatio,Qt::SmoothTransformation);
 
 
-            PointSourcePixmapItem * myPixmapPointSource = new PointSourcePixmapItem();
+            PointSourcePixmapItem * myPixmapPointSourceItem = new PointSourcePixmapItem();
 
-            myPixmapPointSource->setPixmap(myPixmap);
-            myPixmapPointSource->setPointSource(myPointSource);
-            scene.addItem(myPixmapPointSource);
+            myPixmapPointSourceItem->setPixmap(myPixmap);
+            myPixmapPointSourceItem->setPointSource(myPointSource);
+
+            scene.addItem(myPixmapPointSourceItem);
+
 
           }
 
     }
+
+
     return false;
 }
 

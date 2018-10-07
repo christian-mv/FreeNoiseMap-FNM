@@ -10,6 +10,7 @@ public:
     MyGraphicsView(QWidget *parent = nullptr);
 
 protected:
+    virtual void wheelEvent(QWheelEvent *event);
 
 
 };
