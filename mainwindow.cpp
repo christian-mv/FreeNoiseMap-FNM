@@ -61,9 +61,11 @@ void MainWindow::loadCursors()
     myCursors["grid"] = QCursor(
                 QPixmap(":/images/icons/grid.png").scaled(20,20,Qt::KeepAspectRatio,Qt::SmoothTransformation));
 
-       myCursors["arrowCursor"] = QCursor(Qt::ArrowCursor);
+       myCursors["editMode"] = QCursor(Qt::ArrowCursor);
 
-       myCursors["grid_edit"] = QCursor(Qt::CrossCursor);
+       myCursors["gridMode"] = QCursor(Qt::CrossCursor);
+
+       myCursors["dragMode"] = QCursor(Qt::OpenHandCursor);
 
 }
 
@@ -72,7 +74,7 @@ void MainWindow::loadDefaultGrid()
     myGrid.setRect(QRectF(0, 0, 1000, 600));
     myGrid.setDeltaX(5);
     myGrid.setDeltaY(5);
-    myGrid.setInterpolationFactor(2);
+    myGrid.setInterpolationFactor(1);
     receivers.setGrid(myGrid);
 
     resetPixmapArea();
@@ -125,12 +127,11 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
 
 bool MainWindow::eventFilter(QObject *target, QEvent *event)
 {
+
     if(target == &scene){
-        if (event->type() == QEvent::GraphicsSceneMouseMove)
+        QGraphicsSceneMouseEvent *sceneEvent = static_cast<QGraphicsSceneMouseEvent*>(event);
+        if (sceneEvent->type() == QEvent::GraphicsSceneMouseMove)
           {
-            QGraphicsSceneMouseEvent *sceneEvent = static_cast<QGraphicsSceneMouseEvent*>(event);
-
-
             QString str = QString("x: %1 m, y: %2 m")
                                     .arg(sceneEvent->scenePos().x())
                                     .arg(sceneEvent->scenePos().y());
@@ -138,9 +139,10 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             statusBar()->showMessage(str);
           }
 
-        else if (event->type() == QEvent::GraphicsSceneMousePress && ui->graphicsView->cursor()==myCursors["pointSource"])
+        else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
+                 && sceneEvent->button() == Qt::LeftButton
+                 && ui->graphicsView->cursor()==myCursors["pointSource"])
           {
-            QGraphicsSceneMouseEvent *sceneEvent = static_cast<QGraphicsSceneMouseEvent*>(event);
 
             PointSource *myPointSource = new PointSource(
                         sceneEvent->scenePos().x(),
@@ -152,7 +154,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             // create pixmapItem for the noise source
 
             QPixmap myPixmap(":/images/icons/point_source.png");
-            myPixmap = myPixmap.scaled(10,10,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+            myPixmap = myPixmap.scaled(15,15,Qt::KeepAspectRatio,Qt::SmoothTransformation);
 
 
             PointSourcePixmapItem * myPixmapPointSourceItem = new PointSourcePixmapItem();
@@ -162,11 +164,8 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
             scene.addItem(myPixmapPointSourceItem);
 
-
           }
-
     }
-
 
     return false;
 }
@@ -181,16 +180,17 @@ void MainWindow::on_actionAdd_point_source_triggered()
 
 void MainWindow::on_actioneditMode_triggered()
 {
-    ui->graphicsView->setCursor(myCursors["arroCursor"]);
+    ui->graphicsView->setCursor(myCursors["editMoed"]);
 }
 
 void MainWindow::on_actiongrid_triggered()
 {
-    ui->graphicsView->setCursor(myCursors["grid_edit"]);
+    ui->graphicsView->setCursor(myCursors["gridMode"]);
 }
 
 void MainWindow::on_actioncalculateGrid_triggered()
 {
+    ui->graphicsView->setCursor(myCursors["editMoed"]);
     resetPixmapArea();
     receivers.resetNoiseReceiver();
 
@@ -215,13 +215,19 @@ void MainWindow::on_actioncalculateGrid_triggered()
     }
 
     progress.setLabelText(QObject::tr("Painting Grid..."));
-    receivers.paintGrid(*image, myGrid, progress);
 
-    progress.setValue(progress.maximum());
+    receivers.interpolateGrid(); // calculate interpolated receivers
+    receivers.paintGrid(*image, myGrid, progress);
+    receivers.clearInterpolatedReceivers(); // clean memory
 
     pixmapItem.setPixmap(QPixmap::fromImage( invertImageOnYAxes(*image) ));
 
 
 
 //    image->save("../test.png", "PNG");
+}
+
+void MainWindow::on_actiondrag_mode_triggered()
+{
+    ui->graphicsView->setCursor(myCursors["dragMode"]);
 }

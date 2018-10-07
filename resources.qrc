@@ -5,5 +5,6 @@
         <file>icons/calculate_grid.png</file>
         <file>icons/grid.png</file>
         <file>icons/app_icon.png</file>
+        <file>icons/drag_mode.png</file>
     </qresource>
 </RCC>

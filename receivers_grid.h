@@ -21,26 +21,23 @@ public:
     ReceiversGrid(const GridSettings &gridSettings);
     void setGrid(const GridSettings &gridSettings);
     void setGradient(const GradientColor gradientColor);
-    void paintGrid(QImage &image, const GridSettings &myGrid,  QProgressDialog &progress);
+    bool paintGrid(QImage &image, const GridSettings &myGrid,  QProgressDialog &progress);
 #include <QObject>
     void setNoiseColor(const double Leq, QColor * colorDecibell);
     std::vector< std::vector<SingleReceiver *> > matrix;
     GridSettings getGridSettings()const {return this->gridSettings;}
     void resetNoiseReceiver();
     string gridStatistics();
-
-
-
+    void interpolateGrid();
+    void clearInterpolatedReceivers();
 
 private:
-
     GridSettings gridSettings;
     void setMatrixOfReceivers(unsigned int n, unsigned int m);
     QRectF receiverRect(SingleReceiver * receiver);
     QRectF receiverRect(const double x, const double y);
     GradientColor gradientColor;
-    void interpolateGrid();
-    void clearInterpolatedReceivers();
+
 
 
 

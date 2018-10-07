@@ -69,10 +69,10 @@ void ReceiversGrid::setMatrixOfReceivers(unsigned int n, unsigned int m)
     }
 }
 
-void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QProgressDialog &progress)
+bool ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QProgressDialog &progress)
 {
 
-    interpolateGrid();
+
 
     // it is necessary redefine the maximum steps of the progress dialog since interpolation
     // could change the size of matriz
@@ -87,7 +87,7 @@ void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QProgre
 
     painter.scale(1, -1);
 
-    painter.save();
+
 
 //    // set logical coordinates according to gridSettings area
     painter.setWindow(gridSettings.getRect().toRect());
@@ -107,7 +107,10 @@ void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QProgre
 
     for(int i = 0; i<matrix.size(); i++){
 
-        if(progress.wasCanceled()){break;}
+        if(progress.wasCanceled()){
+            progress.close();
+            return false;
+        }
 
         for(int j = 0; j<matrix.at(i).size(); j++){
 
@@ -117,33 +120,13 @@ void ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QProgre
             painter.setBrush(QBrush(decibelColor));
             painter.drawRect(receiverRect(r));
 
-//             if(!r->isInterpolated()){
-//                 painter.drawEllipse(r->get_x(), r->get_y(), 1,1); // central points on rectangles
-//             }
-
-
-//             // next block draws text on each rectangle (optional)
-//                        painter.save();
-//                        painter.scale(1, -1);
-
-//                        QPen pen(Qt::SolidLine);
-
-//                        painter.setFont(QFont("Times", 4));
-//                        painter.setPen(pen);
-
-//             painter.drawText(static_cast<int>(receiverRect(r).x()),
-//                               static_cast<int>(-receiverRect(r).center().y()),
-//                               "(x:" + QString::number(r->get_x())+" , y:" +
-//                               QString::number(r->get_y()) + ") ");
-//                        painter.restore();
         }
 
         qApp->processEvents();
         progress.setValue(i);
     }
-
-    painter.restore();
-    clearInterpolatedReceivers();
+    progress.close();
+    return true;
 }
 
 void ReceiversGrid::setNoiseColor(const double Leq, QColor * colorDecibell)

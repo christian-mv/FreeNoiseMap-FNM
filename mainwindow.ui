@@ -46,6 +46,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actioneditMode"/>
+   <addaction name="actiondrag_mode"/>
    <addaction name="actionAdd_point_source"/>
    <addaction name="actiongrid"/>
   </widget>
@@ -107,6 +108,15 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actiondrag_mode">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/icons/drag_mode.png</normaloff>:/images/icons/drag_mode.png</iconset>
+   </property>
+   <property name="text">
+    <string>drag mode</string>
    </property>
   </action>
  </widget>

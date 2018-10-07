@@ -35,6 +35,8 @@ private slots:
     void on_actiongrid_triggered();
     void on_actioncalculateGrid_triggered();
 
+    void on_actiondrag_mode_triggered();
+
 private:
     Ui::MainWindow *ui;
     MyGraphicsScene scene;
