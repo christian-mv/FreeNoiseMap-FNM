@@ -139,7 +139,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             statusBar()->showMessage(str);
           }
 
-        else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
+        else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
                  && sceneEvent->button() == Qt::LeftButton
                  && ui->graphicsView->cursor()==myCursors["pointSource"])
           {

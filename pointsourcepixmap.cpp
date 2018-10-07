@@ -13,6 +13,7 @@ PointSourcePixmapItem::PointSourcePixmapItem()
     // avoid to scale the item
     setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
     setFlag(QGraphicsItem::ItemIsMovable, true);
+    setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
 }
 
 void PointSourcePixmapItem::setPointSource(PointSource *source)
@@ -47,10 +48,17 @@ void PointSourcePixmapItem::paint(QPainter *painter, const QStyleOptionGraphicsI
 //    painter->restore();
 
     QGraphicsPixmapItem::paint(painter, option, widget);
-
-
 }
 
+QVariant PointSourcePixmapItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+{
 
-
+    if (change == ItemPositionChange && scene()) {
+        // value is the new position.
+        QPointF newPos = value.toPointF();
+        source->set_x(newPos.x());
+        source->set_y(newPos.y());
+    }
+    return QGraphicsItem::itemChange(change, value);
+}
 

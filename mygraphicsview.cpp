@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QPointF>
 #include <QScrollBar>
+#include <QGraphicsItem>
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):
     QGraphicsView(parent)
@@ -14,11 +15,22 @@ MyGraphicsView::MyGraphicsView(QWidget *parent):
 
 void MyGraphicsView::setCursor(const QCursor &newCursor)
 {
-    if(newCursor == Qt::OpenHandCursor){
+    QList<QGraphicsItem *> sceneItems = items();
+    if(newCursor == Qt::OpenHandCursor){        
         setDragMode(ScrollHandDrag);
+        for(auto item: sceneItems){
+
+            item->setFlag(QGraphicsItem::ItemIsMovable, false);
+        }
 
     }else{
         setDragMode(NoDrag);
+        for(auto item: sceneItems){
+            if(item->type() != 65536){ // 65536 represents our MyRasterPixmapItemArea
+                item->setFlag(QGraphicsItem::ItemIsMovable, true);
+            }
+        }
+
     }
 
     QGraphicsView::setCursor(newCursor);

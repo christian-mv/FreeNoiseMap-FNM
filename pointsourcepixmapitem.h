@@ -15,7 +15,12 @@ private:
     PointSource *source;
 
 protected:
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paint(QPainter *painter,
+               const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+
 
 
 };

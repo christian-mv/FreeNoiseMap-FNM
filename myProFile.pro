@@ -33,7 +33,8 @@ SOURCES += \
     noise_engine.cpp \
     mygraphicsview.cpp \
     mygraphicsscene.cpp \
-    pointsourcepixmap.cpp
+    pointsourcepixmap.cpp \
+    myrasterpixmapitemarea.cpp
 
 HEADERS += \
     receivers_grid.h \
@@ -45,7 +46,8 @@ HEADERS += \
     mainwindow.h \
     mygraphicsview.h \
     mygraphicsscene.h \
-    pointsourcepixmapitem.h
+    pointsourcepixmapitem.h \
+    myrasterpixmapitemarea.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
