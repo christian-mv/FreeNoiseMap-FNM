@@ -11,6 +11,10 @@ public:
     virtual int	type() const override;
 
 
+    virtual void paint(QPainter *painter,
+                       const QStyleOptionGraphicsItem *option,
+                       QWidget *widget) override;
+
 };
 
 #endif // MYRASTERPIXMAPITEMAREA_H
