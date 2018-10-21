@@ -1,7 +1,7 @@
 #include "noise_engine.h"
 #include <cstdlib>
 #include <ctime>
-#include <math.h>
+#include <cmath>
 #include <QtDebug>
 using namespace std;
 
