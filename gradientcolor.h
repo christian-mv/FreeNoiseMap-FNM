@@ -3,8 +3,10 @@
 
 #include <tuple>
 #include <vector>
-#define STEP tuple<double, double, double, double>
+#include <QVector>
+
 #define COLOR_RGB tuple<double, double, double>
+
 
 
 using namespace std;
@@ -20,12 +22,12 @@ public:
     void addStep(double red, double green, double blue, double value);
     void sortStepsAscending();
     COLOR_RGB colorAt(const double &Leq);
-    vector<STEP> getSteps() const;
+    QVector<tuple<double, double, double, double>> getSteps() const;
 
 
 private:
     // we store "value" three times for simplicity
-    vector<STEP> steps;
+    QVector <tuple<double, double, double, double>> steps;
     COLOR_RGB interpolateColor(const double &r1,
                                const double &g1,
                                const double &b1,

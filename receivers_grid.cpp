@@ -185,28 +185,31 @@ void ReceiversGrid::resetNoiseReceiver()
     }
 }
 
-string ReceiversGrid::gridStatistics()
-{
-    unsigned int countInterpolated = 0;
-    unsigned int countNoInterpolated = 0;
-    for(auto row: matrix){
-        for(auto receiver: row)
-            if(receiver->isInterpolated()){
-                countInterpolated++;
-            }
-            else
-            {
-                countNoInterpolated++;
-            }
-    }
 
-    string result;
 
-    result = "interpolated receivers: " + std::to_string(countInterpolated)
-            +" no interpolated receivers: " + std::to_string(countInterpolated) ;
+//string ReceiversGrid::gridStatistics()
+//{
+//    unsigned int countInterpolated = 0;
+//    unsigned int countNoInterpolated = 0;
+//    for(auto row: matrix){
+//        for(auto receiver: row)
+//            if(receiver->isInterpolated()){
+//                countInterpolated++;
+//            }
+//            else
+//            {
+//                countNoInterpolated++;
+//            }
+//    }
 
-    return result;
-}
+//    string result;
+
+//    // to_string() is not supported for android NDK
+//    result = "interpolated receivers: " + countInterpolated
+//            +" no interpolated receivers: " + countInterpolated ;
+
+//    return result;
+//}
 
 void ReceiversGrid::interpolateGrid()
 {

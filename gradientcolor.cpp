@@ -28,8 +28,8 @@ void GradientColor::addStep(double red, double green, double blue, double value)
                                 "between 0 and 1");
     }
 
-//    qDebug()<<red <<" , "<< green << " , "<<blue;
-    steps.push_back({red, green, blue, value});
+    tuple<double, double, double, double> temp {red, green, blue, value};
+     steps.push_back(temp);
 }
 
 void GradientColor::sortStepsAscending()
@@ -92,7 +92,7 @@ COLOR_RGB GradientColor::colorAt(const double &Leq)
     return colorResult;
 }
 
-vector<STEP> GradientColor::getSteps() const
+QVector<tuple<double, double, double, double>> GradientColor::getSteps() const
 {
     return this->steps;
 }

@@ -22,12 +22,11 @@ public:
     void setGrid(const GridSettings &gridSettings);
     void setGradient(const GradientColor gradientColor);
     bool paintGrid(QImage &image, const GridSettings &myGrid,  QProgressDialog &progress);
-#include <QObject>
     void setNoiseColor(const double Leq, QColor * colorDecibell);
     std::vector< std::vector<SingleReceiver *> > matrix;
     GridSettings getGridSettings()const {return this->gridSettings;}
     void resetNoiseReceiver();
-    string gridStatistics();
+//    string gridStatistics(); // this doesn't work on android NDK
     void interpolateGrid();
     void clearInterpolatedReceivers();
 
@@ -37,10 +36,6 @@ private:
     QRectF receiverRect(SingleReceiver * receiver);
     QRectF receiverRect(const double x, const double y);
     GradientColor gradientColor;
-
-
-
-
 
 };
 
