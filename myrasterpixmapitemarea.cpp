@@ -1,9 +1,10 @@
 #include "myrasterpixmapitemarea.h"
 #include <QPainter>
 
+
 MyRasterPixmapItemArea::MyRasterPixmapItemArea()
 {
-
+    setAcceptHoverEvents(true);
 }
 
 int MyRasterPixmapItemArea::type() const
@@ -24,5 +25,7 @@ void MyRasterPixmapItemArea::paint(QPainter *painter, const QStyleOptionGraphics
     painter->drawRect(myMargin);
 
 }
+
+
 
 

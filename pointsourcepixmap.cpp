@@ -1,5 +1,5 @@
 #include "pointsourcepixmapitem.h"
-
+#include <QCursor>
 #include "pointsource.h"
 #include <QRectF>
 #include <QDebug>
@@ -16,6 +16,7 @@ PointSourcePixmapItem::PointSourcePixmapItem()
 //    setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
+
 }
 
 void PointSourcePixmapItem::setPointSource(PointSource *source)
@@ -70,5 +71,19 @@ QVariant PointSourcePixmapItem::itemChange(QGraphicsItem::GraphicsItemChange cha
     }
 
     return QGraphicsItem::itemChange(change, value);
+}
+
+void PointSourcePixmapItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+
+    setCursor(Qt::PointingHandCursor);
+    QGraphicsItem::hoverEnterEvent(event);
+}
+
+void PointSourcePixmapItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+
+    QGraphicsItem::hoverLeaveEvent(event);
+
 }
 

@@ -15,6 +15,8 @@ public:
                        const QStyleOptionGraphicsItem *option,
                        QWidget *widget) override;
 
+
+
 };
 
 #endif // MYRASTERPIXMAPITEMAREA_H

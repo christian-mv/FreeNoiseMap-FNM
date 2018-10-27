@@ -5,6 +5,7 @@
 
 class PointSource;
 
+
 class PointSourcePixmapItem : public QGraphicsPixmapItem
 {
 public:
@@ -14,12 +15,16 @@ public:
 private:
     PointSource *source;
 
+
 protected:
     void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
                QWidget *widget);
 
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
 
 

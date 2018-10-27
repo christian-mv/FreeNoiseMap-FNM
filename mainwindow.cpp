@@ -59,14 +59,17 @@ void MainWindow::loadCursors()
     myCursors["pointSource"] = QCursor(
                 QPixmap(":/images/icons/point_source.png").scaled(20,20,Qt::KeepAspectRatio,Qt::SmoothTransformation));
 
+
     myCursors["grid"] = QCursor(
                 QPixmap(":/images/icons/grid.png").scaled(20,20,Qt::KeepAspectRatio,Qt::SmoothTransformation));
 
-       myCursors["editMode"] = QCursor(Qt::ArrowCursor);
+    myCursors["arrowMode"] = QCursor(Qt::ArrowCursor);
 
-       myCursors["gridMode"] = QCursor(Qt::CrossCursor);
+    myCursors["editMode"] = QCursor(Qt::PointingHandCursor);
 
-       myCursors["dragMode"] = QCursor(Qt::OpenHandCursor);
+    myCursors["gridMode"] = QCursor(Qt::CrossCursor);
+
+    myCursors["dragMode"] = QCursor(Qt::OpenHandCursor);
 
 }
 
@@ -101,6 +104,29 @@ void MainWindow::resetPixmapArea(){
     pixmapItem.setPixmap(QPixmap::fromImage( invertImageOnYAxes(*image) ));
 
     pixmapItem.setScale(side/side2); // to represent the real size in the scene
+
+}
+
+void MainWindow::movingItemsOnTheScene(QPointF Pos)
+{
+    if (ui->graphicsView->cursor()==myCursors["arrowMode"] && scene.getShadedItemFlag()){
+
+
+        QGraphicsItem *moving_item= scene.mouseGrabberItem();
+
+        // the next conditional detects if no items or the rasterAreaItem were clicked
+
+
+        if(moving_item!=nullptr && moving_item != &pixmapItem)
+        {
+            shaded_line->setLine(p1_shaded_line.x(),
+                                 p1_shaded_line.y(),
+                                 Pos.x(),
+                                 Pos.y());
+
+            moving_item->setPos(Pos); // this correct the position of the item to be more acurate
+        }
+    }
 }
 
 bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
@@ -129,7 +155,6 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
 bool MainWindow::eventFilter(QObject *target, QEvent *event)
 {
 
-
     if(target == &scene){        
         QGraphicsSceneMouseEvent *sceneEvent = static_cast<QGraphicsSceneMouseEvent*>(event);
         if (sceneEvent->type() == QEvent::GraphicsSceneMouseMove)
@@ -140,26 +165,10 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
             statusBar()->showMessage(str);
 
-            if (ui->graphicsView->cursor()==myCursors["editMode"] && scene.getShadedItemFlag()){
-
-
-                QGraphicsItem *moving_item= scene.mouseGrabberItem();
-
-                // the next conditional detects if no items or the rasterAreaItem were clicked
-
-
-                if(moving_item!=nullptr && moving_item != &pixmapItem)
-                {
-                    shaded_line->setLine(p1_shaded_line.x(),
-                                         p1_shaded_line.y(),
-                                         sceneEvent->scenePos().x(),
-                                         sceneEvent->scenePos().y());
-
-                    moving_item->setPos(sceneEvent->scenePos()); // this correct the position to be more acurate
-                }
-            }
+            movingItemsOnTheScene(sceneEvent->scenePos());
 
           }
+
 
         else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
                  && sceneEvent->button() == Qt::LeftButton
@@ -189,9 +198,10 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
           }
 
 
+
         else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
                  && sceneEvent->button() == Qt::LeftButton
-                 && ui->graphicsView->cursor()==myCursors["editMode"]){
+                 && ui->graphicsView->cursor()==myCursors["arrowMode"]){
 
             /*  Note: scene.mouseGrabberItem() doesn't
                 work weel on GraphicsSceneMousePress event but it works well on
@@ -203,48 +213,40 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
             QGraphicsItem *pressed_item = scene.itemAt(sceneEvent->scenePos(),ui->graphicsView->transform());
 
-
             // the next conditional detects if no items or the rasterAreaItem were clicked
             if(pressed_item!=nullptr && pressed_item != &pixmapItem)
             {
                 shaded_line = new QGraphicsLineItem;
                 p1_shaded_line = sceneEvent->scenePos();
                 scene.addItem(shaded_line);
-
                 scene.setShadedItemFlag(true);
             }
-
         }
+
+
         else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
                  && sceneEvent->button() == Qt::LeftButton
-                 && ui->graphicsView->cursor()==myCursors["editMode"]){
+                 && ui->graphicsView->cursor()==myCursors["arrowMode"]){
 
             QGraphicsItem *item_released= scene.mouseGrabberItem();
 
-            // the next conditional detects if no items or the rasterAreaItem were clicked
+            // the next conditional when a item(s) that is moving is released in its new position
             if(item_released!=nullptr && item_released != &pixmapItem && scene.getShadedItemFlag())
             {
-//                shaded_line->setLine(shaded_line->p1().x(),
-//                                     shaded_line->p1().y(),
-//                                     sceneEvent->scenePos().x(),
-//                                     sceneEvent->scenePos().y());
-
-//                qDebug()<<"Mouse Released";
-//                qDebug()<<"P1: "<<shaded_line->p1();
-//                qDebug()<<"P2: "<<shaded_line->p2();
-
-
-
-//                scene.addLine(*shaded_line);
                 item_released->setPos(sceneEvent->scenePos()); // this correct the position to be more acurate
                 delete shaded_line;
+            }
+            scene.setShadedItemFlag(false);
+        }
 
 
+        QGraphicsSceneHoverEvent *sceneEvent2 = static_cast<QGraphicsSceneHoverEvent*>(event);
+
+            if (sceneEvent2->type() == QEvent::GraphicsSceneHoverEnter){
+                qDebug()<<sceneEvent2->type();
             }
 
-            scene.setShadedItemFlag(false);
 
-        }
      return QMainWindow::eventFilter(target, event);
     }
     return false;
@@ -254,23 +256,27 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
 void MainWindow::on_actionAdd_point_source_triggered()
 {
+    on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
     ui->graphicsView->setCursor(myCursors["pointSource"]);
+
 }
 
 
 void MainWindow::on_actioneditMode_triggered()
 {
-    ui->graphicsView->setCursor(myCursors["editMoed"]);
+    ui->graphicsView->setCursor(myCursors["arrowMode"]);
+
 }
 
 void MainWindow::on_actiongrid_triggered()
 {
     ui->graphicsView->setCursor(myCursors["gridMode"]);
+
 }
 
 void MainWindow::on_actioncalculateGrid_triggered()
 {
-    ui->graphicsView->setCursor(myCursors["editMoed"]);
+    ui->graphicsView->setCursor(myCursors["arrowMode"]);
     resetPixmapArea();
     receivers.resetNoiseReceiver();
 
@@ -310,6 +316,7 @@ void MainWindow::on_actioncalculateGrid_triggered()
 void MainWindow::on_actiondrag_mode_triggered()
 {
     ui->graphicsView->setCursor(myCursors["dragMode"]);
+
 }
 
 void MainWindow::on_actionzoom_full_triggered()
@@ -329,4 +336,6 @@ void MainWindow::on_actionzoom_full_triggered()
 
     ui->graphicsView->horizontalScrollBar()->setMaximum(scene.sceneRect().width()*1.1);
     ui->graphicsView->verticalScrollBar()->setMaximum(scene.sceneRect().height()*1.1);
+
+
 }

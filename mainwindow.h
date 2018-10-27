@@ -55,6 +55,7 @@ private:
     void loadDefaultGrid();
     bool calculateNoiseFromSources(QProgressDialog &progress);
     void resetPixmapArea();
+    void movingItemsOnTheScene(const QPointF Pos);
     QGraphicsLineItem *shaded_line; // auxiliary line when dragging items
     QPointF p1_shaded_line;
 
