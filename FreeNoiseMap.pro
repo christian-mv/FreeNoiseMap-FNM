@@ -6,7 +6,7 @@
 
 QT       += core gui widgets
 
-TARGET = untitled6
+TARGET = freeNoiseMap
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
