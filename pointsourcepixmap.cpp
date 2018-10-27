@@ -13,7 +13,7 @@ PointSourcePixmapItem::PointSourcePixmapItem()
 {
     // avoid to scale the item
     setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
-    setFlag(QGraphicsItem::ItemIsMovable, true);
+//    setFlag(QGraphicsItem::ItemIsMovable, true);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
 }

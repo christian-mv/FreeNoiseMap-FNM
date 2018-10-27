@@ -18,18 +18,17 @@ void MyGraphicsView::setCursor(const QCursor &newCursor)
     QList<QGraphicsItem *> sceneItems = items();
     if(newCursor == Qt::OpenHandCursor){        
         setDragMode(ScrollHandDrag);
-        for(auto item: sceneItems){
-
-            item->setFlag(QGraphicsItem::ItemIsMovable, false);
-        }
+//        for(auto item: sceneItems){
+//            item->setFlag(QGraphicsItem::ItemIsMovable, false);
+//        }
 
     }else{
         setDragMode(NoDrag);
-        for(auto item: sceneItems){
-            if(item->type() != 65536){ // 65536 represents our MyRasterPixmapItemArea
-                item->setFlag(QGraphicsItem::ItemIsMovable, true);
-            }
-        }
+//        for(auto item: sceneItems){
+//            if(item->type() != 65536){ // 65536 represents our MyRasterPixmapItemArea
+//                item->setFlag(QGraphicsItem::ItemIsMovable, true);
+//            }
+//        }
 
     }
 

@@ -9,7 +9,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QProgressDialog>
 #include <QMessageBox>
-
+#include <QScrollBar>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -138,9 +138,27 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                                     .arg(sceneEvent->scenePos().x())
                                     .arg(sceneEvent->scenePos().y());
 
+            statusBar()->showMessage(str);
+
+            if (ui->graphicsView->cursor()==myCursors["editMode"] && scene.getShadedItemFlag()){
 
 
-            statusBar()->showMessage(str);           
+                QGraphicsItem *moving_item= scene.mouseGrabberItem();
+
+                // the next conditional detects if no items or the rasterAreaItem were clicked
+
+
+                if(moving_item!=nullptr && moving_item != &pixmapItem)
+                {
+                    shaded_line->setLine(p1_shaded_line.x(),
+                                         p1_shaded_line.y(),
+                                         sceneEvent->scenePos().x(),
+                                         sceneEvent->scenePos().y());
+
+                    moving_item->setPos(sceneEvent->scenePos()); // this correct the position to be more acurate
+                }
+            }
+
           }
 
         else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
@@ -189,13 +207,9 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             // the next conditional detects if no items or the rasterAreaItem were clicked
             if(pressed_item!=nullptr && pressed_item != &pixmapItem)
             {
-
-
-                shaded_line = new QLineF(sceneEvent->scenePos().x(),sceneEvent->scenePos().y(),
-                                                    0.0, 0.0);
-                qDebug()<<"Mouse Pressed";
-                qDebug()<<"P1: "<<shaded_line->p1();
-                qDebug()<<"P2: "<<shaded_line->p2();
+                shaded_line = new QGraphicsLineItem;
+                p1_shaded_line = sceneEvent->scenePos();
+                scene.addItem(shaded_line);
 
                 scene.setShadedItemFlag(true);
             }
@@ -210,27 +224,29 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             // the next conditional detects if no items or the rasterAreaItem were clicked
             if(item_released!=nullptr && item_released != &pixmapItem && scene.getShadedItemFlag())
             {
-                shaded_line->setLine(shaded_line->p1().x(),
-                                     shaded_line->p1().y(),
-                                     sceneEvent->scenePos().x(),
-                                     sceneEvent->scenePos().y());
+//                shaded_line->setLine(shaded_line->p1().x(),
+//                                     shaded_line->p1().y(),
+//                                     sceneEvent->scenePos().x(),
+//                                     sceneEvent->scenePos().y());
 
-                qDebug()<<"Mouse Released";
-                qDebug()<<"P1: "<<shaded_line->p1();
-                qDebug()<<"P2: "<<shaded_line->p2();
+//                qDebug()<<"Mouse Released";
+//                qDebug()<<"P1: "<<shaded_line->p1();
+//                qDebug()<<"P2: "<<shaded_line->p2();
 
 
 
-                scene.addLine(*shaded_line);
+//                scene.addLine(*shaded_line);
+                item_released->setPos(sceneEvent->scenePos()); // this correct the position to be more acurate
+                delete shaded_line;
 
 
             }
 
             scene.setShadedItemFlag(false);
+
         }
      return QMainWindow::eventFilter(target, event);
     }
-
     return false;
 }
 
@@ -294,4 +310,23 @@ void MainWindow::on_actioncalculateGrid_triggered()
 void MainWindow::on_actiondrag_mode_triggered()
 {
     ui->graphicsView->setCursor(myCursors["dragMode"]);
+}
+
+void MainWindow::on_actionzoom_full_triggered()
+{
+    qreal ofsset = 10;
+
+    QRectF rectF = QRectF(myGrid.getRect().x()-ofsset,
+                          myGrid.getRect().y()+ofsset,
+                          myGrid.getRect().width()+ofsset,
+                          myGrid.getRect().height()+ofsset);
+
+    ui->graphicsView->fitInView(rectF,Qt::KeepAspectRatio);
+
+
+
+//        // center scrollbars:
+
+    ui->graphicsView->horizontalScrollBar()->setMaximum(scene.sceneRect().width()*1.1);
+    ui->graphicsView->verticalScrollBar()->setMaximum(scene.sceneRect().height()*1.1);
 }

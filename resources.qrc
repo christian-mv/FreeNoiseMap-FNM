@@ -6,5 +6,6 @@
         <file>icons/grid.png</file>
         <file>icons/app_icon.png</file>
         <file>icons/drag_mode.png</file>
+        <file>icons/zoomFullExtent.svg</file>
     </qresource>
 </RCC>

@@ -38,6 +38,8 @@ private slots:
 
     void on_actiondrag_mode_triggered();
 
+    void on_actionzoom_full_triggered();
+
 private:
     Ui::MainWindow *ui;
     MyGraphicsScene scene;
@@ -53,7 +55,8 @@ private:
     void loadDefaultGrid();
     bool calculateNoiseFromSources(QProgressDialog &progress);
     void resetPixmapArea();
-    QLineF *shaded_line; // auxiliary line when dragging items
+    QGraphicsLineItem *shaded_line; // auxiliary line when dragging items
+    QPointF p1_shaded_line;
 
 protected:
     bool eventFilter(QObject *target, QEvent *event);
