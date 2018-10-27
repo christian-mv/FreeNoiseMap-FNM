@@ -17,8 +17,10 @@ public:
     double get_z() const {return z;}
     double get_Lw() const {return Lw;}
 private:
-    double x, y, z; // in meters units
+    // current data
+    double x, y, z; // current coordinates in meters units
     double Lw; // sound power in dB(A) units
+
 };
 
 #endif // POINTSOURCE_H

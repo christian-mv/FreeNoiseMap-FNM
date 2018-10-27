@@ -53,6 +53,7 @@ private:
     void loadDefaultGrid();
     bool calculateNoiseFromSources(QProgressDialog &progress);
     void resetPixmapArea();
+    QLineF *shaded_line; // auxiliary line when dragging items
 
 protected:
     bool eventFilter(QObject *target, QEvent *event);

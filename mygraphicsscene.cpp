@@ -9,6 +9,16 @@ MyGraphicsScene::MyGraphicsScene()
 
 }
 
+void MyGraphicsScene::setShadedItemFlag(bool value)
+{
+    shadedItemFlag = value;
+}
+
+bool MyGraphicsScene::getShadedItemFlag() const
+{
+    return shadedItemFlag;
+}
+
 //void MyGraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 //{
 //    QString string = QString("%1, %2")

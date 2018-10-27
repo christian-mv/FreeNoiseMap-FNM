@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->graphicsView->show();
 
+
 }
 
 MainWindow::~MainWindow()
@@ -128,7 +129,8 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
 bool MainWindow::eventFilter(QObject *target, QEvent *event)
 {
 
-    if(target == &scene){
+
+    if(target == &scene){        
         QGraphicsSceneMouseEvent *sceneEvent = static_cast<QGraphicsSceneMouseEvent*>(event);
         if (sceneEvent->type() == QEvent::GraphicsSceneMouseMove)
           {
@@ -136,7 +138,9 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                                     .arg(sceneEvent->scenePos().x())
                                     .arg(sceneEvent->scenePos().y());
 
-            statusBar()->showMessage(str);
+
+
+            statusBar()->showMessage(str);           
           }
 
         else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
@@ -154,7 +158,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             // create pixmapItem for the noise source
 
             QPixmap myPixmap(":/images/icons/point_source.png");
-            myPixmap = myPixmap.scaled(15,15,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+            myPixmap = myPixmap.scaled(16,16,Qt::KeepAspectRatio,Qt::SmoothTransformation);
 
 
             PointSourcePixmapItem * myPixmapPointSourceItem = new PointSourcePixmapItem();
@@ -165,6 +169,66 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             scene.addItem(myPixmapPointSourceItem);
 
           }
+
+
+        else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
+                 && sceneEvent->button() == Qt::LeftButton
+                 && ui->graphicsView->cursor()==myCursors["editMode"]){
+
+            /*  Note: scene.mouseGrabberItem() doesn't
+                work weel on GraphicsSceneMousePress event but it works well on
+                GraphicsSceneMouseRelease event, on the other hand, scene.itemAt()
+                doesn't work well on GraphicsSceneMouseRelease because it takes the topmost
+                object, but it works well on GraphicsSceneMousePress.
+                */
+
+
+            QGraphicsItem *pressed_item = scene.itemAt(sceneEvent->scenePos(),ui->graphicsView->transform());
+
+
+            // the next conditional detects if no items or the rasterAreaItem were clicked
+            if(pressed_item!=nullptr && pressed_item != &pixmapItem)
+            {
+
+
+                shaded_line = new QLineF(sceneEvent->scenePos().x(),sceneEvent->scenePos().y(),
+                                                    0.0, 0.0);
+                qDebug()<<"Mouse Pressed";
+                qDebug()<<"P1: "<<shaded_line->p1();
+                qDebug()<<"P2: "<<shaded_line->p2();
+
+                scene.setShadedItemFlag(true);
+            }
+
+        }
+        else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
+                 && sceneEvent->button() == Qt::LeftButton
+                 && ui->graphicsView->cursor()==myCursors["editMode"]){
+
+            QGraphicsItem *item_released= scene.mouseGrabberItem();
+
+            // the next conditional detects if no items or the rasterAreaItem were clicked
+            if(item_released!=nullptr && item_released != &pixmapItem && scene.getShadedItemFlag())
+            {
+                shaded_line->setLine(shaded_line->p1().x(),
+                                     shaded_line->p1().y(),
+                                     sceneEvent->scenePos().x(),
+                                     sceneEvent->scenePos().y());
+
+                qDebug()<<"Mouse Released";
+                qDebug()<<"P1: "<<shaded_line->p1();
+                qDebug()<<"P2: "<<shaded_line->p2();
+
+
+
+                scene.addLine(*shaded_line);
+
+
+            }
+
+            scene.setShadedItemFlag(false);
+        }
+     return QMainWindow::eventFilter(target, event);
     }
 
     return false;

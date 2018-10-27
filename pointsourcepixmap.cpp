@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QPainter>
 #include <QPen>
+#include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 
 
@@ -13,6 +14,7 @@ PointSourcePixmapItem::PointSourcePixmapItem()
     // avoid to scale the item
     setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
     setFlag(QGraphicsItem::ItemIsMovable, true);
+    setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
 }
 
@@ -53,12 +55,20 @@ void PointSourcePixmapItem::paint(QPainter *painter, const QStyleOptionGraphicsI
 QVariant PointSourcePixmapItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
 
-    if (change == ItemPositionChange && scene()) {
+    if (change == ItemPositionChange &&  scene() ) {
+
         // value is the new position.
         QPointF newPos = value.toPointF();
-        source->set_x(newPos.x());
-        source->set_y(newPos.y());
+//        if(newPos.x() != source->get_x() && newPos.y() != source->get_y()){
+            source->set_x(newPos.x());
+            source->set_y(newPos.y());
+
+//        }
+
+
+
     }
+
     return QGraphicsItem::itemChange(change, value);
 }
 
