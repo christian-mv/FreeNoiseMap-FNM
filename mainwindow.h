@@ -16,6 +16,7 @@
 class PointSource;
 class PointSourcePixmapItem;
 class QProgressDialog;
+class MyGraphicsShadedLineItem;
 
 
 namespace Ui {
@@ -56,8 +57,8 @@ private:
     bool calculateNoiseFromSources(QProgressDialog &progress);
     void resetPixmapArea();
     void movingItemsOnTheScene(const QPointF Pos);
-    QGraphicsLineItem *shaded_line; // auxiliary line when dragging items
-    QPointF p1_shaded_line;
+    MyGraphicsShadedLineItem *shaded_line; // auxiliary line when dragging items
+    QPointF p1_shaded_line; // initial coordinate for shaded_line
 
 protected:
     bool eventFilter(QObject *target, QEvent *event);

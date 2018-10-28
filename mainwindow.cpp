@@ -10,6 +10,8 @@
 #include <QProgressDialog>
 #include <QMessageBox>
 #include <QScrollBar>
+#include "mygraphicsshadedlineitem.h"
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -216,7 +218,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             // the next conditional detects if no items or the rasterAreaItem were clicked
             if(pressed_item!=nullptr && pressed_item != &pixmapItem)
             {
-                shaded_line = new QGraphicsLineItem;
+                shaded_line = new MyGraphicsShadedLineItem;
                 p1_shaded_line = sceneEvent->scenePos();
                 scene.addItem(shaded_line);
                 scene.setShadedItemFlag(true);
