@@ -215,11 +215,19 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
             QGraphicsItem *pressed_item = scene.itemAt(sceneEvent->scenePos(),ui->graphicsView->transform());
 
-            // the next conditional detects if no items or the rasterAreaItem were clicked
+            // the next conditional detects if an intem different from rasterArea was clicked
             if(pressed_item!=nullptr && pressed_item != &pixmapItem)
             {
                 shaded_line = new MyGraphicsShadedLineItem;
+
                 p1_shaded_line = sceneEvent->scenePos();
+
+                // init line with 0 lenth (necessary to avoid flip)
+                shaded_line->setLine(p1_shaded_line.x(),
+                                     p1_shaded_line.y(),
+                                     p1_shaded_line.x(),
+                                     p1_shaded_line.y());
+
                 scene.addItem(shaded_line);
                 scene.setShadedItemFlag(true);
             }
@@ -240,13 +248,6 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             }
             scene.setShadedItemFlag(false);
         }
-
-
-        QGraphicsSceneHoverEvent *sceneEvent2 = static_cast<QGraphicsSceneHoverEvent*>(event);
-
-            if (sceneEvent2->type() == QEvent::GraphicsSceneHoverEnter){
-                qDebug()<<sceneEvent2->type();
-            }
 
 
      return QMainWindow::eventFilter(target, event);

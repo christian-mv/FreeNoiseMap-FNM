@@ -9,7 +9,14 @@
 
 MyGraphicsShadedLineItem::MyGraphicsShadedLineItem()
 {
+    font.setPointSize(10);
+    QFontMetrics fm(font);
+    widthOfText = fm.width("999.999m");
+}
 
+QRectF MyGraphicsShadedLineItem::boundingRect() const
+{
+    return QGraphicsLineItem::boundingRect().adjusted(-widthOfText,-widthOfText,widthOfText,widthOfText);
 }
 
 
@@ -23,6 +30,8 @@ void MyGraphicsShadedLineItem::paint(QPainter *painter,
     pen.setStyle(Qt::DashLine);
     pen.setCosmetic(true); // line doesn't change when zoomming
     painter->setPen(pen);
+    painter->setFont(font);
+
 
 
 
@@ -58,55 +67,28 @@ void MyGraphicsShadedLineItem::paint(QPainter *painter,
 
     painter->drawLine(line1);  // horizontal line
     painter->drawLine(line2); // vertical line
-    painter->drawRect(QGraphicsLineItem::boundingRect());
+//    painter->drawRect(boundingRect());
 
 
 
+    QString text(QString::number(line().length())+QString("m"));
+    QRectF text_rect = painter->fontMetrics().boundingRect(text);
+    text_rect.translate(line().center());
 
-//    QFontMetrics fm = painter->fontMetrics();
-//    QRectF rectText(boundingRect().center().x(),boundingRect().center().y(),fm.width("999.9999"), fm.height());
-
-
-
-    QFont font = painter->font();
+    QStaticText staticText(text);
 
 
-
-    // reduce size
-    while(font.pointSize()>1){
-        if(line().length()/2 < painter->fontMetrics().width("999.9999")
-                || qAbs(line().dy()) < painter->fontMetrics().height()){
-
-            font.setPointSize(font.pointSize()-1);
-            painter->setFont(font);
-
-        }
-        else{
-            break;
-        }
-    }
-
-    // increase size
-
-
-
-    qDebug()<<"fontMetrics().height(): "<<painter->fontMetrics().height();
-
-
-    if(line().length()>1.5*painter->fontMetrics().width("999.9999m")
-            && qAbs(line().dy())>1.5*painter->fontMetrics().height()
-            && qAbs(line().dx())>painter->fontMetrics().width("999.9999m") ){
+    if(boundingRect().contains(text_rect)){
 
         painter->translate(line().center().x(), line().center().y()+painter->fontMetrics().height());
         painter->scale(1.0, -1.0);
         painter->rotate(-theta);
 
-        QStaticText staticText(QString::number(line().length())+QString("m"));
-
-
         pen.setColor(Qt::black);
         painter->setPen(pen);
-        painter->drawStaticText(-painter->fontMetrics().width("999.9999"),0, staticText);
+
+
+        painter->drawStaticText(-widthOfText,0, staticText);
 
     }
 

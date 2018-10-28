@@ -39,6 +39,7 @@ void PointSourcePixmapItem::setPointSource(PointSource *source)
 
 
 
+
 void PointSourcePixmapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 //    // paint a rectangle wrapping the item

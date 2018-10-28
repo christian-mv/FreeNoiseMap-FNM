@@ -2,12 +2,14 @@
 #define MYGRAPHICSSHADEDLINEITEM_H
 
 #include<QGraphicsLineItem>
-
+#include<QFont>
 
 class MyGraphicsShadedLineItem : public QGraphicsLineItem
 {
 public:
     MyGraphicsShadedLineItem();
+
+    QRectF boundingRect() const;
 
 
 
@@ -17,6 +19,9 @@ protected:
                QWidget *widget = nullptr) override;
 
 private:
+
+    int widthOfText;
+    QFont font;
 
 
 };

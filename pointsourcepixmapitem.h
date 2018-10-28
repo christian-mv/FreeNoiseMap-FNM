@@ -12,6 +12,7 @@ public:
     PointSourcePixmapItem();
     void setPointSource(PointSource *source);
 
+
 private:
     PointSource *source;
 
