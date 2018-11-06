@@ -32,6 +32,43 @@ void addRandomSources(vector<PointSource *> &pointSources, const GridSettings &m
 }
 
 
+#include<iostream>
+using namespace std;
+
+double greatestIntegerFunction(int x, int dx=100, int dy=25){
+
+    /*
+     * double greatestIntegerFunction(int x, int dx=100, int dy=25):
+     *
+     * NOTE 1: This function is documented in:
+     * "James Stewwart; Lothar Redlin and Saleem Watson;
+     * Precalculus, Mathematics for Calculus, 7th ed, section 2.2,
+     *  - Greatest Integer Function"
+     * The default values in the arguments (i.e. 100 and 25)
+     * are arbitrary values that have been chosen in order to
+     * reproduce an example of the book. (See example 6).
+     *
+     * NOTE 2: this function has been tested with positive numbers,
+     *          it doesn't support negative values of x.
+*/
+
+    int lefLimit=0;
+    int rightLimit=dx;
+    int i = 0;
+
+
+    while(true){
+        if(x>lefLimit &&x<=rightLimit){
+            cout<<"\ni: "<<i<<endl;
+            return (i+1)*dy ; // return  f(x)=||x||
+        }else{
+           lefLimit = rightLimit;
+           rightLimit+=dx;
+           i++;
+
+        }
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -40,7 +77,6 @@ int main(int argc, char *argv[])
 
     window.showMaximized();
     return a.exec();
-
 }
 
 

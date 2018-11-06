@@ -26,6 +26,8 @@ namespace  NoiseEngine
 
     double sumdB(const double &Leq1, const double &Leq2);
 
+    int greatestIntegerFunction(int x, int dx=100, int dy=25);
+
     void interpolationValueAt(
                             const double &t1,
                             const double &y1,

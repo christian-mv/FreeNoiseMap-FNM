@@ -78,7 +78,7 @@ void MainWindow::loadCursors()
 void MainWindow::loadDefaultGrid()
 {
     myGrid.setRect(QRectF(0, 0, 1000, 600));
-    myGrid.setDeltaX(5);
+    myGrid.setDeltaX(20);
     myGrid.setDeltaY(5);
     myGrid.setInterpolationFactor(1);
     receivers.setGrid(myGrid);
@@ -116,7 +116,8 @@ void MainWindow::movingItemsOnTheScene(QPointF Pos)
 
         QGraphicsItem *moving_item= scene.mouseGrabberItem();
 
-        // the next conditional detects if no items or the rasterAreaItem were clicked
+        // the next conditional detects if no items or the rasterAreaItem were clicked, in
+        // in the contrary case, the proceed witht he calcularion of the line
 
 
         if(moving_item!=nullptr && moving_item != &pixmapItem)

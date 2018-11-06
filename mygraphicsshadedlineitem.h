@@ -3,6 +3,7 @@
 
 #include<QGraphicsLineItem>
 #include<QFont>
+#include "myqgraphicssimpletextitem.h"
 
 class MyGraphicsShadedLineItem : public QGraphicsLineItem
 {
@@ -20,8 +21,18 @@ protected:
 
 private:
 
+    QLineF line1, line2;
+    MyQGraphicsSimpleTextItem *distanceText;
+    MyQGraphicsSimpleTextItem *horizontalText;
+    MyQGraphicsSimpleTextItem *verticalText;
+    double theta() const;
+    void updateShadedLines();
+    void drawLines(QPainter *painter) const;
+    void drawText();
+    void updateWidOfText(const QPainter *p);
     int widthOfText;
-    QFont font;
+    QFont myFont;
+    QString textContainer;
 
 
 };
