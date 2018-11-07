@@ -11,7 +11,7 @@ void MyQGraphicsSimpleTextItem::paint(QPainter *painter, const QStyleOptionGraph
 {
 
    painter->setPen(Qt::black);
-   painter->drawRect(boundingRect());
+//   painter->drawRect(boundingRect());
    painter->scale(1,-1);
    painter->translate(boundingRect().topLeft().x(), -boundingRect().height());
 
