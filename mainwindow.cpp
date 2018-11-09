@@ -244,12 +244,19 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             // the next conditional when a item(s) that is moving is released in its new position
             if(item_released!=nullptr && item_released != &pixmapItem && scene.getShadedItemFlag())
             {
-                item_released->setPos(sceneEvent->scenePos()); // this correct the position to be more acurate
+                // we update the position of the point source just for
+                // movements greater than 0.1
+                QPointF p1 = shaded_line->line().p1();
+                QPointF p2 = sceneEvent->scenePos();
+                double temp = NoiseEngine::distanceBetweenPoints(p1.x(),p1.y(),0, p2.x(),p2.y(), 0);
+
+                if(temp>0.1){
+                    item_released->setPos(sceneEvent->scenePos()); // this correct the position to be more acurate
+                }
                 delete shaded_line;
             }
             scene.setShadedItemFlag(false);
         }
-
 
      return QMainWindow::eventFilter(target, event);
     }
