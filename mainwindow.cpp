@@ -78,9 +78,9 @@ void MainWindow::loadCursors()
 void MainWindow::loadDefaultGrid()
 {
     myGrid.setRect(QRectF(0, 0, 1000, 600));
-    myGrid.setDeltaX(5);
-    myGrid.setDeltaY(5);
-    myGrid.setInterpolationFactor(1);
+    myGrid.setDeltaX(3);
+    myGrid.setDeltaY(3);
+    myGrid.setInterpolationFactor(2);
     receivers.setGrid(myGrid);
 
     resetPixmapArea();
