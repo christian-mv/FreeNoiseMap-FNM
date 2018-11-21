@@ -46,6 +46,12 @@
    </property>
   </widget>
   <widget class="QToolBar" name="toolBar">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
@@ -87,7 +93,7 @@
   </widget>
   <action name="actionAdd_point_source">
    <property name="icon">
-    <iconset>
+    <iconset resource="resources.qrc">
      <normaloff>:/images/icons/point_source.png</normaloff>:/images/icons/point_source.png</iconset>
    </property>
    <property name="text">
@@ -111,7 +117,7 @@
   </action>
   <action name="actiongrid">
    <property name="icon">
-    <iconset>
+    <iconset resource="resources.qrc">
      <normaloff>:/images/icons/grid.png</normaloff>:/images/icons/grid.png</iconset>
    </property>
    <property name="text">
@@ -120,7 +126,7 @@
   </action>
   <action name="actioncalculateGrid">
    <property name="icon">
-    <iconset>
+    <iconset resource="resources.qrc">
      <normaloff>:/images/icons/calculate_grid.png</normaloff>:/images/icons/calculate_grid.png</iconset>
    </property>
    <property name="text">
@@ -135,7 +141,7 @@
   </action>
   <action name="actiondrag_mode">
    <property name="icon">
-    <iconset>
+    <iconset resource="resources.qrc">
      <normaloff>:/images/icons/drag_mode.png</normaloff>:/images/icons/drag_mode.png</iconset>
    </property>
    <property name="text">
@@ -144,8 +150,8 @@
   </action>
   <action name="actionzoom_full">
    <property name="icon">
-    <iconset>
-     <normaloff>:/images/icons/zoomFullExtent.svg</normaloff>:/images/icons/zoomFullExtent.svg</iconset>
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/icons/extend.png</normaloff>:/images/icons/extend.png</iconset>
    </property>
    <property name="text">
     <string>zoom full</string>
@@ -162,6 +168,8 @@
    <header>mygraphicsview.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

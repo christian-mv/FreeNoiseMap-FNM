@@ -35,6 +35,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->scale(1,-1); // invert Y axes
 
 
+
+
+#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
+            QSize iconsSize(80,80);
+            ui->toolBar->setIconSize(iconsSize);
+            ui->toolBar_2->setIconSize(iconsSize);
+#endif
+
+
+
     ui->graphicsView->show();
 
 
@@ -188,8 +198,14 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             // create pixmapItem for the noise source
 
             QPixmap myPixmap(":/images/icons/point_source.png");
-            myPixmap = myPixmap.scaled(16,16,Qt::KeepAspectRatio,Qt::SmoothTransformation);
 
+            // add pixmapItems in a size that depends on the platform
+
+            #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
+                        myPixmap = myPixmap.scaled(36,36,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+            #else
+                        myPixmap = myPixmap.scaled(18,18,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+            #endif
 
             PointSourcePixmapItem * myPixmapPointSourceItem = new PointSourcePixmapItem();
 

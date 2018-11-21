@@ -11,6 +11,8 @@ class PointSourcePixmapItem : public QGraphicsPixmapItem
 public:
     PointSourcePixmapItem();
     void setPointSource(PointSource *source);
+    QRectF boundingRect() const;
+    QPainterPath shape() const;
 
 
 private:
