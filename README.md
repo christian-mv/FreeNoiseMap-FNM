@@ -57,10 +57,6 @@ Factor 4:
 
 
 
-FNM let user to enter several sources to the model:
-
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/addingSeveralSources.png)
-
 
 
 
