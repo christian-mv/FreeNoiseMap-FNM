@@ -108,14 +108,18 @@ void MyGraphicsShadedLineItem::paint(QPainter *painter,
 
         painter->scale(1.0, -1.0);
 
-        if(line().dx()>=0){
-            painter->drawArc(-text_rect.width()/2,-text_rect.width()/2,
-                             text_rect.width(),text_rect.width(),0,16*theta());
-        }else if(line().dx()<0){
-            painter->drawArc(-text_rect.width()/2,-text_rect.width()/2,
-                             text_rect.width(),text_rect.width(),16*180,16*theta());
-        }
+        QRectF archRect(-text_rect.width()/2,-text_rect.width()/2,
+                        text_rect.width(),text_rect.width());
 
+        if(line().dx()>=0){
+
+            painter->drawArc(archRect,0,static_cast<int>(16*theta()));
+
+        }else if(line().dx()<0){
+
+            painter->drawArc(archRect,16*180,static_cast<int>(16*theta()));
+
+        }
 
 
     // this corrects positions of some items:

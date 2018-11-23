@@ -31,6 +31,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+
 private slots:
     void on_actionAdd_point_source_triggered();
     void on_actioneditMode_triggered();
@@ -55,8 +56,12 @@ private:
     void loadCursors();
     void loadDefaultGrid();
     bool calculateNoiseFromSources(QProgressDialog &progress);
-    void resetPixmapArea();
+    void resetPixmapArea();    
     void movingItemsOnTheScene(const QPointF Pos);
+    void draggingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent);
+    void droppingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent);
+
+
     MyGraphicsShadedLineItem *shaded_line; // auxiliary line when dragging items
     QPointF p1_shaded_line; // initial coordinate for shaded_line
 

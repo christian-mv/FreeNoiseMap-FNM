@@ -13,9 +13,17 @@ public:
     void setCursor(const QCursor &cursor);
 
 
+
+
+
+
 private:
     QPoint m_lastMousePos;
     bool m_pressed;
+    qreal totalScaleFactor;
+
+
+
 
 protected:
     // the implementation of the next override methods is explanined
@@ -24,6 +32,8 @@ protected:
 //    virtual void mouseMoveEvent(QMouseEvent *event);
 //    virtual void mousePressEvent(QMouseEvent *event);
 //    virtual void mouseReleaseEvent(QMouseEvent *event);
+
+    virtual bool viewportEvent(QEvent *event);
 
 
 };

@@ -37,10 +37,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
+
 #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
             QSize iconsSize(80,80);
             ui->toolBar->setIconSize(iconsSize);
-            ui->toolBar_2->setIconSize(iconsSize);
 #endif
 
 
@@ -92,6 +92,7 @@ void MainWindow::loadDefaultGrid()
     myGrid.setDeltaY(3);
     myGrid.setInterpolationFactor(2);
     receivers.setGrid(myGrid);
+    scene.setSceneRect(myGrid.getRect()); // neccesary for consistency when scrolling
 
     resetPixmapArea();
 
@@ -142,6 +143,62 @@ void MainWindow::movingItemsOnTheScene(QPointF Pos)
     }
 }
 
+void MainWindow::draggingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent)
+{
+    /*  Note: scene.mouseGrabberItem() doesn't
+        work weel on GraphicsSceneMousePress event but it works well on
+        GraphicsSceneMouseRelease event, on the other hand, scene.itemAt()
+        doesn't work well on GraphicsSceneMouseRelease because it takes the topmost
+        object, but it works well on GraphicsSceneMousePress.
+        */
+
+    QGraphicsItem *pressed_item = scene.itemAt(sceneEvent->scenePos(),ui->graphicsView->transform());
+
+    // the next conditional detects if an intem different from rasterArea was clicked
+    if(pressed_item!=nullptr && pressed_item != &pixmapItem)
+    {
+        if(shaded_line==nullptr){
+            delete shaded_line;
+        }
+
+        shaded_line = new MyGraphicsShadedLineItem;
+
+        p1_shaded_line = sceneEvent->scenePos();
+
+        // init line with 0 lenth (necessary to avoid flip)
+        shaded_line->setLine(p1_shaded_line.x(),
+                             p1_shaded_line.y(),
+                             p1_shaded_line.x(),
+                             p1_shaded_line.y());
+
+        scene.addItem(shaded_line);
+        scene.setShadedItemFlag(true);
+    }
+}
+
+void MainWindow::droppingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent)
+{
+    QGraphicsItem *item_released= scene.mouseGrabberItem();
+
+    // the next conditional when a item(s) that is moving is released in its new position
+    if(item_released!=nullptr && item_released != &pixmapItem && scene.getShadedItemFlag())
+    {
+        // we update the position of the point source just for
+        // movements greater than 0.1
+        QPointF p1 = shaded_line->line().p1();
+        QPointF p2 = sceneEvent->scenePos();
+        double temp = NoiseEngine::distanceBetweenPoints(p1.x(),p1.y(),0, p2.x(),p2.y(), 0);
+
+        if(temp>0.1){
+            item_released->setPos(sceneEvent->scenePos()); // this correct the position to be more acurate
+        }
+        delete shaded_line;
+    }
+    scene.setShadedItemFlag(false);
+}
+
+
+
 bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
 {    
     for(int i = 0; i<receivers.matrix.size(); i++){
@@ -162,13 +219,11 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
 
 
 
-
-
-
 bool MainWindow::eventFilter(QObject *target, QEvent *event)
 {
+    qDebug()<<target;
 
-    if(target == &scene){        
+    if(target == &scene){
         QGraphicsSceneMouseEvent *sceneEvent = static_cast<QGraphicsSceneMouseEvent*>(event);
         if (sceneEvent->type() == QEvent::GraphicsSceneMouseMove)
           {
@@ -217,37 +272,11 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
           }
 
 
-
         else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
                  && sceneEvent->button() == Qt::LeftButton
                  && ui->graphicsView->cursor()==myCursors["arrowMode"]){
 
-            /*  Note: scene.mouseGrabberItem() doesn't
-                work weel on GraphicsSceneMousePress event but it works well on
-                GraphicsSceneMouseRelease event, on the other hand, scene.itemAt()
-                doesn't work well on GraphicsSceneMouseRelease because it takes the topmost
-                object, but it works well on GraphicsSceneMousePress.
-                */
-
-
-            QGraphicsItem *pressed_item = scene.itemAt(sceneEvent->scenePos(),ui->graphicsView->transform());
-
-            // the next conditional detects if an intem different from rasterArea was clicked
-            if(pressed_item!=nullptr && pressed_item != &pixmapItem)
-            {
-                shaded_line = new MyGraphicsShadedLineItem;
-
-                p1_shaded_line = sceneEvent->scenePos();
-
-                // init line with 0 lenth (necessary to avoid flip)
-                shaded_line->setLine(p1_shaded_line.x(),
-                                     p1_shaded_line.y(),
-                                     p1_shaded_line.x(),
-                                     p1_shaded_line.y());
-
-                scene.addItem(shaded_line);
-                scene.setShadedItemFlag(true);
-            }
+            draggingItemsOnTheScene(sceneEvent);
         }
 
 
@@ -255,27 +284,24 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                  && sceneEvent->button() == Qt::LeftButton
                  && ui->graphicsView->cursor()==myCursors["arrowMode"]){
 
-            QGraphicsItem *item_released= scene.mouseGrabberItem();
+            droppingItemsOnTheScene(sceneEvent);
+        }
 
-            // the next conditional when a item(s) that is moving is released in its new position
-            if(item_released!=nullptr && item_released != &pixmapItem && scene.getShadedItemFlag())
-            {
-                // we update the position of the point source just for
-                // movements greater than 0.1
-                QPointF p1 = shaded_line->line().p1();
-                QPointF p2 = sceneEvent->scenePos();
-                double temp = NoiseEngine::distanceBetweenPoints(p1.x(),p1.y(),0, p2.x(),p2.y(), 0);
-
-                if(temp>0.1){
-                    item_released->setPos(sceneEvent->scenePos()); // this correct the position to be more acurate
-                }
+        else if (sceneEvent->type() == QEvent::TouchUpdate
+                 && ui->graphicsView->cursor()==myCursors["arrowMode"]){
+            // next conditional guarantees that the user dropp any object that
+            // currently is dragging before proccessing TouchUpdate event
+            if(scene.getShadedItemFlag()){
                 delete shaded_line;
+                scene.setShadedItemFlag(false);
             }
-            scene.setShadedItemFlag(false);
+
         }
 
      return QMainWindow::eventFilter(target, event);
     }
+
+
     return false;
 }
 

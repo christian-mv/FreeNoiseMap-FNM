@@ -66,11 +66,6 @@ QPainterPath PointSourcePixmapItem::shape() const
 
 void PointSourcePixmapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-
-    // when an item is selected, an around rectangle has to bee painted, and
-    // this implementation is different for mobiles and desktop OS.
-
-#if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
     if(isSelected()){
         QPen pen(Qt::black);
         pen.setWidth(1);
@@ -84,10 +79,6 @@ void PointSourcePixmapItem::paint(QPainter *painter, const QStyleOptionGraphicsI
     }else{
         QGraphicsPixmapItem::paint(painter, option, widget);
     }
-#else
-    QGraphicsPixmapItem::paint(painter, option, widget);
-#endif
-
 }
 
 QVariant PointSourcePixmapItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
