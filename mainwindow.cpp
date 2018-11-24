@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     loadCursors();
 
+
     loadDefaultGrid();
 
     ui->graphicsView->setScene(&scene);
@@ -70,10 +71,6 @@ void MainWindow::loadCursors()
 
     myCursors["pointSource"] = QCursor(
                 QPixmap(":/images/icons/point_source.png").scaled(20,20,Qt::KeepAspectRatio,Qt::SmoothTransformation));
-
-
-    myCursors["grid"] = QCursor(
-                QPixmap(":/images/icons/grid.png").scaled(20,20,Qt::KeepAspectRatio,Qt::SmoothTransformation));
 
     myCursors["arrowMode"] = QCursor(Qt::ArrowCursor);
 
@@ -157,12 +154,14 @@ void MainWindow::draggingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent)
     // the next conditional detects if an intem different from rasterArea was clicked
     if(pressed_item!=nullptr && pressed_item != &pixmapItem)
     {
-        if(shaded_line==nullptr){
-            delete shaded_line;
+
+        // if the shaded_line already exists in the scene, it isn't neccesary
+        // create a new one.
+        if(scene.getShadedItemFlag()){
+           return;
         }
 
         shaded_line = new MyGraphicsShadedLineItem;
-
         p1_shaded_line = sceneEvent->scenePos();
 
         // init line with 0 lenth (necessary to avoid flip)
@@ -173,6 +172,8 @@ void MainWindow::draggingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent)
 
         scene.addItem(shaded_line);
         scene.setShadedItemFlag(true);
+
+
     }
 }
 
@@ -182,7 +183,7 @@ void MainWindow::droppingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent)
 
     // the next conditional when a item(s) that is moving is released in its new position
     if(item_released!=nullptr && item_released != &pixmapItem && scene.getShadedItemFlag())
-    {
+    {        
         // we update the position of the point source just for
         // movements greater than 0.1
         QPointF p1 = shaded_line->line().p1();
@@ -221,7 +222,6 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
 
 bool MainWindow::eventFilter(QObject *target, QEvent *event)
 {
-    qDebug()<<target;
 
     if(target == &scene){
         QGraphicsSceneMouseEvent *sceneEvent = static_cast<QGraphicsSceneMouseEvent*>(event);
@@ -237,6 +237,14 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
           }
 
+
+        else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
+                 && sceneEvent->button() == Qt::LeftButton
+                 && ui->graphicsView->cursor()==myCursors["arrowMode"]){
+
+
+            draggingItemsOnTheScene(sceneEvent);
+        }
 
         else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
                  && sceneEvent->button() == Qt::LeftButton
@@ -271,20 +279,12 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
           }
 
-
-        else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
-                 && sceneEvent->button() == Qt::LeftButton
-                 && ui->graphicsView->cursor()==myCursors["arrowMode"]){
-
-            draggingItemsOnTheScene(sceneEvent);
-        }
-
-
         else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
                  && sceneEvent->button() == Qt::LeftButton
                  && ui->graphicsView->cursor()==myCursors["arrowMode"]){
 
             droppingItemsOnTheScene(sceneEvent);
+
         }
 
         else if (sceneEvent->type() == QEvent::TouchUpdate
@@ -382,13 +382,6 @@ void MainWindow::on_actionzoom_full_triggered()
                           myGrid.getRect().height()+ofsset);
 
     ui->graphicsView->fitInView(rectF,Qt::KeepAspectRatio);
-
-
-
-//        // center scrollbars:
-
-    ui->graphicsView->horizontalScrollBar()->setMaximum(scene.sceneRect().width()*1.1);
-    ui->graphicsView->verticalScrollBar()->setMaximum(scene.sceneRect().height()*1.1);
 
 
 }
