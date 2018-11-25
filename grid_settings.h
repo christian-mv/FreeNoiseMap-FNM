@@ -11,7 +11,7 @@ public:
     void setRect(const QRectF &newRect){ this->rectGrid = newRect; }
     void setDeltaX(const double &dx=10){ this->dx=dx; }
     void setDeltaY(const double &dy=10){ this->dy=dy; }
-    void setInterpolationFactor(const unsigned int &factor=1){interpolationFactor = factor; }
+    void setInterpolationFactor(const unsigned int &factor=1){factor<1? 1 : interpolationFactor = factor; }
 
     QRectF getRect() const { return this->rectGrid; }
     double getDeltaX() const { return dx; }

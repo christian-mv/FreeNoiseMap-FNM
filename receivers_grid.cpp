@@ -105,6 +105,7 @@ bool ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QProgre
     SingleReceiver interpolatedReceiver;
     SingleReceiver *r;
 
+
     for(int i = 0; i<matrix.size(); i++){
 
         if(progress.wasCanceled()){
@@ -119,7 +120,6 @@ bool ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QProgre
             setNoiseColor(r->get_Leq(), &decibelColor);
             painter.setBrush(QBrush(decibelColor));
             painter.drawRect(receiverRect(r));
-
         }
 
         qApp->processEvents();
@@ -140,40 +140,40 @@ void ReceiversGrid::setNoiseColor(const double Leq, QColor * colorDecibell)
                           255);
 
 
-/*    if(Leq <= 35){ // dB units
-        colorDecibell->setRgb(0, 255, 0, 255);
-    }
-    else if(35<Leq && Leq<=40){
-        colorDecibell->setRgb(85, 170, 0, 255);
-    }
-    else if(40<Leq && Leq<=45){
-        colorDecibell->setRgb(255, 255, 0, 255);
-    }
-    else if(45<Leq && Leq<=50){
-        colorDecibell->setRgb(197, 131, 0, 255);
-    }
-    else if(50<Leq && Leq<=55){
-        colorDecibell->setRgb(255, 92, 11, 255);
-    }
-    else if(55<Leq && Leq<=60){
-        colorDecibell->setRgb(255, 0, 0, 255);
-    }
-    else if(60<Leq && Leq<=65){
-        colorDecibell->setRgb(156, 0, 0, 255);
-    }
-    else if(65<Leq && Leq<=70){
-        colorDecibell->setRgb(85, 0, 127, 255);
-    }
-    else if(70<Leq && Leq<=75){
-        colorDecibell->setRgb(0, 0, 150, 255);
-    }
-    else if(75<Leq && Leq<=80){
-        colorDecibell->setRgb(0, 0, 113, 255);
-    }
-    else if(80<Leq){
-        colorDecibell->setRgb(0, 0, 0, 255);
-    }
-*/
+//    if(Leq <= 35){ // dB units
+//        colorDecibell->setRgb(0, 255, 0, 255);
+//    }
+//    else if(35<Leq && Leq<=40){
+//        colorDecibell->setRgb(85, 170, 0, 255);
+//    }
+//    else if(40<Leq && Leq<=45){
+//        colorDecibell->setRgb(255, 255, 0, 255);
+//    }
+//    else if(45<Leq && Leq<=50){
+//        colorDecibell->setRgb(197, 131, 0, 255);
+//    }
+//    else if(50<Leq && Leq<=55){
+//        colorDecibell->setRgb(255, 92, 11, 255);
+//    }
+//    else if(55<Leq && Leq<=60){
+//        colorDecibell->setRgb(255, 0, 0, 255);
+//    }
+//    else if(60<Leq && Leq<=65){
+//        colorDecibell->setRgb(156, 0, 0, 255);
+//    }
+//    else if(65<Leq && Leq<=70){
+//        colorDecibell->setRgb(85, 0, 127, 255);
+//    }
+//    else if(70<Leq && Leq<=75){
+//        colorDecibell->setRgb(0, 0, 150, 255);
+//    }
+//    else if(75<Leq && Leq<=80){
+//        colorDecibell->setRgb(0, 0, 113, 255);
+//    }
+//    else if(80<Leq){
+//        colorDecibell->setRgb(0, 0, 0, 255);
+//    }
+
 }
 
 void ReceiversGrid::resetNoiseReceiver()
@@ -340,11 +340,13 @@ QRectF ReceiversGrid::receiverRect(const double x, const double y)
     unsigned int n = gridSettings.getInterpolatorFactor();
     double dx = gridSettings.getDeltaX();
     double dy = gridSettings.getDeltaY();
+    double width = dx/n;
+    double height = dy/n;
 
-    return QRectF(x - (dx/n)/2,
-                      y - (dy/n)/2,
-                      dx/n,
-                      dy/n
+    return QRectF(x - width/2,
+                      y - height/2,
+                      width,
+                      height
                   );
 }
 

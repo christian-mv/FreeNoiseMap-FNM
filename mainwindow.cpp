@@ -85,9 +85,9 @@ void MainWindow::loadCursors()
 void MainWindow::loadDefaultGrid()
 {
     myGrid.setRect(QRectF(0, 0, 1000, 600));
-    myGrid.setDeltaX(3);
-    myGrid.setDeltaY(3);
-    myGrid.setInterpolationFactor(2);
+    myGrid.setDeltaX(2);
+    myGrid.setDeltaY(2);
+    myGrid.setInterpolationFactor(1);
     receivers.setGrid(myGrid);
     scene.setSceneRect(myGrid.getRect()); // neccesary for consistency when scrolling
 
