@@ -23,7 +23,7 @@ MyGraphicsView::MyGraphicsView(QWidget *parent):
 void MyGraphicsView::setCursor(const QCursor &newCursor)
 {
 
-    QList<QGraphicsItem *> sceneItems = items();
+//    QList<QGraphicsItem *> sceneItems = items();
     if(newCursor == Qt::OpenHandCursor){        
         setDragMode(ScrollHandDrag);        
 
@@ -37,21 +37,21 @@ void MyGraphicsView::setCursor(const QCursor &newCursor)
 
     }
 
-    if(newCursor != Qt::ArrowCursor){
-        this->setMouseTracking(false);
-        for(auto item: sceneItems){
-            if(item->type() != 65536){ // 65536 represents our MyRasterPixmapItemArea
-                item->setAcceptHoverEvents(false);
-            }
-        }
-    }else if(newCursor == Qt::ArrowCursor){
-        this->setMouseTracking(true);
-        for(auto item: sceneItems){
-            if(item->type() != 65536){ // 65536 represents our MyRasterPixmapItemArea
-                item->setAcceptHoverEvents(true);
-            }
-        }
-    }
+//    if(newCursor != Qt::ArrowCursor){
+//        this->setMouseTracking(false);
+//        for(auto item: sceneItems){
+//            if(item->type() != 65536){ // 65536 represents our MyRasterPixmapItemArea
+//                item->setAcceptHoverEvents(false);
+//            }
+//        }
+//    }else if(newCursor == Qt::ArrowCursor){
+//        this->setMouseTracking(true);
+//        for(auto item: sceneItems){
+//            if(item->type() != 65536){ // 65536 represents our MyRasterPixmapItemArea
+//                item->setAcceptHoverEvents(true);
+//            }
+//        }
+//    }
 
 
     QGraphicsView::setCursor(newCursor);
@@ -128,6 +128,8 @@ bool MyGraphicsView::viewportEvent(QEvent *event)
     }
     return QGraphicsView::viewportEvent(event);
 }
+
+
 
 
 //void MyGraphicsView::mouseMoveEvent(QMouseEvent *event)

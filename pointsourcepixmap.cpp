@@ -103,13 +103,12 @@ void PointSourcePixmapItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
 
     setCursor(Qt::PointingHandCursor);
+
     QGraphicsItem::hoverEnterEvent(event);
 }
 
-void PointSourcePixmapItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
-{
-
-    QGraphicsItem::hoverLeaveEvent(event);
-
-}
+//void PointSourcePixmapItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+//{
+//    QGraphicsItem::hoverLeaveEvent(event);
+//}
 

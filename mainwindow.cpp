@@ -32,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setMouseTracking(true); // enabling mouse track on a scene when not pressing mouse
     qApp->installEventFilter(this);
 
+
+
     ui->graphicsView->centerOn(QPointF(0,0));
     ui->graphicsView->scale(1,-1); // invert Y axes
 
@@ -69,16 +71,20 @@ QImage MainWindow::invertImageOnYAxes(const QImage &image)
 void MainWindow::loadCursors()
 {
 
+    myCursors["arrowMode"] = QCursor(Qt::ArrowCursor);
+    myCursors["backUpCursor"] = myCursors["arrowMode"];
+
     myCursors["pointSource"] = QCursor(
                 QPixmap(":/images/icons/point_source.png").scaled(20,20,Qt::KeepAspectRatio,Qt::SmoothTransformation));
 
-    myCursors["arrowMode"] = QCursor(Qt::ArrowCursor);
 
     myCursors["editMode"] = QCursor(Qt::PointingHandCursor);
 
     myCursors["gridMode"] = QCursor(Qt::CrossCursor);
 
     myCursors["dragMode"] = QCursor(Qt::OpenHandCursor);
+
+
 
 }
 
@@ -235,6 +241,17 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
             movingItemsOnTheScene(sceneEvent->scenePos());
 
+            auto itemUnderCursor = scene.itemAt(sceneEvent->scenePos(), ui->graphicsView->transform());
+            if(itemUnderCursor != &pixmapItem
+                    && itemUnderCursor != nullptr ){
+
+                if(ui->graphicsView->cursor()==myCursors["arrowMode"]){
+                    itemUnderCursor->setAcceptHoverEvents(true);
+                }else{
+                    itemUnderCursor->setAcceptHoverEvents(false);
+                    itemUnderCursor->setCursor(ui->graphicsView->cursor());
+                }
+            }
           }
 
 
@@ -274,6 +291,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
             myPixmapPointSourceItem->setPixmap(myPixmap);
             myPixmapPointSourceItem->setPointSource(myPointSource);
+
 
             scene.addItem(myPixmapPointSourceItem);
 
@@ -317,18 +335,21 @@ void MainWindow::on_actionAdd_point_source_triggered()
 
 void MainWindow::on_actioneditMode_triggered()
 {
+    on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
     ui->graphicsView->setCursor(myCursors["arrowMode"]);
 
 }
 
 void MainWindow::on_actiongrid_triggered()
 {
+    on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
     ui->graphicsView->setCursor(myCursors["gridMode"]);
 
 }
 
 void MainWindow::on_actioncalculateGrid_triggered()
 {
+    on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
     ui->graphicsView->setCursor(myCursors["arrowMode"]);
     resetPixmapArea();
     receivers.resetNoiseReceiver();

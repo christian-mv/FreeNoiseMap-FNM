@@ -28,12 +28,15 @@ private:
 protected:
     // the implementation of the next override methods is explanined
     // in "Game Programming Using QT, 1ed, chp 6, page 215"
-    virtual void wheelEvent(QWheelEvent *event);
+    virtual void wheelEvent(QWheelEvent *event) override;
 //    virtual void mouseMoveEvent(QMouseEvent *event);
 //    virtual void mousePressEvent(QMouseEvent *event);
 //    virtual void mouseReleaseEvent(QMouseEvent *event);
 
-    virtual bool viewportEvent(QEvent *event);
+    virtual bool viewportEvent(QEvent *event) override;
+
+
+
 
 
 };
