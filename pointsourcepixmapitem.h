@@ -11,8 +11,9 @@ class PointSourcePixmapItem : public QGraphicsPixmapItem
 public:
     PointSourcePixmapItem();
     void setPointSource(PointSource *source);
-    QRectF boundingRect() const;
-    QPainterPath shape() const;
+    QRectF boundingRect() const override;
+    QPainterPath shape() const override;
+    virtual int	type() const override;
 
 
 private:
@@ -22,11 +23,11 @@ private:
 protected:
     void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
-               QWidget *widget);
+               QWidget *widget) override;
 
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
 //    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
 

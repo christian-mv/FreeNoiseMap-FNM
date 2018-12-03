@@ -58,7 +58,7 @@ private:
     bool calculateNoiseFromSources(QProgressDialog &progress);
     void resetPixmapArea();    
     void movingItemsOnTheScene(const QPointF Pos);
-    void draggingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent);
+    void draggingPointSourceItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent, QGraphicsItem *pressed_item);
     void droppingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent);
 
 

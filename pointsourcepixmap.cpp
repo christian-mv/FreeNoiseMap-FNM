@@ -1,4 +1,5 @@
 #include "pointsourcepixmapitem.h"
+#include "fnm_types.h"
 #include <QCursor>
 #include "pointsource.h"
 #include <QRectF>
@@ -59,6 +60,11 @@ QPainterPath PointSourcePixmapItem::shape() const
     QPainterPath path;
     path.addRect(this->boundingRect());
     return path;
+}
+
+int PointSourcePixmapItem::type() const
+{
+    return FNM_TypeId::PointSourceItemType; // represents a custom item
 }
 
 

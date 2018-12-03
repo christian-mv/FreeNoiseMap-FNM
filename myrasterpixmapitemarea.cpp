@@ -1,4 +1,5 @@
 #include "myrasterpixmapitemarea.h"
+#include "fnm_types.h"
 #include <QPainter>
 
 
@@ -9,7 +10,7 @@ MyRasterPixmapItemArea::MyRasterPixmapItemArea()
 
 int MyRasterPixmapItemArea::type() const
 {
-    return 65536; // represents a custom item
+    return FNM_TypeId::RasterPixmapItemType; // represents a custom item
 }
 
 void MyRasterPixmapItemArea::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

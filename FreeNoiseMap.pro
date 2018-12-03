@@ -51,7 +51,8 @@ HEADERS += \
     pointsourcepixmapitem.h \
     myrasterpixmapitemarea.h \
     mygraphicsshadedlineitem.h \
-    myqgraphicssimpletextitem.h
+    myqgraphicssimpletextitem.h \
+    fnm_types.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

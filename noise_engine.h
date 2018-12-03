@@ -13,7 +13,8 @@
 
 
 namespace  NoiseEngine
-{
+{    
+
     MATRIX_OF_DOUBLES createMatrixOfDoubles(unsigned int m, unsigned int n);
     void initSeed(); // initializes the seed only once
     int intRandom(int min, int max);
@@ -38,6 +39,7 @@ namespace  NoiseEngine
 
 
     void addRandomSources(vector<PointSource *> &pointSources, const GridSettings &myGrid);
+
 
 };
 

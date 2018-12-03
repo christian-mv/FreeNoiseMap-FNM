@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "fnm_types.h"
 #include "pointsource.h"
 #include "ui_mainwindow.h"
 #include "noise_engine.h"
@@ -49,6 +50,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     ui->graphicsView->show();
+
+//    QPainterPath path;
+//    path.moveTo(0,0);
+//    path.lineTo(100,100);
+//    path.lineTo(500,300);
+//    QGraphicsPathItem *itemPath = new QGraphicsPathItem(path);
+//    itemPath->setPen(QPen(Qt::black));
+//    itemPath->setPos(50,50);
+//    itemPath->setFlag(QGraphicsItem::ItemIsMovable, true);
+//    itemPath->setFlag(QGraphicsItem::ItemIsSelectable, true);
+//    scene.addItem(itemPath);
 
 
 }
@@ -146,16 +158,9 @@ void MainWindow::movingItemsOnTheScene(QPointF Pos)
     }
 }
 
-void MainWindow::draggingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent)
+void MainWindow::draggingPointSourceItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent, QGraphicsItem *pressed_item)
 {
-    /*  Note: scene.mouseGrabberItem() doesn't
-        work weel on GraphicsSceneMousePress event but it works well on
-        GraphicsSceneMouseRelease event, on the other hand, scene.itemAt()
-        doesn't work well on GraphicsSceneMouseRelease because it takes the topmost
-        object, but it works well on GraphicsSceneMousePress.
-        */
 
-    QGraphicsItem *pressed_item = scene.itemAt(sceneEvent->scenePos(),ui->graphicsView->transform());
 
     // the next conditional detects if an intem different from rasterArea was clicked
     if(pressed_item!=nullptr && pressed_item != &pixmapItem)
@@ -260,7 +265,23 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                  && ui->graphicsView->cursor()==myCursors["arrowMode"]){
 
 
-            draggingItemsOnTheScene(sceneEvent);
+            /*  Note: scene.mouseGrabberItem() doesn't
+                work weel on GraphicsSceneMousePress event but it works well on
+                GraphicsSceneMouseRelease event, on the other hand, scene.itemAt()
+                doesn't work well on GraphicsSceneMouseRelease because it takes the topmost
+                object, but it works well on GraphicsSceneMousePress.
+                */
+            QGraphicsItem *pressed_item = scene.itemAt(sceneEvent->scenePos(),ui->graphicsView->transform());
+
+            switch (pressed_item->type()) {
+                case FNM_TypeId::PointSourceItemType:
+                    draggingPointSourceItemsOnTheScene(sceneEvent, pressed_item);
+                break;
+
+            }
+
+
+
         }
 
         else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
