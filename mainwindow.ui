@@ -65,6 +65,7 @@
    <addaction name="actioneditMode"/>
    <addaction name="actiondrag_mode"/>
    <addaction name="actionAdd_point_source"/>
+   <addaction name="action_add_line_source"/>
    <addaction name="actiongrid"/>
    <addaction name="actionzoom_full"/>
   </widget>
@@ -135,6 +136,15 @@
    </property>
    <property name="toolTip">
     <string>Zoom full extente</string>
+   </property>
+  </action>
+  <action name="action_add_line_source">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/icons/line_source.png</normaloff>:/images/icons/line_source.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add line source</string>
    </property>
   </action>
  </widget>

@@ -7,5 +7,6 @@
         <file>icons/app_icon.png</file>
         <file>icons/drag_mode.png</file>
         <file>icons/extend.png</file>
+        <file>icons/line_source.png</file>
     </qresource>
 </RCC>
