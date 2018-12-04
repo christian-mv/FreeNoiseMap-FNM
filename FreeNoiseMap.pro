@@ -36,7 +36,8 @@ SOURCES += \
     pointsourcepixmap.cpp \
     myrasterpixmapitemarea.cpp \
     mygraphicsshadedlineitem.cpp \
-    myqgraphicssimpletextitem.cpp
+    myqgraphicssimpletextitem.cpp \
+    linesource.cpp
 
 HEADERS += \
     receivers_grid.h \
@@ -52,7 +53,8 @@ HEADERS += \
     myrasterpixmapitemarea.h \
     mygraphicsshadedlineitem.h \
     myqgraphicssimpletextitem.h \
-    fnm_types.h
+    fnm_types.h \
+    linesource.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

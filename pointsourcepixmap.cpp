@@ -38,6 +38,13 @@ void PointSourcePixmapItem::setPointSource(PointSource *source)
     this->setTransform(transform);
 }
 
+PointSource *PointSourcePixmapItem::getPointSource() const
+{
+    return source;
+}
+
+
+
 QRectF PointSourcePixmapItem::boundingRect() const
 {
 

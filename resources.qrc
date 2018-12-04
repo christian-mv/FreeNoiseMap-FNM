@@ -8,5 +8,6 @@
         <file>icons/drag_mode.png</file>
         <file>icons/extend.png</file>
         <file>icons/line_source.png</file>
+        <file>icons/target.png</file>
     </qresource>
 </RCC>

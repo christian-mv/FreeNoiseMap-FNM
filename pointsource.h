@@ -10,7 +10,7 @@ public:
     void set_x(const double &x){this->x = x;}
     void set_y(const double &y){this->y = y;}
     void set_z(const double &z){this->z = z;}
-    void set_Lw(const double &z){this->z = z;}
+    void set_Lw(const double &Lw){this->Lw = Lw;}
 
     double get_x() const {return x;}
     double get_y() const {return y;}
@@ -19,7 +19,7 @@ public:
 private:
     // current data
     double x, y, z; // current coordinates in meters units
-    double Lw; // sound power in dB(A) units
+    double Lw; // total sound power level in dB(A) units
 
 };
 

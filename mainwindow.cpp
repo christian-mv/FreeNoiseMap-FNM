@@ -51,16 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->graphicsView->show();
 
-//    QPainterPath path;
-//    path.moveTo(0,0);
-//    path.lineTo(100,100);
-//    path.lineTo(500,300);
-//    QGraphicsPathItem *itemPath = new QGraphicsPathItem(path);
-//    itemPath->setPen(QPen(Qt::black));
-//    itemPath->setPos(50,50);
-//    itemPath->setFlag(QGraphicsItem::ItemIsMovable, true);
-//    itemPath->setFlag(QGraphicsItem::ItemIsSelectable, true);
-//    scene.addItem(itemPath);
+
 
 
 }
@@ -95,6 +86,10 @@ void MainWindow::loadCursors()
     myCursors["gridMode"] = QCursor(Qt::CrossCursor);
 
     myCursors["dragMode"] = QCursor(Qt::OpenHandCursor);
+
+    myCursors["lineSourceMode"] = QCursor(
+                QPixmap(":/images/icons/target.png").scaled(20,20,Qt::KeepAspectRatio,Qt::SmoothTransformation));
+
 
 
 
@@ -209,6 +204,16 @@ void MainWindow::droppingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent)
     scene.setShadedItemFlag(false);
 }
 
+bool MainWindow::isThereNoiseSources() const
+{
+    for(auto item: scene.items()){
+        if(item->type()== FNM_TypeId::PointSourceItemType ||
+                item->type()== FNM_TypeId::LineSourceItemType)
+            return true;
+    }
+    return false;
+}
+
 
 
 bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
@@ -217,11 +222,18 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
         if(progress.wasCanceled()){
             return false;
         }
-        for(auto currentReceiver : receivers.matrix.at(i)){
-            for(auto currentSource : pointSources){
-                NoiseEngine::P2P(currentSource, currentReceiver);
-            }
 
+        PointSourcePixmapItem *currentPixmapItemPointSource;
+
+        for(auto currentReceiver : receivers.matrix.at(i)){
+
+            // noise from pointSources
+            for(auto currentItem : scene.items()){
+                if(currentItem->type() == FNM_TypeId::PointSourceItemType){
+                    currentPixmapItemPointSource = (static_cast<PointSourcePixmapItem *>(currentItem));
+                    NoiseEngine::P2P(currentPixmapItemPointSource->getPointSource(), currentReceiver);
+                }
+            }
         }
         progress.setValue(i);
         qApp->processEvents();
@@ -273,14 +285,14 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                 */
             QGraphicsItem *pressed_item = scene.itemAt(sceneEvent->scenePos(),ui->graphicsView->transform());
 
-            switch (pressed_item->type()) {
-                case FNM_TypeId::PointSourceItemType:
-                    draggingPointSourceItemsOnTheScene(sceneEvent, pressed_item);
-                break;
+            if(pressed_item != nullptr){
+                switch (pressed_item->type()) {
+                    case FNM_TypeId::PointSourceItemType:
+                        draggingPointSourceItemsOnTheScene(sceneEvent, pressed_item);
+                    break;
 
+                }
             }
-
-
 
         }
 
@@ -293,8 +305,6 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                         sceneEvent->scenePos().x(),
                         sceneEvent->scenePos().y(),
                         1.2,90);
-
-            pointSources.push_back(myPointSource);
 
             // create pixmapItem for the noise source
 
@@ -317,6 +327,34 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             scene.addItem(myPixmapPointSourceItem);
 
           }
+
+        else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
+                 && sceneEvent->button() == Qt::LeftButton
+                 && ui->graphicsView->cursor()==myCursors["lineSourceMode"])
+        {
+                static QPainterPath path(sceneEvent->scenePos());
+                static QGraphicsPathItem *itemPath = new QGraphicsPathItem(path);
+
+                qDebug()<<"ELEMENTS: "<<path.elementCount();
+
+                if(path.elementCount()<=1){
+                    qDebug()<<"EMPTY";
+
+
+                    path.lineTo(sceneEvent->scenePos());
+                    scene.addItem(itemPath);
+                    qDebug()<<path;
+                }else{
+
+                    path.lineTo(sceneEvent->scenePos());
+
+                    qDebug()<<path;
+                }
+                itemPath->setPath(path);
+                itemPath->setFlag(QGraphicsItem::ItemIsMovable, true);
+                itemPath->setFlag(QGraphicsItem::ItemIsSelectable, true);
+
+        }
 
         else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
                  && sceneEvent->button() == Qt::LeftButton
@@ -376,7 +414,7 @@ void MainWindow::on_actioncalculateGrid_triggered()
     receivers.resetNoiseReceiver();
 
 
-    if(pointSources.size() == 0){
+    if( !isThereNoiseSources() ){
         QMessageBox::warning(this, tr("My Application"),
                                        tr("No sources available\n"
                                           "Please enter noise sources"),QMessageBox::Ok);
@@ -426,4 +464,10 @@ void MainWindow::on_actionzoom_full_triggered()
     ui->graphicsView->fitInView(rectF,Qt::KeepAspectRatio);
 
 
+}
+
+void MainWindow::on_action_add_line_source_triggered()
+{
+    on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
+    ui->graphicsView->setCursor(myCursors["lineSourceMode"]);
 }

@@ -42,6 +42,8 @@ private slots:
 
     void on_actionzoom_full_triggered();
 
+    void on_action_add_line_source_triggered();
+
 private:
     Ui::MainWindow *ui;
     MyGraphicsScene scene;
@@ -49,8 +51,6 @@ private:
     MyRasterPixmapItemArea pixmapItem;
     GridSettings myGrid;
     ReceiversGrid receivers;
-    vector<PointSource *> pointSources;
-    vector<PointSourcePixmapItem *> pixmapPointSources;
     QHash<QString, QCursor> myCursors;
     QImage invertImageOnYAxes(const QImage &image);
     void loadCursors();
@@ -60,7 +60,7 @@ private:
     void movingItemsOnTheScene(const QPointF Pos);
     void draggingPointSourceItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent, QGraphicsItem *pressed_item);
     void droppingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent);
-
+    bool isThereNoiseSources() const;
 
     MyGraphicsShadedLineItem *shaded_line; // auxiliary line when dragging items
     QPointF p1_shaded_line; // initial coordinate for shaded_line
