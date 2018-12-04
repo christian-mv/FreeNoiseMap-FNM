@@ -11,7 +11,7 @@ class MyGraphicsShadedLineItem : public QGraphicsLineItem
 {
 public:
     MyGraphicsShadedLineItem();
-    QRectF boundingRect() const;
+    QRectF boundingRect() const override;
 
 
 

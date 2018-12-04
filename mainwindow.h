@@ -14,7 +14,9 @@
 
 
 class PointSource;
+class SingleLineSource;
 class PointSourcePixmapItem;
+class MyQGraphicsLineSourcesItem;
 class QProgressDialog;
 class MyGraphicsShadedLineItem;
 
@@ -61,9 +63,13 @@ private:
     void draggingPointSourceItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent, QGraphicsItem *pressed_item);
     void droppingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent);
     bool isThereNoiseSources() const;
+    bool releaseLineSourceEdition();
 
     MyGraphicsShadedLineItem *shaded_line; // auxiliary line when dragging items
     QPointF p1_shaded_line; // initial coordinate for shaded_line
+    SingleLineSource *singleLineSource = nullptr;
+    MyQGraphicsLineSourcesItem *itemLineSources = nullptr;
+
 
 protected:
     bool eventFilter(QObject *target, QEvent *event);

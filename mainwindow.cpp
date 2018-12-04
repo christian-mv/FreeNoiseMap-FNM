@@ -1,9 +1,3 @@
-#include "mainwindow.h"
-#include "fnm_types.h"
-#include "pointsource.h"
-#include "ui_mainwindow.h"
-#include "noise_engine.h"
-#include "pointsourcepixmapitem.h"
 #include <QDebug>
 #include <QDesktopWidget>
 #include <QMouseEvent>
@@ -11,7 +5,17 @@
 #include <QProgressDialog>
 #include <QMessageBox>
 #include <QScrollBar>
+
+#include "mainwindow.h"
+#include "fnm_types.h"
+#include "pointsource.h"
+#include "ui_mainwindow.h"
+#include "noise_engine.h"
+#include "pointsourcepixmapitem.h"
 #include "mygraphicsshadedlineitem.h"
+#include "my_qgraphics_line_sources_item.h"
+#include "single_line_source.h"
+
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -214,6 +218,12 @@ bool MainWindow::isThereNoiseSources() const
     return false;
 }
 
+bool MainWindow::releaseLineSourceEdition()
+{
+    singleLineSource = nullptr;
+    itemLineSources = nullptr;
+}
+
 
 
 bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
@@ -328,33 +338,69 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
           }
 
+
+        // add line source
         else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
                  && sceneEvent->button() == Qt::LeftButton
                  && ui->graphicsView->cursor()==myCursors["lineSourceMode"])
         {
-                static QPainterPath path(sceneEvent->scenePos());
-                static QGraphicsPathItem *itemPath = new QGraphicsPathItem(path);
-
-                qDebug()<<"ELEMENTS: "<<path.elementCount();
-
-                if(path.elementCount()<=1){
-                    qDebug()<<"EMPTY";
 
 
-                    path.lineTo(sceneEvent->scenePos());
-                    scene.addItem(itemPath);
-                    qDebug()<<path;
-                }else{
 
-                    path.lineTo(sceneEvent->scenePos());
 
-                    qDebug()<<path;
+            // there aren't any declared vertice in the line
+
+
+            if(singleLineSource == nullptr ){
+                singleLineSource = new SingleLineSource;
+                if(itemLineSources == nullptr){
+                    itemLineSources = new MyQGraphicsLineSourcesItem(nullptr,
+                                                                     QPointF(sceneEvent->scenePos().x(),
+                                                                             sceneEvent->scenePos().y()));
+
+                    scene.addItem(itemLineSources);
+                    singleLineSource->set_p1(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(), 0.0);
+                    singleLineSource->set_p2(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(), 0.0);
                 }
-                itemPath->setPath(path);
-                itemPath->setFlag(QGraphicsItem::ItemIsMovable, true);
-                itemPath->setFlag(QGraphicsItem::ItemIsSelectable, true);
 
+
+
+            }
+
+            // there is at least on declared vertice in the line
+
+            else if(singleLineSource != nullptr){
+
+                if(itemLineSources->countSources()<=0){
+                    singleLineSource->set_p1(singleLineSource->get_x2(),
+                                             singleLineSource->get_y2(),
+                                             singleLineSource->get_z2());
+                }else{
+                    singleLineSource->set_p1(itemLineSources->getLineSources().back()->get_x2(),
+                                             itemLineSources->getLineSources().back()->get_y2(),
+                                             itemLineSources->getLineSources().back()->get_z2());
+                }
+
+
+                singleLineSource->set_p2(sceneEvent->scenePos().x(),
+                                         sceneEvent->scenePos().y(), 0.0);
+
+                if(singleLineSource->distance()>0){ // it is not necessary to add lines of 0 distance
+                    itemLineSources->addSource(singleLineSource);
+                    singleLineSource = new SingleLineSource;
+                }
+            }
         }
+
+        // release line source
+        else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
+                 && sceneEvent->button() == Qt::RightButton
+                 && ui->graphicsView->cursor()==myCursors["lineSourceMode"])
+        {
+            releaseLineSourceEdition();
+        }
+
+
 
         else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
                  && sceneEvent->button() == Qt::LeftButton
@@ -388,6 +434,7 @@ void MainWindow::on_actionAdd_point_source_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
     ui->graphicsView->setCursor(myCursors["pointSource"]);
+    releaseLineSourceEdition();
 
 }
 
@@ -396,6 +443,7 @@ void MainWindow::on_actioneditMode_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
     ui->graphicsView->setCursor(myCursors["arrowMode"]);
+    releaseLineSourceEdition();
 
 }
 
@@ -403,6 +451,7 @@ void MainWindow::on_actiongrid_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
     ui->graphicsView->setCursor(myCursors["gridMode"]);
+    releaseLineSourceEdition();
 
 }
 
@@ -412,6 +461,8 @@ void MainWindow::on_actioncalculateGrid_triggered()
     ui->graphicsView->setCursor(myCursors["arrowMode"]);
     resetPixmapArea();
     receivers.resetNoiseReceiver();
+    releaseLineSourceEdition();
+
 
 
     if( !isThereNoiseSources() ){
