@@ -3,22 +3,22 @@
 
 #include <QGraphicsPixmapItem>
 
-class PointSource;
+class MinimalPointSource;
 
 
 class PointSourcePixmapItem : public QGraphicsPixmapItem
 {
 public:
     PointSourcePixmapItem();
-    void setPointSource(PointSource *source);
-    PointSource * getPointSource()const;
+    void setPointSource(MinimalPointSource *source);
+    MinimalPointSource * getPointSource()const;
     QRectF boundingRect() const override;
     QPainterPath shape() const override;
     virtual int	type() const override;
 
 
 private:
-    PointSource *source;
+    MinimalPointSource *source;
 
 
 protected:

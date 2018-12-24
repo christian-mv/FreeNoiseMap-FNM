@@ -219,10 +219,7 @@ void MyGraphicsShadedLineItem::drawLines(QPainter *painter) const
 //            painter->drawRect(boundingRect()); // drawRectangle
 }
 
-void MyGraphicsShadedLineItem::drawText()
-{
 
-}
 
 
 

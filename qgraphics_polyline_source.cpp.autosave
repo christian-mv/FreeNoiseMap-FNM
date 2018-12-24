@@ -1,0 +1,14 @@
+#include "qgraphics_polyline_source.h"
+
+QGraphicsPolyLineSourceItem::QGraphicsPolyLineSourceItem()
+    : Lw(-88)
+{
+
+}
+
+void QGraphicsPolyLineSourceItem::addLine(QGraphicsLineItem *lineItem)
+{
+    qGraphicsLineItemsGroup.addToGroup(lineItem);
+}
+
+

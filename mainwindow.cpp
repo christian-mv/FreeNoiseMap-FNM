@@ -8,19 +8,19 @@
 
 #include "mainwindow.h"
 #include "fnm_types.h"
-#include "pointsource.h"
+#include "minimal_point_source.h"
 #include "ui_mainwindow.h"
 #include "noise_engine.h"
 #include "pointsourcepixmapitem.h"
 #include "mygraphicsshadedlineitem.h"
-#include "my_qgraphics_line_sources_item.h"
-#include "single_line_source.h"
+#include "qgraphics_polyline_source_item.h"
 
 
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    QMainWindow(parent), ui(new Ui::MainWindow),
+    singleLine(nullptr), polyLineSource(nullptr)
+
 {
 
     ui->setupUi(this);
@@ -218,11 +218,13 @@ bool MainWindow::isThereNoiseSources() const
     return false;
 }
 
-bool MainWindow::releaseLineSourceEdition()
+void MainWindow::releaseLineSourceEdition()
 {
-    singleLineSource = nullptr;
-    itemLineSources = nullptr;
+    singleLine = nullptr;
+    polyLineSource = nullptr;
 }
+
+
 
 
 
@@ -311,7 +313,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                  && ui->graphicsView->cursor()==myCursors["pointSource"])
           {
 
-            PointSource *myPointSource = new PointSource(
+            MinimalPointSource *myPointSource = new MinimalPointSource(
                         sceneEvent->scenePos().x(),
                         sceneEvent->scenePos().y(),
                         1.2,90);
@@ -349,47 +351,49 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
 
             // there aren't any declared vertice in the line
+            if(singleLine == nullptr){
+                singleLine = new QLineF();
+                if(polyLineSource == nullptr){
+                    polyLineSource = new QGraphicsPolyLineSourceItem();
 
-
-            if(singleLineSource == nullptr ){
-                singleLineSource = new SingleLineSource;
-                if(itemLineSources == nullptr){
-                    itemLineSources = new MyQGraphicsLineSourcesItem(nullptr,
-                                                                     QPointF(sceneEvent->scenePos().x(),
-                                                                             sceneEvent->scenePos().y()));
-
-                    scene.addItem(itemLineSources);
-                    singleLineSource->set_p1(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(), 0.0);
-                    singleLineSource->set_p2(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(), 0.0);
+                    scene.addItem(polyLineSource->getLinesGroup());
+                    singleLine->setLine(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(),
+                                           sceneEvent->scenePos().x(), sceneEvent->scenePos().y());
                 }
 
-
-
             }
+            // there is at least one declared vertice in the line
+            else if(singleLine != nullptr){
 
-            // there is at least on declared vertice in the line
+                if(polyLineSource->getLinesGroup()->childItems().isEmpty()){
+                    singleLine->setP1(QPointF(singleLine->x2(),
+                                              singleLine->y2()));
 
-            else if(singleLineSource != nullptr){
 
-                if(itemLineSources->countSources()<=0){
-                    singleLineSource->set_p1(singleLineSource->get_x2(),
-                                             singleLineSource->get_y2(),
-                                             singleLineSource->get_z2());
                 }else{
-                    singleLineSource->set_p1(itemLineSources->getLineSources().back()->get_x2(),
-                                             itemLineSources->getLineSources().back()->get_y2(),
-                                             itemLineSources->getLineSources().back()->get_z2());
+
+                    // this lines take the first vertice of the current line as exactly the second vertice of the previous line
+
+                    singleLine->setP1( singleLine->p2() );
+
                 }
 
+                singleLine->setP2(QPointF(
+                                          sceneEvent->scenePos().x(),
+                                          sceneEvent->scenePos().y()
+                                          )
+                                  );
 
-                singleLineSource->set_p2(sceneEvent->scenePos().x(),
-                                         sceneEvent->scenePos().y(), 0.0);
 
-                if(singleLineSource->distance()>0){ // it is not necessary to add lines of 0 distance
-                    itemLineSources->addSource(singleLineSource);
-                    singleLineSource = new SingleLineSource;
+                if(singleLine->p1() != singleLine->p2()){ // it is not necessary to add lines of 0 distance
+                    polyLineSource->addLine(new QGraphicsLineItem(*singleLine));
+                    singleLine = new QLineF(singleLine->x2(),
+                                            singleLine->y2(),
+                                            singleLine->x2(),
+                                            singleLine->y2());
                 }
             }
+
         }
 
         // release line source
@@ -452,7 +456,6 @@ void MainWindow::on_actiongrid_triggered()
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
     ui->graphicsView->setCursor(myCursors["gridMode"]);
     releaseLineSourceEdition();
-
 }
 
 void MainWindow::on_actioncalculateGrid_triggered()
@@ -462,7 +465,6 @@ void MainWindow::on_actioncalculateGrid_triggered()
     resetPixmapArea();
     receivers.resetNoiseReceiver();
     releaseLineSourceEdition();
-
 
 
     if( !isThereNoiseSources() ){
@@ -500,6 +502,7 @@ void MainWindow::on_actioncalculateGrid_triggered()
 void MainWindow::on_actiondrag_mode_triggered()
 {
     ui->graphicsView->setCursor(myCursors["dragMode"]);
+    releaseLineSourceEdition();
 
 }
 
@@ -521,4 +524,5 @@ void MainWindow::on_action_add_line_source_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
     ui->graphicsView->setCursor(myCursors["lineSourceMode"]);
+    releaseLineSourceEdition();
 }

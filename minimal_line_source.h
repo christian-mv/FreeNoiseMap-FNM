@@ -6,10 +6,10 @@
 /*LineSource hereda los atributos de PointSource donde (x,y,z) es la
 Posición del primer vertice y Lw el nivel de potencia acústica total*/
 
-class SingleLineSource
+class MinimalLineSource
 {
 public:
-    explicit SingleLineSource();
+    explicit MinimalLineSource();
 
 
 

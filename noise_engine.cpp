@@ -49,7 +49,7 @@ double distanceBetweenPoints(double x1, double y1, double z1, double x2, double 
 
 
 
-void P2P(PointSource *pointSource, SingleReceiver *receiver)
+void P2P(MinimalPointSource *pointSource, SingleReceiver *receiver)
 {
     double distance = distanceBetweenPoints(pointSource->get_x(),
                                             pointSource->get_y(),
@@ -89,12 +89,12 @@ void interpolationValueAt(const double &t1,
 
 
 
-void addRandomSources(vector<PointSource *> &pointSources, const GridSettings &myGrid)
+void addRandomSources(vector<MinimalPointSource *> &pointSources, const GridSettings &myGrid)
 {
-    pointSources.push_back(new PointSource(100,100,0,90));
-    pointSources.push_back(new PointSource(150,200,0,90));
+    pointSources.push_back(new MinimalPointSource(100,100,0,90));
+    pointSources.push_back(new MinimalPointSource(150,200,0,90));
 
-    pointSources.push_back(new PointSource(20,50,0,80));
+    pointSources.push_back(new MinimalPointSource(20,50,0,80));
 
     //// random sources
     //    int nSources=3;

@@ -1,12 +1,12 @@
-#ifndef POINTSOURCE_H
-#define POINTSOURCE_H
+#ifndef MINIMAL_POINT_SOURCE_H
+#define MINIMAL_POINT_SOURCE_H
 
 
-class PointSource
+class MinimalPointSource
 {
 public:
 
-    explicit PointSource(double in_x=0.0, double in_y=0.0, double in_z=0.0, double in_Lw=-88.0);
+    explicit MinimalPointSource(double in_x=0.0, double in_y=0.0, double in_z=0.0, double in_Lw=-88.0);
     void set_x(const double &x){this->x = x;}
     void set_y(const double &y){this->y = y;}
     void set_z(const double &z){this->z = z;}

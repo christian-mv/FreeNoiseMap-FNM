@@ -27,7 +27,6 @@ SOURCES += \
     grid_settings.cpp \
     receivers_grid.cpp \
     single_receiver.cpp \
-    pointsource.cpp \
     gradientcolor.cpp \
     mainwindow.cpp \
     noise_engine.cpp \
@@ -37,14 +36,14 @@ SOURCES += \
     myrasterpixmapitemarea.cpp \
     mygraphicsshadedlineitem.cpp \
     myqgraphicssimpletextitem.cpp \
-    mygraphicslinesourcesitem.cpp \
-    sigle_line_source.cpp
+    minimal_point_source.cpp \
+    minimal_line_source.h.cpp \
+    qgraphics_polyline_source_item.cpp
 
 HEADERS += \
     receivers_grid.h \
     grid_settings.h \
     single_receiver.h \
-    pointsource.h \
     gradientcolor.h \
     noise_engine.h \
     mainwindow.h \
@@ -55,8 +54,9 @@ HEADERS += \
     mygraphicsshadedlineitem.h \
     myqgraphicssimpletextitem.h \
     fnm_types.h \
-    single_line_source.h \
-    my_qgraphics_line_sources_item.h
+    minimal_point_source.h \
+    minimal_line_source.h \
+    qgraphics_polyline_source_item.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

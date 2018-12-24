@@ -1,7 +1,7 @@
 #include "pointsourcepixmapitem.h"
 #include "fnm_types.h"
 #include <QCursor>
-#include "pointsource.h"
+#include "minimal_point_source.h"
 #include <QRectF>
 #include <QDebug>
 #include <QPainter>
@@ -20,7 +20,7 @@ PointSourcePixmapItem::PointSourcePixmapItem()
 
 }
 
-void PointSourcePixmapItem::setPointSource(PointSource *source)
+void PointSourcePixmapItem::setPointSource(MinimalPointSource *source)
 {
     this->source = source;
 
@@ -38,7 +38,7 @@ void PointSourcePixmapItem::setPointSource(PointSource *source)
     this->setTransform(transform);
 }
 
-PointSource *PointSourcePixmapItem::getPointSource() const
+MinimalPointSource *PointSourcePixmapItem::getPointSource() const
 {
     return source;
 }

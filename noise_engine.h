@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
-#include "pointsource.h"
+#include "minimal_point_source.h"
 #include "single_receiver.h"
 #include "receivers_grid.h"
 
@@ -19,7 +19,7 @@ namespace  NoiseEngine
     void initSeed(); // initializes the seed only once
     int intRandom(int min, int max);
 
-    void P2P(PointSource *pointSource, SingleReceiver *receiver);
+    void P2P(MinimalPointSource *pointSource, SingleReceiver *receiver);
 
     double distanceBetweenPoints(double x1, double y1, double z1,
                                  double x2, double y2, double z2);
@@ -38,7 +38,7 @@ namespace  NoiseEngine
                             const double &y3);
 
 
-    void addRandomSources(vector<PointSource *> &pointSources, const GridSettings &myGrid);
+    void addRandomSources(vector<MinimalPointSource *> &pointSources, const GridSettings &myGrid);
 
 
 };

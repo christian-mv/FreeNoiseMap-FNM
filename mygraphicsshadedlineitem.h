@@ -32,7 +32,7 @@ private:
     double theta() const;
     void updateShadedLines();
     void drawLines(QPainter *painter) const;
-    void drawText();
+
     QString textContainer;
 
 
