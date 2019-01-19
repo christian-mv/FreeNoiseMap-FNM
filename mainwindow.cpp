@@ -17,6 +17,7 @@
 
 
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow),
     singleLine(nullptr), polyLineSource(nullptr)
@@ -260,6 +261,8 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
     if(target == &scene){
         QGraphicsSceneMouseEvent *sceneEvent = static_cast<QGraphicsSceneMouseEvent*>(event);
+
+        // update status bar with coordinates
         if (sceneEvent->type() == QEvent::GraphicsSceneMouseMove)
           {
             QString str = QString("x: %1 m, y: %2 m")
@@ -283,7 +286,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             }
           }
 
-
+        // drag point source
         else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
                  && sceneEvent->button() == Qt::LeftButton
                  && ui->graphicsView->cursor()==myCursors["arrowMode"]){
@@ -308,6 +311,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
         }
 
+        // add point source
         else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
                  && sceneEvent->button() == Qt::LeftButton
                  && ui->graphicsView->cursor()==myCursors["pointSource"])
@@ -347,16 +351,13 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                  && ui->graphicsView->cursor()==myCursors["lineSourceMode"])
         {
 
-
-
-
             // there aren't any declared vertice in the line
             if(singleLine == nullptr){
                 singleLine = new QLineF();
                 if(polyLineSource == nullptr){
                     polyLineSource = new QGraphicsPolyLineSourceItem();
 
-                    scene.addItem(polyLineSource->getLinesGroup());
+                    scene.addItem(polyLineSource);
                     singleLine->setLine(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(),
                                            sceneEvent->scenePos().x(), sceneEvent->scenePos().y());
                 }
@@ -365,7 +366,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             // there is at least one declared vertice in the line
             else if(singleLine != nullptr){
 
-                if(polyLineSource->getLinesGroup()->childItems().isEmpty()){
+                if(polyLineSource->childItems().isEmpty()){
                     singleLine->setP1(QPointF(singleLine->x2(),
                                               singleLine->y2()));
 
@@ -386,7 +387,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
 
                 if(singleLine->p1() != singleLine->p2()){ // it is not necessary to add lines of 0 distance
-                    polyLineSource->addLine(new QGraphicsLineItem(*singleLine));
+                    polyLineSource->addLine(new MyQGraphicsLineItem(*singleLine));
                     singleLine = new QLineF(singleLine->x2(),
                                             singleLine->y2(),
                                             singleLine->x2(),

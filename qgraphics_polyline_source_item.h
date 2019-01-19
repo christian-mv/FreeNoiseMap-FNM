@@ -2,19 +2,38 @@
 #define QGRAPHICS_POLYLINE_SOURCE_ITEM_H
 
 #include<QGraphicsItemGroup>
-class QGraphicsLineItem;
+#include<QPolygonF>
 
-class QGraphicsPolyLineSourceItem
-{
+
+class MyQGraphicsLineItem : public QGraphicsLineItem{
 public:
-    QGraphicsPolyLineSourceItem();
-    void addLine(QGraphicsLineItem *lineItem);
-    QGraphicsItemGroup * getLinesGroup();
+    MyQGraphicsLineItem(QGraphicsItem *parent = nullptr);
+    MyQGraphicsLineItem(const QLineF &line, QGraphicsItem *parent = nullptr);
 
+protected:
+    void  hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+};
+
+
+class QGraphicsPolyLineSourceItem : public QGraphicsItemGroup{
+public:
+    QGraphicsPolyLineSourceItem(QGraphicsItem *parent = nullptr);
+    void addLine(MyQGraphicsLineItem *lineItem);
+    QPainterPath shape() const override;
+
+protected:
+    void paint(QPainter *painter,
+               const QStyleOptionGraphicsItem *option,
+               QWidget *widget) override;
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
 
 private:
-    QGraphicsItemGroup qGraphicsLineItemsGroup;
-    double Lw; // total sound power level
+    double Lw;
+    QPolygonF getBufferOfLine(const QGraphicsLineItem *line) const;
+
+
 };
+
+
 
 #endif // QGRAPHICS_POLYLINE_SOURCE_ITEM_H

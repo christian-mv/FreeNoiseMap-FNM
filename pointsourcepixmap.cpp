@@ -114,9 +114,7 @@ QVariant PointSourcePixmapItem::itemChange(QGraphicsItem::GraphicsItemChange cha
 
 void PointSourcePixmapItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-
     setCursor(Qt::PointingHandCursor);
-
     QGraphicsItem::hoverEnterEvent(event);
 }
 
@@ -124,4 +122,3 @@ void PointSourcePixmapItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 //{
 //    QGraphicsItem::hoverLeaveEvent(event);
 //}
-
