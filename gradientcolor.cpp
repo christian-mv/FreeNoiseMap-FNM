@@ -59,7 +59,7 @@ COLOR_RGB GradientColor::colorAt(const double &Leq)
     }
     else{
         sortStepsAscending();
-        for(unsigned int i = 0; i<steps.size()-1; ++i){
+        for(int i = 0; i<steps.size()-1; ++i){
             if(std::get<3>(steps.at(i)) <=Leq && Leq<=std::get<3>(steps.at(i+1))){
 //                color_1 = {
 //                    std::get<0>(steps.at(i)),

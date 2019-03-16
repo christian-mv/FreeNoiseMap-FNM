@@ -2,7 +2,10 @@
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 #include <math.h>
-#include<QDebug>
+#include <QDebug>
+#include "fnm_types.h"
+#include <QPainterPathStroker>
+#include <QGraphicsSceneHoverEvent>
 
 
 QGraphicsPolyLineSourceItem::QGraphicsPolyLineSourceItem(QGraphicsItem *parent)
@@ -13,7 +16,6 @@ QGraphicsPolyLineSourceItem::QGraphicsPolyLineSourceItem(QGraphicsItem *parent)
 
 void QGraphicsPolyLineSourceItem::addLine(MyQGraphicsLineItem *lineItem)
 {
-
     addToGroup(lineItem);
 }
 
@@ -22,21 +24,30 @@ QPainterPath QGraphicsPolyLineSourceItem::shape() const
     QPainterPath path;
     path.setFillRule(Qt::WindingFill);
     QList<QGraphicsItem *> list = QGraphicsItem::childItems();
+    QPolygonF tempPolygon;
 
     for(auto item: list){
         auto line_item = static_cast<QGraphicsLineItem *>(item);
 
-//        path.addRect(item->boundingRect());
-        path.addPolygon(getBufferOfLine(line_item));
+//        path.addPolygon(getBufferOfLine(line_item)); // this is intended of custom buffers
+
+        tempPolygon = line_item->shape().toFillPolygon();
+        path.addPolygon(tempPolygon);
 
     }
 
     return path;
 }
 
+int QGraphicsPolyLineSourceItem::type() const
+{
+    return FNM_TypeId::LineSourceItemType;
+}
+
 void QGraphicsPolyLineSourceItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QPen pen(Qt::green);
+    pen.setCosmetic(true); // line doesn't change when zoomming
     pen.setWidth(1);
     painter->setPen(pen);
 //        QRectF myMargin = QGraphicsLineItem::boundingRect();
@@ -51,61 +62,60 @@ void QGraphicsPolyLineSourceItem::paint(QPainter *painter, const QStyleOptionGra
 
 void QGraphicsPolyLineSourceItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    setCursor(Qt::PointingHandCursor);
+//    setCursor(Qt::PointingHandCursor);
 
-    QGraphicsItem::hoverEnterEvent(event);
-}
-
-QPolygonF QGraphicsPolyLineSourceItem::getBufferOfLine(const QGraphicsLineItem *lineItem) const
-{
-    // this implementation of buffer zone is temporal, a better implementation
-    // should include an algorithm as describe in the follow url:
-    // https://www.boost.org/doc/libs/1_64_0/libs/geometry/doc/html/geometry/reference/algorithms/buffer/buffer_7_with_strategies.html
-    // https://www.tandfonline.com/doi/full/10.1080/10095020.2012.747643
-    QPolygonF polygon;
-    double d = 10; // distance
-    double PI = 3.141592;
-
-
-//    double theta1 = lineItem->line().angle(QLine(0.0, 0.0, 1.0, 0.0));
-    double theta1 = (180/PI)*atan( (lineItem->line().p2().y()-lineItem->line().p1().y())/(lineItem->line().p2().x()-lineItem->line().p1().x()) );
-
-    QLineF line1;
-    QLineF line2;
-
-    if(theta1>=0 && theta1<90){
-        line1 = lineItem->line().translated(10.0, -10.0);
-        line2 = lineItem->line().translated(-10.0, 10.0);
-    }else if(theta1<0 && theta1>-90){
-        line1 = lineItem->line().translated(10.0, 10.0);
-        line2 = lineItem->line().translated(-10.0, -10.0);
-    }else{
-        line1 = lineItem->line().translated(10.0, 0);
-        line2 = lineItem->line().translated(-10.0, 0);
+    QList<QGraphicsItem *> list = QGraphicsItem::childItems();
+    for(auto item: list){
+        auto line_item = static_cast<QGraphicsItem *>(item);
+        line_item->setCursor(Qt::PointingHandCursor);
     }
+    event->accept();
 
-    polygon<<line1.p1()<<line1.p2()<<line2.p2()<<line2.p1();
-    return polygon;
+
+//    QGraphicsItemGroup::hoverEnterEvent(event);
 }
 
-
-
-
-MyQGraphicsLineItem::MyQGraphicsLineItem(QGraphicsItem *parent)
-    : QGraphicsLineItem (parent)
-{
-
-}
 
 MyQGraphicsLineItem::MyQGraphicsLineItem(const QLineF &line, QGraphicsItem *parent)
     : QGraphicsLineItem (line, parent)
 {
-
+    setBufferZoneDistance(10.0);
 }
 
-void MyQGraphicsLineItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+QPainterPath MyQGraphicsLineItem::shape() const
 {
-    setCursor(Qt::PointingHandCursor);
-    QGraphicsItem::hoverEnterEvent(event);
-
+     /*
+      * this implementation take into accout the buffer distance
+      * source: https://stackoverflow.com/questions/5730409/qpainterpath-grow-expand
+      * an alternative implementation for the buffer zone can be found in:
+      * https://www.boost.org/doc/libs/1_64_0/libs/geometry/doc/html/geometry/reference/algorithms/buffer/buffer_7_with_strategies.htmlhttps://www.tandfonline.com/doi/full/10.1080/10095020.2012.747643
+     */
+    QPainterPath oldPath = QGraphicsLineItem::shape();
+    QPainterPathStroker stroker;
+    stroker.setWidth(this->bufferDistance);
+    stroker.setJoinStyle(Qt::MiterJoin); // and other adjustments you need
+    QPainterPath newpath = (stroker.createStroke(oldPath) + oldPath).simplified();
+    return newpath;
 }
+
+
+
+void MyQGraphicsLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+
+    QPen pen(Qt::blue);
+    painter->setPen(pen);
+    pen.setCosmetic(true); // line doesn't change when zoomming
+    pen.setWidth(1);
+    painter->setPen(pen);
+    painter->drawLine(this->line());
+    //    QGraphicsLineItem::paint(painter,option,widget);
+}
+
+void MyQGraphicsLineItem::setBufferZoneDistance(const qreal &newValue)
+{
+    bufferDistance = newValue;
+}
+

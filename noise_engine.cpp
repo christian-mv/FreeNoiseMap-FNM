@@ -36,7 +36,7 @@ void initSeed()
 {
     static bool flagSeed=false;
     if(!flagSeed){
-        srand(time(nullptr));
+        srand( static_cast<unsigned int>(time(nullptr)) );
         flagSeed = true; // now flag will be always true
     }
 }
@@ -88,31 +88,6 @@ void interpolationValueAt(const double &t1,
 }
 
 
-
-void addRandomSources(vector<MinimalPointSource *> &pointSources, const GridSettings &myGrid)
-{
-    pointSources.push_back(new MinimalPointSource(100,100,0,90));
-    pointSources.push_back(new MinimalPointSource(150,200,0,90));
-
-    pointSources.push_back(new MinimalPointSource(20,50,0,80));
-
-    //// random sources
-    //    int nSources=3;
-    //    int min_x = static_cast<int>(myGrid.getLeft());
-    //    int max_x = static_cast<int>(myGrid.getRight());
-    //    int min_y = static_cast<int>(myGrid.getTop());
-    //    int max_y = static_cast<int>(myGrid.getBottom());
-    //    int min_z = -5;
-    //    int max_z = 5;
-    //    qDebug()<<myGrid.getTop();
-
-    //    for(int i=0; i<nSources; i++){
-    //        pointSources.push_back(new PointSource(NoiseEngine::intRandom(min_x, max_x),
-    //                                               NoiseEngine::intRandom(-min_y, -max_y),
-    //                                               NoiseEngine::intRandom(min_z, max_z),
-    //                                               NoiseEngine::intRandom(80, 85)));
-    //    }
-}
 
 int greatestIntegerFunction(int x, int dx, int dy)
 {

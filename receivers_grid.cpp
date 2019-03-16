@@ -76,7 +76,7 @@ bool ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QProgre
 
     // it is necessary redefine the maximum steps of the progress dialog since interpolation
     // could change the size of matriz
-    progress.setMaximum(matrix.size()+1);
+    progress.setMaximum(static_cast<int>(matrix.size())+1);
 
     QPainter painter(&image);
 
@@ -106,14 +106,14 @@ bool ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QProgre
     SingleReceiver *r;
 
 
-    for(int i = 0; i<matrix.size(); i++){
+    for(unsigned int i = 0; i<matrix.size(); i++){
 
         if(progress.wasCanceled()){
             progress.close();
             return false;
         }
 
-        for(int j = 0; j<matrix.at(i).size(); j++){
+        for(unsigned int j = 0; j<matrix.at(i).size(); j++){
 
             r = matrix.at(i).at(j);
 
@@ -123,18 +123,18 @@ bool ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QProgre
         }
 
         qApp->processEvents();
-        progress.setValue(i);
+        progress.setValue( static_cast<int>(i) );
     }
     progress.close();
     return true;
 }
 
-void ReceiversGrid::setNoiseColor(const double Leq, QColor * colorDecibell)
+void ReceiversGrid::setNoiseColor(const double Leq, QColor * colorDecibel)
 {
     tuple<double, double, double> colorTuple;
 
     colorTuple = gradientColor.colorAt(Leq);
-    colorDecibell->setRgb(static_cast<int>( 255*std::get<0>(colorTuple) ),
+    colorDecibel->setRgb(static_cast<int>( 255*std::get<0>(colorTuple) ),
                           static_cast<int>( 255*std::get<1>(colorTuple) ),
                           static_cast<int>( 255*std::get<2>(colorTuple) ),
                           255);
@@ -227,12 +227,12 @@ void ReceiversGrid::interpolateGrid()
     double Leqy_temp; // here store interpolated Leq on y axes.
 
     //  interpolated rectangles on x axes
-    for(int i = 0; i<matrix.size(); i++){
-        for(int j = 0; j<matrix.at(i).size(); j=j+factor){
+    for(unsigned int i = 0; i<matrix.size(); i++){
+        for(unsigned int j = 0; j<matrix.at(i).size(); j=j+factor){
 
             r = matrix.at(i).at(j);
             if(j<matrix.at(i).size()-1){
-                for(int k=1; k<factor; k++){
+                for(unsigned int k=1; k<factor; k++){
 
                     NoiseEngine::interpolationValueAt(r->get_x(),
                                                       r->get_Leq(),
@@ -259,14 +259,14 @@ void ReceiversGrid::interpolateGrid()
 
     std::vector<SingleReceiver *> centinel = matrix.back();
 
-    for(int i = 0; ; i=i+factor){
+    for(unsigned int i = 0; ; i=i+factor){
 
         if(matrix.at(i) == centinel) // beak when the last row is reached
         {
             break;
         }
-        for(int k=1; k<factor; k++){
-            for(int j = 0; j<matrix.at(i).size(); j++){
+        for(unsigned int k=1; k<factor; k++){
+            for(unsigned int j = 0; j<matrix.at(i).size(); j++){
 
                 r = matrix.at(i).at(j);
 
@@ -297,7 +297,7 @@ void ReceiversGrid::interpolateGrid()
 void ReceiversGrid::clearInterpolatedReceivers()
 {
     // delete full interpolated rows
-    int i = 0;
+    unsigned int i = 0;
     std::vector<SingleReceiver *> row = matrix.at(i);
     while(row != matrix.back()){
         // delete rows of full interpolated receivers
@@ -311,8 +311,8 @@ void ReceiversGrid::clearInterpolatedReceivers()
     }
 
     // delete interpolated receivers located in between of no-interpolated receivers
-    for(int i=0; i<matrix.size(); i++){
-        int j = 0;
+    for(unsigned int i=0; i<matrix.size(); i++){
+        unsigned int j = 0;
         auto tempReceiver = matrix.at(i).at(j);
         while(tempReceiver != matrix.at(i).back()){
             if(tempReceiver->isInterpolated()){

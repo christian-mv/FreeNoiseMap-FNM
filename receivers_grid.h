@@ -22,7 +22,7 @@ public:
     void setGrid(const GridSettings &gridSettings);
     void setGradient(const GradientColor gradientColor);
     bool paintGrid(QImage &image, const GridSettings &myGrid,  QProgressDialog &progress);
-    void setNoiseColor(const double Leq, QColor * colorDecibell);
+    void setNoiseColor(const double Leq, QColor * colorDecibel);
     std::vector< std::vector<SingleReceiver *> > matrix;
     GridSettings getGridSettings()const {return this->gridSettings;}
     void resetNoiseReceiver();

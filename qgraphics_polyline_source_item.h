@@ -7,11 +7,18 @@
 
 class MyQGraphicsLineItem : public QGraphicsLineItem{
 public:
-    MyQGraphicsLineItem(QGraphicsItem *parent = nullptr);
+
     MyQGraphicsLineItem(const QLineF &line, QGraphicsItem *parent = nullptr);
+    QPainterPath shape() const override;
 
 protected:
-    void  hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+    void paint(QPainter *painter,
+               const QStyleOptionGraphicsItem *option,
+               QWidget *widget) override;
+private:
+    qreal bufferDistance;
+    void setBufferZoneDistance(const qreal & newValue);
+
 };
 
 
@@ -20,6 +27,7 @@ public:
     QGraphicsPolyLineSourceItem(QGraphicsItem *parent = nullptr);
     void addLine(MyQGraphicsLineItem *lineItem);
     QPainterPath shape() const override;
+    int	type() const override;
 
 protected:
     void paint(QPainter *painter,
@@ -27,10 +35,10 @@ protected:
                QWidget *widget) override;
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
 
+
+
 private:
     double Lw;
-    QPolygonF getBufferOfLine(const QGraphicsLineItem *line) const;
-
 
 };
 

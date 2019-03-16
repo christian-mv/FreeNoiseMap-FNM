@@ -43,6 +43,8 @@ void MyGraphicsShadedLineItem::paint(QPainter *painter,
                                      const QStyleOptionGraphicsItem *option,
                                      QWidget *widget)
 {
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
     // set painter for lines
     painter->setRenderHint(QPainter::Antialiasing, true);
     QPen pen(QColor(0,0,0,200));

@@ -1,16 +1,11 @@
 #include "mainwindow.h"
 #include <QApplication>
-#include "noise_engine.h"
-#include <QtDebug>
-#include <QGraphicsScene>
-#include <QGraphicsPixmapItem>
-#include <QGraphicsView>
-#include <QPixmap>
-#include "gradientcolor.h"
-
+#include <QByteArray>
 
 int main(int argc, char *argv[])
 {
+
+    qputenv("QT_SCALE_FACTOR", QByteArray("1")); // https://github.com/christian-mv/Warning-QT_DEVICE_PIXEL_RATIO-is-deprecated-....git
     QApplication a(argc, argv);
     MainWindow window;
 
@@ -18,7 +13,4 @@ int main(int argc, char *argv[])
 
     return a.exec();
 }
-
-
-
 

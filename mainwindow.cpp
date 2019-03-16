@@ -53,11 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
 
 
-
     ui->graphicsView->show();
-
-
-
 
 }
 
@@ -80,6 +76,7 @@ void MainWindow::loadCursors()
 {
 
     myCursors["arrowMode"] = QCursor(Qt::ArrowCursor);
+
     myCursors["backUpCursor"] = myCursors["arrowMode"];
 
     myCursors["pointSource"] = QCursor(
@@ -145,9 +142,9 @@ void MainWindow::movingItemsOnTheScene(QPointF Pos)
         // the next conditional detects if no items or the rasterAreaItem were clicked, in
         // in the contrary case, the proceed witht he calcularion of the line
 
-
         if(moving_item!=nullptr && moving_item != &pixmapItem)
         {
+
             shaded_line->setLine(p1_shaded_line.x(),
                                  p1_shaded_line.y(),
                                  Pos.x(),
@@ -231,7 +228,7 @@ void MainWindow::releaseLineSourceEdition()
 
 bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
 {    
-    for(int i = 0; i<receivers.matrix.size(); i++){
+    for(unsigned long i = 0; i<receivers.matrix.size(); i++){
         if(progress.wasCanceled()){
             return false;
         }
@@ -248,7 +245,7 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
                 }
             }
         }
-        progress.setValue(i);
+        progress.setValue(static_cast<int>(i));
         qApp->processEvents();
     }
     return true;
@@ -429,7 +426,6 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
      return QMainWindow::eventFilter(target, event);
     }
 
-
     return false;
 }
 
@@ -447,7 +443,7 @@ void MainWindow::on_actionAdd_point_source_triggered()
 void MainWindow::on_actioneditMode_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
-    ui->graphicsView->setCursor(myCursors["arrowMode"]);
+    ui->graphicsView->setCursor(myCursors["arrowMode"]);   
     releaseLineSourceEdition();
 
 }
@@ -480,7 +476,7 @@ void MainWindow::on_actioncalculateGrid_triggered()
     progress.setWindowTitle(this->windowTitle());
     progress.setLabelText(QObject::tr("Calculating..."));
     progress.setMinimum(0);
-    progress.setMaximum(receivers.matrix.size());
+    progress.setMaximum(static_cast<int>( receivers.matrix.size()) );
     progress.show();
 
     if(!calculateNoiseFromSources(progress)){

@@ -125,6 +125,9 @@ bool MyGraphicsView::viewportEvent(QEvent *event)
 
             }
         }
+        break;
+    default:
+        break;
     }
     return QGraphicsView::viewportEvent(event);
 }
@@ -164,14 +167,5 @@ bool MyGraphicsView::viewportEvent(QEvent *event)
 
 //    QGraphicsView::mouseReleaseEvent(event);
 //}
-
-
-
-
-
-
-
-
-
 
 

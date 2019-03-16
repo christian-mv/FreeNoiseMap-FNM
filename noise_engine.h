@@ -38,9 +38,6 @@ namespace  NoiseEngine
                             const double &y3);
 
 
-    void addRandomSources(vector<MinimalPointSource *> &pointSources, const GridSettings &myGrid);
-
-
 };
 
 #endif // DYNAMIC_MATRIX_H

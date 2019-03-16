@@ -97,16 +97,11 @@ void PointSourcePixmapItem::paint(QPainter *painter, const QStyleOptionGraphicsI
 QVariant PointSourcePixmapItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
 
-    if (change == ItemPositionChange &&  scene() ) {
-
+    if (change == ItemPositionChange &&  scene() ) {        
         // value is the new position.
         QPointF newPos = value.toPointF();
-//        if(newPos.x() != source->get_x() && newPos.y() != source->get_y()){
-            source->set_x(newPos.x());
-            source->set_y(newPos.y());
-
-//        }
-
+        source->set_x(newPos.x());
+        source->set_y(newPos.y());
     }
 
     return QGraphicsItem::itemChange(change, value);
@@ -115,7 +110,7 @@ QVariant PointSourcePixmapItem::itemChange(QGraphicsItem::GraphicsItemChange cha
 void PointSourcePixmapItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     setCursor(Qt::PointingHandCursor);
-    QGraphicsItem::hoverEnterEvent(event);
+    QGraphicsPixmapItem::hoverEnterEvent(event);
 }
 
 //void PointSourcePixmapItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
