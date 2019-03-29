@@ -6,7 +6,8 @@
 #include <cmath>
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):
-    QGraphicsView(parent)
+    QGraphicsView(parent),
+    totalScaleFactor(1)
 {
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 //    setDragMode(ScrollHandDrag);
@@ -15,8 +16,6 @@ MyGraphicsView::MyGraphicsView(QWidget *parent):
 
 
 //    setAlignment(Qt::AlignLeft | Qt::AlignTop );
-
-    totalScaleFactor = 1;
 
 }
 
@@ -55,6 +54,11 @@ void MyGraphicsView::setCursor(const QCursor &newCursor)
 
 
     QGraphicsView::setCursor(newCursor);
+}
+
+void MyGraphicsView::resetTotalScaleFactor()
+{
+    totalScaleFactor = 1;
 }
 
 

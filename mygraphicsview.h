@@ -11,6 +11,7 @@ public:
     MyGraphicsView(QWidget *parent = nullptr);
 
     void setCursor(const QCursor &cursor);
+    void resetTotalScaleFactor();
 
 private:
     QPoint m_lastMousePos;

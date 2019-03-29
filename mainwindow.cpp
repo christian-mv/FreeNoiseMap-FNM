@@ -15,7 +15,8 @@
 #include "mygraphicsshadedlineitem.h"
 #include "qgraphics_polyline_source_item.h"
 
-
+#define VERSION_OF_APP "beta"
+#define MY_APP_NAME "Free Noise Map"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -27,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setCentralWidget(ui->graphicsView);
     setWindowIcon(QIcon(":/images/icons/app_icon.png"));
-    setWindowTitle(QString(MY_APP_NAME)+" - v"+QString(VERSION_OF_APP));
+    setWindowTitle(QString(MY_APP_NAME)+" - version "+QString(VERSION_OF_APP));
 
     loadCursors();
 
@@ -506,15 +507,13 @@ void MainWindow::on_actiondrag_mode_triggered()
 void MainWindow::on_actionzoom_full_triggered()
 {
     qreal ofsset = 10;
-
     QRectF rectF = QRectF(myGrid.getRect().x()-ofsset,
                           myGrid.getRect().y()+ofsset,
                           myGrid.getRect().width()+ofsset,
                           myGrid.getRect().height()+ofsset);
 
     ui->graphicsView->fitInView(rectF,Qt::KeepAspectRatio);
-
-
+    ui->graphicsView->resetTotalScaleFactor();
 }
 
 void MainWindow::on_action_add_line_source_triggered()

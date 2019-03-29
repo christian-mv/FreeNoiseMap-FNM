@@ -9,8 +9,7 @@
 #include "receivers_grid.h"
 #include <mygraphicsscene.h>
 #include "myrasterpixmapitemarea.h"
-#define VERSION_OF_APP "1.0"
-#define MY_APP_NAME "Free Noise Map"
+
 
 
 class MinimalPointSource;
