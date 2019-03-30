@@ -10,6 +10,7 @@ public:
 
     MyQGraphicsLineItem(const QLineF &line, QGraphicsItem *parent = nullptr);
     QPainterPath shape() const override;
+    virtual int	type() const override;
 
 protected:
     void paint(QPainter *painter,
@@ -18,7 +19,6 @@ protected:
 private:
     qreal bufferDistance;
     void setBufferZoneDistance(const qreal & newValue);
-
 };
 
 
@@ -27,15 +27,14 @@ public:
     QGraphicsPolyLineSourceItem(QGraphicsItem *parent = nullptr);
     void addLine(MyQGraphicsLineItem *lineItem);
     QPainterPath shape() const override;
-    int	type() const override;
+    virtual int	type() const override;
+
 
 protected:
     void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
                QWidget *widget) override;
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
-
-
 
 private:
     double Lw;

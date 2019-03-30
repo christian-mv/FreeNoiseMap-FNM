@@ -11,7 +11,9 @@
 QGraphicsPolyLineSourceItem::QGraphicsPolyLineSourceItem(QGraphicsItem *parent)
     :QGraphicsItemGroup(parent ),Lw(-88.0)
 {
-
+        setFlag(QGraphicsItem::ItemIsMovable, false);
+        setFlag(QGraphicsItem::ItemIsSelectable, true);
+        setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
 }
 
 void QGraphicsPolyLineSourceItem::addLine(MyQGraphicsLineItem *lineItem)
@@ -41,12 +43,13 @@ QPainterPath QGraphicsPolyLineSourceItem::shape() const
 
 int QGraphicsPolyLineSourceItem::type() const
 {
-    return FNM_TypeId::LineSourceItemType;
+    return FNM_TypeId::PolyLineSourceItemType;
 }
+
 
 void QGraphicsPolyLineSourceItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QPen pen(Qt::green);
+    QPen pen(Qt::gray);
     pen.setCosmetic(true); // line doesn't change when zoomming
     pen.setWidth(1);
     painter->setPen(pen);
@@ -78,7 +81,7 @@ void QGraphicsPolyLineSourceItem::hoverEnterEvent(QGraphicsSceneHoverEvent *even
 
 MyQGraphicsLineItem::MyQGraphicsLineItem(const QLineF &line, QGraphicsItem *parent)
     : QGraphicsLineItem (line, parent)
-{
+{   
     setBufferZoneDistance(10.0);
 }
 
@@ -98,6 +101,12 @@ QPainterPath MyQGraphicsLineItem::shape() const
     return newpath;
 }
 
+int MyQGraphicsLineItem::type() const
+{
+    return FNM_TypeId::LineSourceItemType;
+}
+
+
 
 
 void MyQGraphicsLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -113,6 +122,7 @@ void MyQGraphicsLineItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
     painter->drawLine(this->line());
     //    QGraphicsLineItem::paint(painter,option,widget);
 }
+
 
 void MyQGraphicsLineItem::setBufferZoneDistance(const qreal &newValue)
 {
