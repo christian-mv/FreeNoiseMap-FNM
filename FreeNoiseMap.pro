@@ -31,7 +31,6 @@ SOURCES += \
     mainwindow.cpp \
     noise_engine.cpp \
     mygraphicsview.cpp \
-    mygraphicsscene.cpp \
     pointsourcepixmap.cpp \
     myrasterpixmapitemarea.cpp \
     mygraphicsshadedlineitem.cpp \
@@ -48,7 +47,6 @@ HEADERS += \
     noise_engine.h \
     mainwindow.h \
     mygraphicsview.h \
-    mygraphicsscene.h \
     pointsourcepixmapitem.h \
     myrasterpixmapitemarea.h \
     mygraphicsshadedlineitem.h \

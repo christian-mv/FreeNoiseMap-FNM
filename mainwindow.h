@@ -7,7 +7,6 @@
 #include <QPixmap>
 #include "grid_settings.h"
 #include "receivers_grid.h"
-#include <mygraphicsscene.h>
 #include "myrasterpixmapitemarea.h"
 
 
@@ -47,7 +46,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    MyGraphicsScene scene;
+    QGraphicsScene scene;
     QImage *image;
     MyRasterPixmapItemArea pixmapItem;
     GridSettings myGrid;
