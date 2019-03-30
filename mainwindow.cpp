@@ -133,47 +133,76 @@ void MainWindow::resetPixmapArea(){
 
 }
 
-void MainWindow::movingItemsOnTheScene(QPointF Pos)
+void MainWindow::movingItemsOnTheScene(const QGraphicsSceneMouseEvent *sceneMouseEvent)
 {
-    if (ui->graphicsView->cursor()==myCursors["arrowMode"] && scene.getShadedItemFlag()){
+    if (ui->graphicsView->cursor()==myCursors["arrowMode"] ){
 
 
         QGraphicsItem *moving_item= scene.mouseGrabberItem();
 
-        // the next conditional detects if no items or the rasterAreaItem were clicked, in
-        // in the contrary case, the proceed witht he calcularion of the line
+
+        if(shaded_line != nullptr){
+            shaded_line->setLine(p1_shaded_line.x(),
+                                 p1_shaded_line.y(),
+                                 sceneMouseEvent->scenePos().x(),
+                                 sceneMouseEvent->scenePos().y());
+        }
 
         if(moving_item!=nullptr && moving_item != &pixmapItem)
         {
-
-            shaded_line->setLine(p1_shaded_line.x(),
-                                 p1_shaded_line.y(),
-                                 Pos.x(),
-                                 Pos.y());
-
-            moving_item->setPos(Pos); // this correct the position of the item to be more acurate
+            //  while shade_line exist we shouldn't change the position of Line source since
+            // it doesn't work well
+            if(moving_item->type() == FNM_TypeId::LineSourceItemType && shaded_line == nullptr){
+                moving_item = moving_item->parentItem();
+                moving_item->moveBy(-sceneMouseEvent->lastScenePos().x()+sceneMouseEvent->scenePos().x(),
+                                    -sceneMouseEvent->lastScenePos().y()+sceneMouseEvent->scenePos().y());
+            }
+            else if(moving_item->type() == FNM_TypeId::PolyLineSourceItemType && shaded_line == nullptr){
+                moving_item->moveBy(-sceneMouseEvent->lastScenePos().x()+sceneMouseEvent->scenePos().x(),
+                                    -sceneMouseEvent->lastScenePos().y()+sceneMouseEvent->scenePos().y());
+            }
+            else if(moving_item->type() != FNM_TypeId::LineSourceItemType && moving_item->type() != FNM_TypeId::PolyLineSourceItemType){
+                 moving_item->setPos(sceneMouseEvent->scenePos()); // this correct the position of the item to be more acurate
+            }
         }
     }
 }
 
-void MainWindow::draggingPointSourceItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent, QGraphicsItem *pressed_item)
+void MainWindow::updateShadedLinesItem(QPointF pos)
 {
 
-    if(scene.getShadedItemFlag()){
-        return;
+    if(shaded_line != nullptr){
+
+        shaded_line->setLine(p1_shaded_line.x(),
+                             p1_shaded_line.y(),
+                             pos.x(),
+                             pos.y());
     }
+}
 
-    shaded_line = new MyGraphicsShadedLineItem;
-    p1_shaded_line = sceneEvent->scenePos();
 
-    // init line with 0 lenth (it is necessary to avoid flip)
-    shaded_line->setLine(p1_shaded_line.x(),
-                         p1_shaded_line.y(),
-                         p1_shaded_line.x(),
-                         p1_shaded_line.y());
+void MainWindow::createShadedLinesItem(QPointF pos)
+{
+    if(shaded_line == nullptr){
+        shaded_line = new MyGraphicsShadedLineItem;
+        p1_shaded_line = pos;
 
-    scene.addItem(shaded_line);
-    scene.setShadedItemFlag(true);
+        // init line with 0 lenth (it is necessary to avoid flip)
+        shaded_line->setLine(p1_shaded_line.x(),
+                             p1_shaded_line.y(),
+                             p1_shaded_line.x(),
+                             p1_shaded_line.y());
+
+        scene.addItem(shaded_line);
+    }
+}
+
+void MainWindow::deleteShadedLinesItem()
+{
+    if(shaded_line != nullptr){
+        delete shaded_line;
+        shaded_line = nullptr;
+    }
 }
 
 void MainWindow::droppingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent)
@@ -181,10 +210,11 @@ void MainWindow::droppingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent)
     QGraphicsItem *item_released= scene.mouseGrabberItem();
 
     // the next conditional when a item(s) that is moving is released in its new position
-    if(item_released!=nullptr && item_released != &pixmapItem && scene.getShadedItemFlag())
-    {        
+    if(item_released!=nullptr && item_released != &pixmapItem && shaded_line !=nullptr)
+    {
         // we update the position of the item just for
         // movements greater than 0.1
+
         QPointF p1 = shaded_line->line().p1();
         QPointF p2 = sceneEvent->scenePos();
         double temp = NoiseEngine::distanceBetweenPoints(p1.x(),p1.y(),0, p2.x(),p2.y(), 0);
@@ -192,9 +222,8 @@ void MainWindow::droppingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent)
         if(temp>0.1){
             item_released->setPos(sceneEvent->scenePos()); // this correct the position to be more acurate
         }
-        delete shaded_line;
     }
-    scene.setShadedItemFlag(false);
+
 }
 
 bool MainWindow::isThereNoiseSources() const
@@ -210,9 +239,9 @@ bool MainWindow::isThereNoiseSources() const
 
 void MainWindow::releaseLineSourceEdition()
 {    
-    if(polyLineSource != nullptr){
-        polyLineSource->setFlag(QGraphicsItem::ItemIsMovable, true);
-    }
+//    if(polyLineSource != nullptr){
+//        polyLineSource->setFlag(QGraphicsItem::ItemIsMovable, true);
+//    }
 
     singleLine = nullptr;
     polyLineSource = nullptr;
@@ -249,7 +278,6 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
 
 bool MainWindow::eventFilter(QObject *target, QEvent *event)
 {
-
     if(target == &scene){
         QGraphicsSceneMouseEvent *sceneEvent = static_cast<QGraphicsSceneMouseEvent*>(event);
 
@@ -262,7 +290,8 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
             statusBar()->showMessage(str);
 
-            movingItemsOnTheScene(sceneEvent->scenePos());
+            updateShadedLinesItem(sceneEvent->scenePos());
+            movingItemsOnTheScene(sceneEvent);
 
             auto itemUnderCursor = scene.itemAt(sceneEvent->scenePos(), ui->graphicsView->transform());
             if(itemUnderCursor != &pixmapItem
@@ -307,6 +336,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
 
             scene.addItem(myPixmapPointSourceItem);
+            deleteShadedLinesItem();
 
           }
 
@@ -315,21 +345,27 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                  && sceneEvent->button() == Qt::LeftButton
                  && ui->graphicsView->cursor()==myCursors["arrowMode"]){
 
-
-            /*  Note: scene.mouseGrabberItem() doesn't
-                work well on GraphicsSceneMousePress event but it works well on
-                GraphicsSceneMouseRelease event, on the other hand, scene.itemAt()
-                doesn't work well on GraphicsSceneMouseRelease because it takes the topmost
-                object, but it works well on GraphicsSceneMousePress.
+            QGraphicsItem *pressed_item = scene.itemAt(sceneEvent->scenePos(),ui->graphicsView->transform());
+            /*
+             * Note : scene.mouseGrabberItem() doesn't
+             * work well on GraphicsSceneMousePress event but it works well on
+             * GraphicsSceneMouseRelease event, on the other hand, scene.itemAt()
+             * doesn't work well on GraphicsSceneMouseRelease because it takes the topmost
+             * object, but it works well on GraphicsSceneMousePress.
                 */
-            QGraphicsItem *pressed_item = scene.itemAt(sceneEvent->scenePos(),ui->graphicsView->transform());            
-            if(pressed_item != nullptr){                
-                switch (pressed_item->type()) {
-                    case FNM_TypeId::PointSourceItemType:
-                        // this function manage shade lines (it dosen't work well with all items)
-                        draggingPointSourceItemsOnTheScene(sceneEvent, pressed_item);
-                    break;
 
+            if(pressed_item != nullptr){
+                 /* this switch controls which item require shaded lines
+                  * this is important since shaded lines don't work well with all items, for some extrange reason
+                  * it doesn't work with polylines */
+                switch (pressed_item->type()) {
+                case FNM_TypeId::LineSourceItemType:
+                case FNM_TypeId::PolyLineSourceItemType:
+                    // do not create shadedlines for the above items
+                    break;
+                default:
+                    createShadedLinesItem(sceneEvent->scenePos());
+                    break;
                 }
             }
         }
@@ -342,6 +378,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
             // there aren't any declared vertice in the line
             if(singleLine == nullptr){
+                createShadedLinesItem(sceneEvent->scenePos());
                 singleLine = new QLineF();
                 if(polyLineSource == nullptr){
                     polyLineSource = new QGraphicsPolyLineSourceItem();
@@ -353,19 +390,18 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
             }
             // there is at least one declared vertice in the line
-            else if(singleLine != nullptr){
-
+            else if(singleLine != nullptr){                
                 if(polyLineSource->childItems().isEmpty()){
                     singleLine->setP1(QPointF(singleLine->x2(),
                                               singleLine->y2()));
 
-
+                deleteShadedLinesItem();
                 }else{
 
                     // this lines take the first vertice of the current line as exactly the second vertice of the previous line
 
-                    singleLine->setP1( singleLine->p2() );
-
+                    singleLine->setP1( singleLine->p2() );                    
+                    deleteShadedLinesItem();
                 }
 
                 singleLine->setP2(QPointF(
@@ -374,6 +410,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                                           )
                                   );
 
+                createShadedLinesItem(sceneEvent->scenePos());
                 if(singleLine->p1() != singleLine->p2()){ // it is not necessary to add lines of 0 distance
                     polyLineSource->addLine(new MyQGraphicsLineItem(*singleLine));
                     singleLine = new QLineF(singleLine->x2(),
@@ -390,25 +427,24 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                  && sceneEvent->button() == Qt::RightButton
                  && ui->graphicsView->cursor()==myCursors["lineSourceMode"])
         {
+            deleteShadedLinesItem();
             releaseLineSourceEdition();
-        }
 
+        }
 
 
         // dropping items
         else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
                  && sceneEvent->button() == Qt::LeftButton
-                 && ui->graphicsView->cursor()==myCursors["arrowMode"]){   
+                 && ui->graphicsView->cursor()==myCursors["arrowMode"]){
             droppingItemsOnTheScene(sceneEvent);
+            deleteShadedLinesItem();
         }
         else if (sceneEvent->type() == QEvent::TouchUpdate
                  && ui->graphicsView->cursor()==myCursors["arrowMode"]){
             // next conditional guarantees that the user dropp any object that
             // currently is dragging before proccessing TouchUpdate event
-            if(scene.getShadedItemFlag()){
-                delete shaded_line;
-                scene.setShadedItemFlag(false);
-            }
+            deleteShadedLinesItem();
         }
 
      return QMainWindow::eventFilter(target, event);

@@ -58,14 +58,16 @@ private:
     void loadDefaultGrid();
     bool calculateNoiseFromSources(QProgressDialog &progress);
     void resetPixmapArea();    
-    void movingItemsOnTheScene(const QPointF Pos);
-    void draggingPointSourceItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent, QGraphicsItem *pressed_item);
+    void movingItemsOnTheScene(const QGraphicsSceneMouseEvent *sceneMouseEvent);
+    void updateShadedLinesItem(QPointF pos);
+    void createShadedLinesItem(QPointF pos);
+    void deleteShadedLinesItem();
     void droppingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent);
     bool isThereNoiseSources() const;
     void releaseLineSourceEdition();
 
 
-    MyGraphicsShadedLineItem *shaded_line; // auxiliary line when dragging items
+    MyGraphicsShadedLineItem *shaded_line = nullptr; // auxiliary line when dragging items
     QPointF p1_shaded_line; // initial coordinate for shaded_line
 
     QLineF *singleLine;

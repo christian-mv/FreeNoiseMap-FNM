@@ -50,6 +50,7 @@ int QGraphicsPolyLineSourceItem::type() const
 void QGraphicsPolyLineSourceItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QPen pen(Qt::gray);
+    painter->setRenderHint(QPainter::Antialiasing);
     pen.setCosmetic(true); // line doesn't change when zoomming
     pen.setWidth(1);
     painter->setPen(pen);
@@ -116,6 +117,7 @@ void MyQGraphicsLineItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
     QPen pen(Qt::blue);
     painter->setPen(pen);
+    painter->setRenderHint(QPainter::Antialiasing);
     pen.setCosmetic(true); // line doesn't change when zoomming
     pen.setWidth(1);
     painter->setPen(pen);
