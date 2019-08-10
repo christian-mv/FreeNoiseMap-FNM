@@ -13,7 +13,8 @@
 
 class MinimalPointSource;
 class QLineF;
-class QGraphicsPolyLineSourceItem;
+//class QGraphicsPolyLineSourceItem;
+class MyQGraphicsMultiLineSource;
 class PointSourcePixmapItem;
 class QProgressDialog;
 class MyGraphicsShadedLineItem;
@@ -70,7 +71,8 @@ private:
     QPointF p1_shaded_line; // initial coordinate for shaded_line
 
     QLineF *singleLine;
-    QGraphicsPolyLineSourceItem * polyLineSource;
+//    QGraphicsPolyLineSourceItem * polyLineSource;
+    MyQGraphicsMultiLineSource * polyLineSource;
 
 
 protected:

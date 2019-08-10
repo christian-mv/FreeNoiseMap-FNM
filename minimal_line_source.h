@@ -2,17 +2,10 @@
 #define SINGLE_LINE_SOURCE_H
 
 
-
-/*LineSource hereda los atributos de PointSource donde (x,y,z) es la
-Posición del primer vertice y Lw el nivel de potencia acústica total*/
-
 class MinimalLineSource
 {
 public:
     explicit MinimalLineSource();
-
-
-
 
     void set_x1(const double &x1){this->x1 = x1;}
     void set_y1(const double &y1){this->y1 = y1;}

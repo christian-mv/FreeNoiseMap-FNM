@@ -25,6 +25,7 @@ CONFIG += c++14
 SOURCES += \
         main.cpp \
     grid_settings.cpp \
+    my_qgraphics_multiline_item.cpp \
     receivers_grid.cpp \
     single_receiver.cpp \
     gradientcolor.cpp \
@@ -36,10 +37,10 @@ SOURCES += \
     mygraphicsshadedlineitem.cpp \
     myqgraphicssimpletextitem.cpp \
     minimal_point_source.cpp \
-    minimal_line_source.h.cpp \
-    qgraphics_polyline_source_item.cpp
+    minimal_line_source.h.cpp
 
 HEADERS += \
+    my_qgraphics_multiline_item.h \
     receivers_grid.h \
     grid_settings.h \
     single_receiver.h \
@@ -53,8 +54,7 @@ HEADERS += \
     myqgraphicssimpletextitem.h \
     fnm_types.h \
     minimal_point_source.h \
-    minimal_line_source.h \
-    qgraphics_polyline_source_item.h
+    minimal_line_source.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

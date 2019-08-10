@@ -4,7 +4,8 @@
 
 
 
-MinimalLineSource::MinimalLineSource()
+MinimalLineSource::MinimalLineSource():
+    x1(0), y1(0), z1(0), Lw_total(0)
 {
 }
 

@@ -5,7 +5,6 @@
 #include <QProgressDialog>
 #include <QMessageBox>
 #include <QScrollBar>
-
 #include "mainwindow.h"
 #include "fnm_types.h"
 #include "minimal_point_source.h"
@@ -13,7 +12,8 @@
 #include "noise_engine.h"
 #include "pointsourcepixmapitem.h"
 #include "mygraphicsshadedlineitem.h"
-#include "qgraphics_polyline_source_item.h"
+//#include "qgraphics_polyline_source_item.h"
+#include "my_qgraphics_multiline_item.h"
 
 #define VERSION_OF_APP "beta"
 #define MY_APP_NAME "Free Noise Map"
@@ -152,17 +152,9 @@ void MainWindow::movingItemsOnTheScene(const QGraphicsSceneMouseEvent *sceneMous
         {
             //  while shade_line exist we shouldn't change the position of Line source since
             // it doesn't work well
-            if(moving_item->type() == FNM_TypeId::LineSourceItemType && shaded_line == nullptr){
-                moving_item = moving_item->parentItem();
+            if(moving_item->type() == FNM_TypeId::MultiLineSourceItemType && shaded_line == nullptr){
                 moving_item->moveBy(-sceneMouseEvent->lastScenePos().x()+sceneMouseEvent->scenePos().x(),
                                     -sceneMouseEvent->lastScenePos().y()+sceneMouseEvent->scenePos().y());
-            }
-            else if(moving_item->type() == FNM_TypeId::PolyLineSourceItemType && shaded_line == nullptr){
-                moving_item->moveBy(-sceneMouseEvent->lastScenePos().x()+sceneMouseEvent->scenePos().x(),
-                                    -sceneMouseEvent->lastScenePos().y()+sceneMouseEvent->scenePos().y());
-            }
-            else if(moving_item->type() != FNM_TypeId::LineSourceItemType && moving_item->type() != FNM_TypeId::PolyLineSourceItemType){
-                 moving_item->setPos(sceneMouseEvent->scenePos()); // this correct the position of the item to be more acurate
             }
         }
     }
@@ -230,8 +222,7 @@ bool MainWindow::isThereNoiseSources() const
 {
     for(auto item: scene.items()){
         if(item->type()== FNM_TypeId::PointSourceItemType ||
-                item->type()== FNM_TypeId::LineSourceItemType ||
-                item->type()== FNM_TypeId::PolyLineSourceItemType)
+                item->type()== FNM_TypeId::MultiLineSourceItemType)
             return true;
     }
     return false;
@@ -359,8 +350,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                   * this is important since shaded lines don't work well with all items, for some extrange reason
                   * it doesn't work with polylines */
                 switch (pressed_item->type()) {
-                case FNM_TypeId::LineSourceItemType:
-                case FNM_TypeId::PolyLineSourceItemType:
+                case FNM_TypeId::MultiLineSourceItemType:
                     // do not create shadedlines for the above items
                     break;
                 default:
@@ -381,7 +371,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                 createShadedLinesItem(sceneEvent->scenePos());
                 singleLine = new QLineF();
                 if(polyLineSource == nullptr){
-                    polyLineSource = new QGraphicsPolyLineSourceItem();
+                    polyLineSource = new MyQGraphicsMultiLineSource();
 
                     scene.addItem(polyLineSource);
                     singleLine->setLine(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(),
@@ -412,7 +402,8 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
                 createShadedLinesItem(sceneEvent->scenePos());
                 if(singleLine->p1() != singleLine->p2()){ // it is not necessary to add lines of 0 distance
-                    polyLineSource->addLine(new MyQGraphicsLineItem(*singleLine));
+//                    polyLineSource->addLine(new MyQGraphicsLineItem(*singleLine));
+                    polyLineSource->addLineSource(*singleLine);
                     singleLine = new QLineF(singleLine->x2(),
                                             singleLine->y2(),
                                             singleLine->x2(),
