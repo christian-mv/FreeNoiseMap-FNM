@@ -122,6 +122,26 @@ int greatestIntegerFunction(int x, int dx, int dy)
     }
 }
 
+
+std::vector<MinimalPointSource> fromLineToPointSources(const MinimalLineSource *line,
+                                                       const double &distanceBetweenPoints)
+{
+    std::vector<MinimalPointSource> results;
+    MinimalPointSource point;
+    int n = static_cast<int>(line->distance()/distanceBetweenPoints);
+    double dx = line->get_x2() - line->get_x1();
+    double dy = line->get_y2() - line->get_y1();
+    double dw = line->get_Lw_total() - 10.0*log10(n); // Lw per point source
+
+    for(int k=0; k<=n; k++){
+        point.set_x( line->get_x1() + k*dx/n );
+        point.set_y( line->get_y1() + k*dy/n );
+        point.set_Lw(dw);
+        results.push_back(point);
+    }
+    return results;
+}
+
 };
 
 

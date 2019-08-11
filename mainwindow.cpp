@@ -248,14 +248,25 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
         }
 
         PointSourcePixmapItem *currentPixmapItemPointSource;
+        MyQGraphicsMultiLineSource *currentLineSource;
 
-        for(auto currentReceiver : receivers.matrix.at(i)){
-
-            // noise from pointSources
+        for(auto currentReceiver : receivers.matrix.at(i)){           
             for(auto currentItem : scene.items()){
+                // noise from point sources
                 if(currentItem->type() == FNM_TypeId::PointSourceItemType){
                     currentPixmapItemPointSource = (static_cast<PointSourcePixmapItem *>(currentItem));
                     NoiseEngine::P2P(currentPixmapItemPointSource->getPointSource(), currentReceiver);
+                }
+                // noise from line sources
+                if(currentItem->type() == FNM_TypeId::MultiLineSourceItemType){
+                    currentLineSource = (static_cast<MyQGraphicsMultiLineSource *>(currentItem));
+                    // Here we iterate a multi line source to obtain a list of
+                    // segmets, then each segment is split in point sources
+                    for(MinimalLineSource *segment: *currentLineSource->getLineSources()){
+                        for(MinimalPointSource subPointSource: NoiseEngine::fromLineToPointSources(segment,22.0)){
+                            NoiseEngine::P2P(&subPointSource, currentReceiver);
+                        }
+                    }
                 }
             }
         }
@@ -351,7 +362,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                   * it doesn't work with polylines */
                 switch (pressed_item->type()) {
                 case FNM_TypeId::MultiLineSourceItemType:
-                    // do not create shadedlines for the above items
+                    // do not create shadedlines for line source (NOT WORKING)
                     break;
                 default:
                     createShadedLinesItem(sceneEvent->scenePos());
@@ -371,8 +382,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                 createShadedLinesItem(sceneEvent->scenePos());
                 singleLine = new QLineF();
                 if(polyLineSource == nullptr){
-                    polyLineSource = new MyQGraphicsMultiLineSource();
-
+                    polyLineSource = new MyQGraphicsMultiLineSource();                    
                     scene.addItem(polyLineSource);
                     singleLine->setLine(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(),
                                            sceneEvent->scenePos().x(), sceneEvent->scenePos().y());
@@ -380,7 +390,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
             }
             // there is at least one declared vertice in the line
-            else if(singleLine != nullptr){                
+            else if(singleLine != nullptr){
                 if(polyLineSource->childItems().isEmpty()){
                     singleLine->setP1(QPointF(singleLine->x2(),
                                               singleLine->y2()));
@@ -403,7 +413,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                 createShadedLinesItem(sceneEvent->scenePos());
                 if(singleLine->p1() != singleLine->p2()){ // it is not necessary to add lines of 0 distance
 //                    polyLineSource->addLine(new MyQGraphicsLineItem(*singleLine));
-                    polyLineSource->addLineSource(*singleLine);
+                    polyLineSource->addLineSource(*singleLine, 90.0);
                     singleLine = new QLineF(singleLine->x2(),
                                             singleLine->y2(),
                                             singleLine->x2(),
@@ -436,8 +446,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             // next conditional guarantees that the user dropp any object that
             // currently is dragging before proccessing TouchUpdate event
             deleteShadedLinesItem();
-        }
-
+        }    
      return QMainWindow::eventFilter(target, event);
     }
 

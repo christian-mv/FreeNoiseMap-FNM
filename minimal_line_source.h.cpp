@@ -9,6 +9,11 @@ MinimalLineSource::MinimalLineSource():
 {
 }
 
+MinimalLineSource::~MinimalLineSource()
+{
+    qDebug()<<"KILLING MINIMAL SOURCE";
+}
+
 void MinimalLineSource::set_p1(const double &x, const double &y, const double &z)
 {
     x1 = x;
@@ -23,8 +28,21 @@ void MinimalLineSource::set_p2(const double &x, const double &y, const double &z
     z2 = z;
 }
 
+
+
 double MinimalLineSource::distance() const
 {
 
     return NoiseEngine::distanceBetweenPoints(x1, y1, z1, x2, y2, z2);
+}
+
+void MinimalLineSource::moveBy(const double &dx, const double &dy, const double &dz)
+{
+    x1+=dx;
+    y1+=dy;
+    z1+=dz;
+
+    x2+=dx;
+    y2+=dy;
+    z2+=dz;
 }

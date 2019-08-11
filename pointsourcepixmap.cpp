@@ -100,6 +100,7 @@ QVariant PointSourcePixmapItem::itemChange(QGraphicsItem::GraphicsItemChange cha
         QPointF newPos = value.toPointF();
         source->set_x(newPos.x());
         source->set_y(newPos.y());
+        qDebug()<<" new point: "<<newPos;
     }
 
     return QGraphicsItem::itemChange(change, value);

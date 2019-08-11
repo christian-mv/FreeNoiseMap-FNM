@@ -15,23 +15,24 @@ public:
     QPainterPath shape() const override;
     int	type() const override;
 
-    void addLineSource(const MinimalLineSource &lineSource);
-    void addLineSource(const QLineF &line);
-    const QVector<MinimalLineSource> * getLineSources();
+    void addLineSource(MinimalLineSource *lineSource);
+    void addLineSource(const QLineF &line, double Lw_total);
+    QVector<MinimalLineSource*> * getLineSources();
     void setBufferDistance(const double &newValue);
 
 
-private:
-    QVector<MinimalLineSource> lineSources;
+private:    
     double xMin, xMax, yMin, yMax; // this is intended to calculate bounding box
-    void updateBoundingRectangle(const MinimalLineSource &newSource);
+    double bufferDistance;
+    QVector<MinimalLineSource*> *lineSources;
+    void updateBoundingRectangle(MinimalLineSource *newSource);
     QPainterPath multilineBuffer; // this is return from shape()
     QPainterPath singleLineBuffer(QLineF line, const double &distance);
     void updateMultilineBuffer(QPainterPath newLineBuffer);
-    double bufferDistance;
 
 
-
+protected:
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 };
 
 #endif // MY_QGRAPHICS_MULTILINE_ITEM_H

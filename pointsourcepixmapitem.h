@@ -26,7 +26,7 @@ protected:
                const QStyleOptionGraphicsItem *option,
                QWidget *widget) override;
 
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
 //    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);

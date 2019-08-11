@@ -1,11 +1,13 @@
 #ifndef SINGLE_LINE_SOURCE_H
 #define SINGLE_LINE_SOURCE_H
 
+#include<QDebug>
 
 class MinimalLineSource
 {
 public:
     explicit MinimalLineSource();
+    ~MinimalLineSource();
 
     void set_x1(const double &x1){this->x1 = x1;}
     void set_y1(const double &y1){this->y1 = y1;}
@@ -30,6 +32,8 @@ public:
 
     double get_Lw_total() const {return Lw_total;}
     double distance() const;
+    void moveBy(const double &dx, const double &dy, const double &dz);
+
 private:
     // current data
     double x1, y1, z1; // vertice 1

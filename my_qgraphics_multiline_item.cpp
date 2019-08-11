@@ -1,15 +1,18 @@
 #include "my_qgraphics_multiline_item.h"
 #include "fnm_types.h"
 #include <QPainter>
-
+#include <QDebug>
 
 
 MyQGraphicsMultiLineSource::MyQGraphicsMultiLineSource():
-    xMin(0), xMax(0), yMin(0), yMax(0), bufferDistance(10.0)
+    xMin(0), xMax(0), yMin(0), yMax(0), bufferDistance(10.0),
+    lineSources(new QVector<MinimalLineSource*>)
 {
     setFlag(QGraphicsItem::ItemIsMovable, false);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
+
+
 }
 
 QRectF MyQGraphicsMultiLineSource::boundingRect() const
@@ -26,7 +29,7 @@ void MyQGraphicsMultiLineSource::paint(QPainter *painter,
     Q_UNUSED(opt)
     Q_UNUSED(w)
 
-    if(lineSources.length()<1){
+    if(lineSources->length()<1){
         return;
     }
 
@@ -41,20 +44,27 @@ void MyQGraphicsMultiLineSource::paint(QPainter *painter,
     QPointF point1;
     QPointF point2;
 
-    for(int i=0; i<lineSources.length(); i++){
+    for(int i=0; i<lineSources->length(); i++){
 
-        point1.setX( lineSources.at(i).get_x1() );
-        point1.setY( lineSources.at(i).get_y1() );
+        point1.setX( lineSources->at(i)->get_x1() );
+        point1.setY( lineSources->at(i)->get_y1() );
 
-        point2.setX( lineSources.at(i).get_x2() );
-        point2.setY( lineSources.at(i).get_y2() );
+        point2.setX( lineSources->at(i)->get_x2() );
+        point2.setY( lineSources->at(i)->get_y2() );
 
-        painter->drawLine(point1, point2);
+        // it is neccesary to substract pos() to compesate
+        // when the line source has been moved
+        painter->drawLine(point1-pos(), point2-pos());
     }
-    pen.setColor(Qt::green);
-    pen.setStyle(Qt::PenStyle::DashLine);
-    painter->setPen(pen);
+//    // draw Rectangle
+//    pen.setColor(Qt::red);
+//    pen.setStyle(Qt::PenStyle::SolidLine);
+//    painter->setPen(pen);
 //    painter->drawRect(boundingRect());
+
+    pen.setColor(Qt::darkGray);
+    pen.setStyle(Qt::PenStyle::SolidLine);
+    painter->setPen(pen);
     painter->drawPath(shape());
 
 }
@@ -88,47 +98,47 @@ int MyQGraphicsMultiLineSource::type() const
     return FNM_TypeId::MultiLineSourceItemType;
 }
 
-void MyQGraphicsMultiLineSource::addLineSource(const MinimalLineSource &newSource)
+void MyQGraphicsMultiLineSource::addLineSource(MinimalLineSource *newSource)
 {
     prepareGeometryChange();
-    QPainterPath newSegmentBuffer = singleLineBuffer(QLineF(newSource.get_x1(),
-                                                         newSource.get_y1(),
-                                                         newSource.get_x2(),
-                                                         newSource.get_y2()), bufferDistance);
+    QPainterPath newSegmentBuffer = singleLineBuffer(QLineF(newSource->get_x1(),
+                                                         newSource->get_y1(),
+                                                         newSource->get_x2(),
+                                                         newSource->get_y2()), bufferDistance);
 
     // init some values when the first line is inserted
-    if(lineSources.size()<1){
+    if(lineSources->size()<1){
         multilineBuffer = newSegmentBuffer;
+        xMin = qMin(newSource->get_x1(), newSource->get_x2());
+        yMin = qMin(newSource->get_y1(), newSource->get_y2());
 
-        xMin = qMin(newSource.get_x1(), newSource.get_x2());
-        yMin = qMin(newSource.get_y1(), newSource.get_y2());
-
-        xMax = qMax(newSource.get_x1(), newSource.get_x2());
-        yMax = qMax(newSource.get_y1(), newSource.get_y2());
+        xMax = qMax(newSource->get_x1(), newSource->get_x2());
+        yMax = qMax(newSource->get_y1(), newSource->get_y2());
     }
 
     // update multilineBufferZone
-    if(lineSources.size()>=1) {
+    if(lineSources->size()>=1) {
         updateMultilineBuffer(newSegmentBuffer);
     }
 
-    lineSources.append(newSource);
+    lineSources->append(newSource);
 
     updateBoundingRectangle(newSource);
 
 }
 
-void MyQGraphicsMultiLineSource::addLineSource(const QLineF &line)
+void MyQGraphicsMultiLineSource::addLineSource(const QLineF &line, double Lw_total)
 {
-    MinimalLineSource source;
-    source.set_p1(line.x1(), line.y1(), 0);
-    source.set_p2(line.x2(), line.y2(), 0);
+    MinimalLineSource *source = new MinimalLineSource();
+    source->set_p1(line.x1(), line.y1(), 0);
+    source->set_p2(line.x2(), line.y2(), 0);
+    source->set_Lw_total(Lw_total);
     addLineSource(source);
 }
 
-const QVector<MinimalLineSource> *MyQGraphicsMultiLineSource::getLineSources()
+QVector<MinimalLineSource*> *MyQGraphicsMultiLineSource::getLineSources()
 {
-    return &lineSources;
+    return lineSources;
 }
 
 void MyQGraphicsMultiLineSource::setBufferDistance(const double &newValue)
@@ -137,31 +147,33 @@ void MyQGraphicsMultiLineSource::setBufferDistance(const double &newValue)
 }
 
 
-void MyQGraphicsMultiLineSource::updateBoundingRectangle(const MinimalLineSource &newSource)
+
+
+void MyQGraphicsMultiLineSource::updateBoundingRectangle(MinimalLineSource *newSource)
 {
     double temp;
 
     // updating xMin
-    newSource.get_x1()<=newSource.get_x2() ? temp=newSource.get_x1() : temp=newSource.get_x2();
+    newSource->get_x1()<=newSource->get_x2() ? temp=newSource->get_x1() : temp=newSource->get_x2();
 
     if(temp<xMin){
         xMin = temp;
     }
 
     // updating xMax
-    newSource.get_x1()>=newSource.get_x2() ? temp=newSource.get_x1() : temp=newSource.get_x2();
+    newSource->get_x1()>=newSource->get_x2() ? temp=newSource->get_x1() : temp=newSource->get_x2();
     if(temp>xMax){
         xMax = temp;
     }
 
     // updating yMin
-    newSource.get_y1()<=newSource.get_y2() ? temp=newSource.get_y1() : temp=newSource.get_y2();
+    newSource->get_y1()<=newSource->get_y2() ? temp=newSource->get_y1() : temp=newSource->get_y2();
     if(temp<yMin){
         yMin = temp;
     }
 
     // updating yMax
-    newSource.get_y1()>=newSource.get_y2() ? temp=newSource.get_y1() : temp=newSource.get_y2();
+    newSource->get_y1()>=newSource->get_y2() ? temp=newSource->get_y1() : temp=newSource->get_y2();
     if(temp>yMax){
         yMax = temp;
     }
@@ -184,6 +196,23 @@ QPainterPath MyQGraphicsMultiLineSource::singleLineBuffer(QLineF line, const dou
 void MyQGraphicsMultiLineSource::updateMultilineBuffer(QPainterPath newLineBuffer)
 {
     multilineBuffer = multilineBuffer.united(newLineBuffer);
+}
+
+QVariant MyQGraphicsMultiLineSource::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+{
+    if (change == ItemPositionChange &&  scene() ) {
+        // value is the new position.
+        QPointF newPos = value.toPointF();
+        double dx = newPos.x() - pos().x();
+        double dy = newPos.y()  - pos().y();
+
+        for(auto segment: *lineSources){
+            segment->moveBy(dx, dy, 0);
+        }
+
+    }
+
+    return QGraphicsItem::itemChange(change, value);
 }
 
 

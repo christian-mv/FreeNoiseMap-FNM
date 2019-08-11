@@ -7,6 +7,7 @@
 #include <ctime>
 #include <vector>
 #include "minimal_point_source.h"
+#include "minimal_line_source.h"
 #include "single_receiver.h"
 #include "receivers_grid.h"
 
@@ -36,6 +37,10 @@ namespace  NoiseEngine
                                   double &y2,
                             const double &t3,
                             const double &y3);
+
+    std::vector<MinimalPointSource> fromLineToPointSources(const MinimalLineSource *line,
+                                                           const double &delta);
+
 
 
 };
