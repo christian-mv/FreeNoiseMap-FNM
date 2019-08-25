@@ -49,7 +49,9 @@ double distanceBetweenPoints(double x1, double y1, double z1, double x2, double 
 
 
 
-void P2P(MinimalPointSource *pointSource, SingleReceiver *receiver)
+void P2P(MinimalPointSource *pointSource,
+         SingleReceiver *receiver,
+         const Minimal_acoustic_barrier *barrier)
 {
     double distance = distanceBetweenPoints(pointSource->get_x(),
                                             pointSource->get_y(),
@@ -57,9 +59,12 @@ void P2P(MinimalPointSource *pointSource, SingleReceiver *receiver)
                                             receiver->get_x(),
                                             receiver->get_y(),
                                             receiver->get_z());
-    double A_div;
 
-    distance<1 ? A_div=0 : A_div = 20*std::log10(distance) + 11;
+    double A_div = attenuation_divergence(distance);
+
+
+
+
 
     double Leq_result = pointSource->get_Lw() - A_div;
     Leq_result = sumdB(receiver->get_Leq(), Leq_result);
@@ -142,6 +147,115 @@ std::vector<MinimalPointSource> fromLineToPointSources(const MinimalLineSource *
     return results;
 }
 
-};
+double attenuation_divergence(const double &distance)
+{
+    double A_div;
+    distance<1 ? A_div=0 : A_div = 20*std::log10(distance) + 11;
+    return A_div;
+}
+
+double attenuation_barrier(const MinimalPointSource* const pointSource,
+                           const SingleReceiver* const receiver,
+                           const Minimal_acoustic_barrier* const barrierSegment,
+                           const double &frequency)
+{
+
+
+    bool parallel = areTheseParallelLines(pointSource->get_x(), pointSource->get_y(),
+                                          receiver->get_x(), receiver->get_y(),
+                                          barrierSegment->p1x, barrierSegment->p1y,
+                                          barrierSegment->p2x, barrierSegment->p2y);
+    if(parallel){
+//        qDebug("Parallel lines");
+        return 0.0;
+    }
+
+    std::tuple<double, double> intercetionPoint2D;
+    intercetionPoint2D = intercectionPointBetween2DLines(pointSource->get_x(), pointSource->get_y(),
+                                                     receiver->get_x(), receiver->get_y(),
+                                                     barrierSegment->p1x, barrierSegment->p1y,
+                                                     barrierSegment->p2x, barrierSegment->p2y);
+
+
+
+    double dss, dsr, d, z, kmet, C2, C3, lambda, Dz;
+
+    dss = distanceBetweenPoints(pointSource->get_x(),
+                                pointSource->get_y(),
+                                pointSource->get_z(),
+                                std::get<0>(intercetionPoint2D),
+                                std::get<1>(intercetionPoint2D),
+                                barrierSegment->height);
+
+
+    dsr = distanceBetweenPoints(receiver->get_x(),
+                                receiver->get_y(),
+                                receiver->get_z(),
+                                std::get<0>(intercetionPoint2D),
+                                std::get<1>(intercetionPoint2D),
+                                barrierSegment->height);
+
+    d = distanceBetweenPoints(pointSource->get_x(),
+                              pointSource->get_y(),
+                              pointSource->get_z(),
+                              receiver->get_x(),
+                              receiver->get_y(),
+                              receiver->get_z());
+
+
+    z = dss + dsr - d;
+
+    // correct sign for z according to sightlight (pending)
+
+
+    z>0 ? kmet = std::pow( euler , -(1/2000)*std::sqrt(dss*dsr*d/(2*z)) ) : kmet = 1;
+
+    C2 = 20; // see ISO 9613
+    C3 = 1; // single difraction
+    // C3 for double difraction see equation 15 ISO 9613-2
+
+
+    lambda = c/frequency;
+
+    Dz = 10*std::log10( 3 + (C2/lambda)*C3*z*kmet );
+
+    return Dz;
+}
+
+std::tuple<double, double> intercectionPointBetween2DLines(double p0x, double p0y,
+                                                 double p1x, double p1y,
+                                                 double p2x, double p2y,
+                                                 double p3x, double p3y)
+{
+    // https://www.youtube.com/watch?v=4bIsntTiKfM
+
+    double x_result, y_result;
+    double A1, B1, C1, A2, B2, C2, denominator;
+
+    A1 = p1y - p0y;
+    B1 = p0x - p1x;
+    C1 = A1 * p0x + B1 * p0y;
+    A2 = p3y - p2y;
+    B2 = p2x - p3x;
+    C2 = A2 * p2x + B2 * p2y;
+    denominator = A1*B2 - A2*B1;
+
+    x_result = (B2*C1 - B1*C2)/denominator;
+    y_result = (A1*C2 - A2*C1)/denominator;
+
+    return std::make_tuple(x_result, y_result);
+}
+
+bool areTheseParallelLines(double p0x, double p0y, double p1x, double p1y,
+                           double p2x, double p2y, double p3x, double p3y)
+{
+    // Precalculus 7Ed, chapter 1; James Stewart
+    double m1, m2;
+    m1 = (p1y - p0y)/(p1x - p0x);
+    m2 = (p3y - p2y)/(p3x - p2x);
+    return (m1 == m2);
+}
+
+}; // end namespace
 
 

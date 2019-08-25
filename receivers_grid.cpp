@@ -141,37 +141,37 @@ void ReceiversGrid::setNoiseColor(const double Leq, QColor * colorDecibel)
 
 
 //    if(Leq <= 35){ // dB units
-//        colorDecibell->setRgb(0, 255, 0, 255);
+//        colorDecibel->setRgb(0, 255, 0, 255);
 //    }
 //    else if(35<Leq && Leq<=40){
-//        colorDecibell->setRgb(85, 170, 0, 255);
+//        colorDecibel->setRgb(85, 170, 0, 255);
 //    }
 //    else if(40<Leq && Leq<=45){
-//        colorDecibell->setRgb(255, 255, 0, 255);
+//        colorDecibel->setRgb(255, 255, 0, 255);
 //    }
 //    else if(45<Leq && Leq<=50){
-//        colorDecibell->setRgb(197, 131, 0, 255);
+//        colorDecibel->setRgb(197, 131, 0, 255);
 //    }
 //    else if(50<Leq && Leq<=55){
-//        colorDecibell->setRgb(255, 92, 11, 255);
+//        colorDecibel->setRgb(255, 92, 11, 255);
 //    }
 //    else if(55<Leq && Leq<=60){
-//        colorDecibell->setRgb(255, 0, 0, 255);
+//        colorDecibel->setRgb(255, 0, 0, 255);
 //    }
 //    else if(60<Leq && Leq<=65){
-//        colorDecibell->setRgb(156, 0, 0, 255);
+//        colorDecibel->setRgb(156, 0, 0, 255);
 //    }
 //    else if(65<Leq && Leq<=70){
-//        colorDecibell->setRgb(85, 0, 127, 255);
+//        colorDecibel->setRgb(85, 0, 127, 255);
 //    }
 //    else if(70<Leq && Leq<=75){
-//        colorDecibell->setRgb(0, 0, 150, 255);
+//        colorDecibel->setRgb(0, 0, 150, 255);
 //    }
 //    else if(75<Leq && Leq<=80){
-//        colorDecibell->setRgb(0, 0, 113, 255);
+//        colorDecibel->setRgb(0, 0, 113, 255);
 //    }
 //    else if(80<Leq){
-//        colorDecibell->setRgb(0, 0, 0, 255);
+//        colorDecibel->setRgb(0, 0, 0, 255);
 //    }
 
 }
