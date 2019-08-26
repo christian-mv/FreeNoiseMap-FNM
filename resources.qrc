@@ -9,5 +9,7 @@
         <file>icons/extend.png</file>
         <file>icons/line_source.png</file>
         <file>icons/target.png</file>
+        <file>icons/acoustic_barrier.png</file>
+        <file>icons/barrier_cursor.png</file>
     </qresource>
 </RCC>

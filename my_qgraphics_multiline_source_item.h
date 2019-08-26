@@ -1,8 +1,7 @@
-#ifndef MY_QGRAPHICS_MULTILINE_ITEM_H
-#define MY_QGRAPHICS_MULTILINE_ITEM_H
+#ifndef MY_QGRAPHICS_MULTILINE_SOURCE_ITEM_H
+#define MY_QGRAPHICS_MULTILINE_SOURCE_ITEM_H
 
 #include <QGraphicsItem>
-#include <QLinkedList>
 #include "minimal_line_source.h"
 
 
@@ -35,4 +34,4 @@ protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 };
 
-#endif // MY_QGRAPHICS_MULTILINE_ITEM_H
+#endif // MY_QGRAPHICS_MULTILINE_SOURCE_ITEM_H

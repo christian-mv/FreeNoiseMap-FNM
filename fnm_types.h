@@ -2,9 +2,11 @@
 #define FNM_TYPES_H
 
 namespace FNM_TypeId{
-    enum {RasterPixmapItemType =  65536,
-          PointSourceItemType = 65537,
-          MultiLineSourceItemType = 65538,
+    enum {
+        RasterPixmapItemType =  65536,
+        PointSourceItemType = 65537,
+        MultiLineSourceItemType = 65538,
+        AcousticBarrierItemType= 65539
          };
 }
 

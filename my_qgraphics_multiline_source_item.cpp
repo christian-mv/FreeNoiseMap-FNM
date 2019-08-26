@@ -1,4 +1,4 @@
-#include "my_qgraphics_multiline_item.h"
+#include "my_qgraphics_multiline_source_item.h"
 #include "fnm_types.h"
 #include <QPainter>
 #include <QDebug>
@@ -11,8 +11,6 @@ MyQGraphicsMultiLineSource::MyQGraphicsMultiLineSource():
     setFlag(QGraphicsItem::ItemIsMovable, false);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
-
-
 }
 
 QRectF MyQGraphicsMultiLineSource::boundingRect() const

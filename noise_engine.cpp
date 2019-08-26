@@ -51,7 +51,7 @@ double distanceBetweenPoints(double x1, double y1, double z1, double x2, double 
 
 void P2P(MinimalPointSource *pointSource,
          SingleReceiver *receiver,
-         const Minimal_acoustic_barrier *barrier)
+         const std::vector<MinimalAcousticBarrier*> &barrierSegments)
 {
     double distance = distanceBetweenPoints(pointSource->get_x(),
                                             pointSource->get_y(),
@@ -62,11 +62,14 @@ void P2P(MinimalPointSource *pointSource,
 
     double A_div = attenuation_divergence(distance);
 
+    double A_bar = 0;
+
+    if(!barrierSegments.empty()){
+        A_bar = attenuation_barrier(pointSource,receiver,barrierSegments, 500.0);
+    }
 
 
-
-
-    double Leq_result = pointSource->get_Lw() - A_div;
+    double Leq_result = pointSource->get_Lw() - A_div - A_bar;
     Leq_result = sumdB(receiver->get_Leq(), Leq_result);
 
     receiver->set_Leq(Leq_result);
@@ -136,11 +139,13 @@ std::vector<MinimalPointSource> fromLineToPointSources(const MinimalLineSource *
     int n = static_cast<int>(line->distance()/distanceBetweenPoints);
     double dx = line->get_x2() - line->get_x1();
     double dy = line->get_y2() - line->get_y1();
+    double dz = line->get_z2() - line->get_z1();
     double dw = line->get_Lw_total() - 10.0*log10(n); // Lw per point source
 
     for(int k=0; k<=n; k++){
         point.set_x( line->get_x1() + k*dx/n );
         point.set_y( line->get_y1() + k*dy/n );
+        point.set_z( line->get_z1() + k*dz/n );
         point.set_Lw(dw);
         results.push_back(point);
     }
@@ -156,59 +161,36 @@ double attenuation_divergence(const double &distance)
 
 double attenuation_barrier(const MinimalPointSource* const pointSource,
                            const SingleReceiver* const receiver,
-                           const Minimal_acoustic_barrier* const barrierSegment,
+                           const std::vector<MinimalAcousticBarrier*> &barrierSegments,
                            const double &frequency)
 {
 
+    double  z, kmet, C2, C3, lambda, Dz;
+    std::vector< std::tuple<double, double, double> > diffractionPath;
 
-    bool parallel = areTheseParallelLines(pointSource->get_x(), pointSource->get_y(),
-                                          receiver->get_x(), receiver->get_y(),
-                                          barrierSegment->p1x, barrierSegment->p1y,
-                                          barrierSegment->p2x, barrierSegment->p2y);
-    if(parallel){
-//        qDebug("Parallel lines");
-        return 0.0;
+    diffractionPath =  calculateDiffractionPathPoints(pointSource->get_x(),
+                                                pointSource->get_y(),
+                                                pointSource->get_z(),
+                                                receiver->get_x(),
+                                                receiver->get_y(),
+                                                receiver->get_z(),
+                                                barrierSegments);
+
+    if(diffractionPath.size()<=2){
+        return 0;
     }
 
-    std::tuple<double, double> intercetionPoint2D;
-    intercetionPoint2D = intercectionPointBetween2DLines(pointSource->get_x(), pointSource->get_y(),
-                                                     receiver->get_x(), receiver->get_y(),
-                                                     barrierSegment->p1x, barrierSegment->p1y,
-                                                     barrierSegment->p2x, barrierSegment->p2y);
+    BarrierPathdistances isoDistances;
+    isoDistances = Iso9613BarrierDistances(diffractionPath);
 
 
-
-    double dss, dsr, d, z, kmet, C2, C3, lambda, Dz;
-
-    dss = distanceBetweenPoints(pointSource->get_x(),
-                                pointSource->get_y(),
-                                pointSource->get_z(),
-                                std::get<0>(intercetionPoint2D),
-                                std::get<1>(intercetionPoint2D),
-                                barrierSegment->height);
-
-
-    dsr = distanceBetweenPoints(receiver->get_x(),
-                                receiver->get_y(),
-                                receiver->get_z(),
-                                std::get<0>(intercetionPoint2D),
-                                std::get<1>(intercetionPoint2D),
-                                barrierSegment->height);
-
-    d = distanceBetweenPoints(pointSource->get_x(),
-                              pointSource->get_y(),
-                              pointSource->get_z(),
-                              receiver->get_x(),
-                              receiver->get_y(),
-                              receiver->get_z());
-
-
-    z = dss + dsr - d;
+    z = isoDistances.dss + isoDistances.dsr + isoDistances.e- isoDistances.d;
 
     // correct sign for z according to sightlight (pending)
 
 
-    z>0 ? kmet = std::pow( euler , -(1/2000)*std::sqrt(dss*dsr*d/(2*z)) ) : kmet = 1;
+//    z>0 ? kmet = std::pow( euler , -(1/2000)*std::sqrt(diffractionDistance*d/(2*z)) ) : kmet = 1;
+    z>0 ? kmet = std::pow( euler , -(1/2000)*std::sqrt(isoDistances.dss*isoDistances.dsr*isoDistances.d/(2*z)) ) : kmet = 1;
 
     C2 = 20; // see ISO 9613
     C3 = 1; // single difraction
@@ -222,15 +204,17 @@ double attenuation_barrier(const MinimalPointSource* const pointSource,
     return Dz;
 }
 
-std::tuple<double, double> intercectionPointBetween2DLines(double p0x, double p0y,
+
+std::tuple<bool, double, double> intercectionBetween2DLineSegments(double p0x, double p0y,
                                                  double p1x, double p1y,
                                                  double p2x, double p2y,
                                                  double p3x, double p3y)
 {
-    // https://www.youtube.com/watch?v=4bIsntTiKfM
+    // https://www.youtube.com/watch?v=4bIsntTiKfM&list=PL7wAPgl1JVvURU_YF4hHMcsWK98KbnZPs&index=2
 
-    double x_result, y_result;
+    double intersectX, intersectY;
     double A1, B1, C1, A2, B2, C2, denominator;
+    double rx0, ry0, rx1, ry1;
 
     A1 = p1y - p0y;
     B1 = p0x - p1x;
@@ -240,10 +224,26 @@ std::tuple<double, double> intercectionPointBetween2DLines(double p0x, double p0
     C2 = A2 * p2x + B2 * p2y;
     denominator = A1*B2 - A2*B1;
 
-    x_result = (B2*C1 - B1*C2)/denominator;
-    y_result = (A1*C2 - A2*C1)/denominator;
+    if(denominator == 0  || areTheseParallelLines(p0x, p0y,p1x, p1y,p2x, p2y,p3x, p3y)){
+        return std::make_tuple(false, 0, 0);
+    }
 
-    return std::make_tuple(x_result, y_result);
+    intersectX = (B2*C1 - B1*C2)/denominator;
+    intersectY = (A1*C2 - A2*C1)/denominator;
+
+    rx0 = (intersectX - p0x) / (p1x - p0x);
+    ry0 = (intersectY - p0y) / (p1y - p0y);
+    rx1 = (intersectX - p2x) / (p3x - p2x);
+    ry1 = (intersectY - p2y) / (p3y - p2y);
+
+    if(((rx0 >= 0 && rx0 <= 1) || (ry0 >= 0 && ry0 <= 1)) &&
+            ((rx1 >= 0 && rx1 <= 1) || (ry1 >= 0 && ry1 <= 1))) {
+        return std::make_tuple(true, intersectX, intersectY);
+    }
+    else {
+        return std::make_tuple(false, 0, 0);
+    }
+
 }
 
 bool areTheseParallelLines(double p0x, double p0y, double p1x, double p1y,
@@ -255,6 +255,110 @@ bool areTheseParallelLines(double p0x, double p0y, double p1x, double p1y,
     m2 = (p3y - p2y)/(p3x - p2x);
     return (m1 == m2);
 }
+
+std::vector< std::tuple<double, double, double> > calculateDiffractionPathPoints(const double &x0, const double &y0, const double &z0,
+                                                                           const double &x1, const double &y1, const double &z1,
+                                                                           const std::vector<MinimalAcousticBarrier*> &barrierSegments)
+{
+    std::vector< std::tuple<double, double, double> > pathPoints;
+
+    std::tuple<bool, double, double> intercection;
+    pathPoints.push_back(std::make_tuple(x0,y0,z0));
+
+    for(auto segment: barrierSegments){
+        intercection = intercectionBetween2DLineSegments(x0,y0,x1,y1,
+                                                         segment->get_x1(),
+                                                         segment->get_y1(),
+                                                         segment->get_x2(),
+                                                         segment->get_y2());
+
+        // take into account point that are positive intersections
+        if(std::get<0>(intercection)){
+            pathPoints.push_back(std::make_tuple(std::get<1>(intercection),
+                                                std::get<2>(intercection),
+                                                segment->get_height()));
+        }
+    }
+
+    pathPoints.push_back(std::make_tuple(x1,y1,z1));
+
+    // sort vector according to 2D distance from point x0,y0
+    std::sort(pathPoints.begin(),
+              pathPoints.end(),
+              [&x0, &y0](const std::tuple<double, double, double> &a,
+              const std::tuple<double, double, double> &b) -> bool{
+
+        double aDistance = distanceBetweenPoints(x0,y0,0,
+                                                 std::get<0>(a),
+                                                 std::get<1>(a),0);
+
+        double bDistance = distanceBetweenPoints(x0,y0,0,
+                                                 std::get<0>(b),
+                                                 std::get<1>(b),0);
+
+
+        return aDistance < bDistance;
+    });
+
+    return pathPoints;
+}
+
+
+// for this function it is supposed that pathPoints is already sorted
+BarrierPathdistances Iso9613BarrierDistances(const std::vector<std::tuple<double, double, double> > &pathPoints)
+{
+
+    BarrierPathdistances data;
+
+
+    int lastIndex = pathPoints.size()-1;
+
+    data.d = distanceBetweenPoints(std::get<0>(pathPoints.at(0)),
+                                   std::get<1>(pathPoints.at(0)),
+                                   std::get<2>(pathPoints.at(0)),
+
+                                   std::get<0>(pathPoints.at(lastIndex)),
+                                   std::get<1>(pathPoints.at(lastIndex)),
+                                   std::get<2>(pathPoints.at(lastIndex)));
+
+
+    data.dss = distanceBetweenPoints(std::get<0>(pathPoints.at(0)),
+                                     std::get<1>(pathPoints.at(0)),
+                                     std::get<2>(pathPoints.at(0)),
+
+                                     std::get<0>(pathPoints.at(1)),
+                                     std::get<1>(pathPoints.at(1)),
+                                     std::get<2>(pathPoints.at(1)));
+
+
+
+    data.dsr = distanceBetweenPoints(std::get<0>(pathPoints.at(lastIndex)),
+                                     std::get<1>(pathPoints.at(lastIndex)),
+                                     std::get<2>(pathPoints.at(lastIndex)),
+
+                                     std::get<0>(pathPoints.at(lastIndex-1)),
+                                     std::get<1>(pathPoints.at(lastIndex-1)),
+                                     std::get<2>(pathPoints.at(lastIndex-1)));
+    data.e = 0;
+
+    for(int i= 1; i<=lastIndex-2; i++){
+        data.e += distanceBetweenPoints(std::get<0>(pathPoints.at(i)),
+                                        std::get<1>(pathPoints.at(i)),
+                                        std::get<2>(pathPoints.at(i)),
+
+                                        std::get<0>(pathPoints.at(i+1)),
+                                        std::get<1>(pathPoints.at(i+1)),
+                                        std::get<2>(pathPoints.at(i+1)));
+    }
+
+
+//    qDebug()<<"d: "<<data.d<<" dss: "<<data.dss<<" dsr: "<<data.dsr<<" e: "<<data.e;
+
+    return data;
+
+}
+
+
 
 }; // end namespace
 

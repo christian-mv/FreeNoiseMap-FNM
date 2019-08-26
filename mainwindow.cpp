@@ -12,8 +12,8 @@
 #include "noise_engine.h"
 #include "pointsourcepixmapitem.h"
 #include "mygraphicsshadedlineitem.h"
-//#include "qgraphics_polyline_source_item.h"
-#include "my_qgraphics_multiline_item.h"
+#include "my_qgraphics_multiline_source_item.h"
+#include "my_qgraphics_acoustic_barrier_item.h"
 
 #define VERSION_OF_APP "beta"
 #define MY_APP_NAME "Free Noise Map"
@@ -21,7 +21,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow),
-    singleLine(nullptr), polyLineSource(nullptr)
+    singleLine(nullptr), polyLineSource(nullptr), acousticBarrier(nullptr)
 
 {
 
@@ -83,6 +83,8 @@ void MainWindow::loadCursors()
     myCursors["pointSource"] = QCursor(
                 QPixmap(":/images/icons/point_source.png").scaled(20,20,Qt::KeepAspectRatio,Qt::SmoothTransformation));
 
+    myCursors["barrierCursor"] = QCursor(
+                QPixmap(":/images/icons/barrier_cursor.png").scaled(20,20,Qt::KeepAspectRatio,Qt::SmoothTransformation));
 
     myCursors["editMode"] = QCursor(Qt::PointingHandCursor);
 
@@ -152,7 +154,8 @@ void MainWindow::movingItemsOnTheScene(const QGraphicsSceneMouseEvent *sceneMous
         {
             //  while shade_line exist we shouldn't change the position of Line source since
             // it doesn't work well
-            if(moving_item->type() == FNM_TypeId::MultiLineSourceItemType && shaded_line == nullptr){
+            if( (moving_item->type() == FNM_TypeId::MultiLineSourceItemType || moving_item->type() == FNM_TypeId::AcousticBarrierItemType)
+                    && shaded_line == nullptr){
                 moving_item->moveBy(-sceneMouseEvent->lastScenePos().x()+sceneMouseEvent->scenePos().x(),
                                     -sceneMouseEvent->lastScenePos().y()+sceneMouseEvent->scenePos().y());
             }
@@ -228,14 +231,11 @@ bool MainWindow::isThereNoiseSources() const
     return false;
 }
 
-void MainWindow::releaseLineSourceEdition()
+void MainWindow::releaseLineItemEdition()
 {    
-//    if(polyLineSource != nullptr){
-//        polyLineSource->setFlag(QGraphicsItem::ItemIsMovable, true);
-//    }
-
     singleLine = nullptr;
     polyLineSource = nullptr;
+    acousticBarrier = nullptr;
 }
 
 
@@ -249,13 +249,19 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
 
         PointSourcePixmapItem *currentPixmapItemPointSource;
         MyQGraphicsMultiLineSource *currentLineSource;
+        auto barriersSegments = barrierSegmentsToStdVector();
+//        MinimalAcousticBarrier* barrierSegment;
 
         for(auto currentReceiver : receivers.matrix.at(i)){           
             for(auto currentItem : scene.items()){
                 // noise from point sources
                 if(currentItem->type() == FNM_TypeId::PointSourceItemType){
                     currentPixmapItemPointSource = (static_cast<PointSourcePixmapItem *>(currentItem));
-                    NoiseEngine::P2P(currentPixmapItemPointSource->getPointSource(), currentReceiver);
+
+                    NoiseEngine::P2P(currentPixmapItemPointSource->getPointSource(),
+                                                             currentReceiver, barriersSegments);
+
+
                 }
                 // noise from line sources
                 if(currentItem->type() == FNM_TypeId::MultiLineSourceItemType){
@@ -264,7 +270,7 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
                     // segmets, then each segment is split in point sources
                     for(MinimalLineSource *segment: *currentLineSource->getLineSources()){
                         for(MinimalPointSource subPointSource: NoiseEngine::fromLineToPointSources(segment,22.0)){
-                            NoiseEngine::P2P(&subPointSource, currentReceiver);
+                            NoiseEngine::P2P(&subPointSource, currentReceiver, barriersSegments);
                         }
                     }
                 }
@@ -274,6 +280,33 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
         qApp->processEvents();
     }
     return true;
+}
+
+QList<MyQGraphicsAcousticBarrierItem *> MainWindow::barrierList() const
+{
+    QList<MyQGraphicsAcousticBarrierItem *> barriers;
+    for(auto item: scene.items()){
+        if(item->type() == FNM_TypeId::AcousticBarrierItemType){
+            barriers.append(static_cast<MyQGraphicsAcousticBarrierItem *>(item));
+        }
+    }
+    return barriers;
+}
+
+std::vector<MinimalAcousticBarrier *> MainWindow::barrierSegmentsToStdVector() const
+{
+    std::vector<MinimalAcousticBarrier *> segments;
+    QVector<MinimalAcousticBarrier*> temp;
+
+    for(auto item: scene.items()){
+        if(item->type() == FNM_TypeId::AcousticBarrierItemType){
+            temp = (static_cast<MyQGraphicsAcousticBarrierItem *>(item)->getBarrierSegments());
+            for(auto singleSegment: temp){
+                segments.push_back(singleSegment);
+            }
+        }
+    }
+    return segments;
 }
 
 
@@ -298,10 +331,10 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             auto itemUnderCursor = scene.itemAt(sceneEvent->scenePos(), ui->graphicsView->transform());
             if(itemUnderCursor != &pixmapItem
                     && itemUnderCursor != nullptr ){
-
                 if(ui->graphicsView->cursor()==myCursors["arrowMode"]){
                     itemUnderCursor->setAcceptHoverEvents(true);
-                }else{
+                }
+                else{
                     itemUnderCursor->setAcceptHoverEvents(false);
                     itemUnderCursor->setCursor(ui->graphicsView->cursor());
                 }
@@ -317,7 +350,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             MinimalPointSource *myPointSource = new MinimalPointSource(
                         sceneEvent->scenePos().x(),
                         sceneEvent->scenePos().y(),
-                        1.2,90);
+                        1.2,100);
 
             // create pixmapItem for the noise source
 
@@ -361,8 +394,10 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                   * this is important since shaded lines don't work well with all items, for some extrange reason
                   * it doesn't work with polylines */
                 switch (pressed_item->type()) {
+                // do not create shadedlines for line source or acoustic barrier (NOT WORKING)
                 case FNM_TypeId::MultiLineSourceItemType:
-                    // do not create shadedlines for line source (NOT WORKING)
+                    break;
+                case FNM_TypeId::AcousticBarrierItemType:
                     break;
                 default:
                     createShadedLinesItem(sceneEvent->scenePos());
@@ -423,16 +458,66 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
         }
 
-        // release line source
-        else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
-                 && sceneEvent->button() == Qt::RightButton
-                 && ui->graphicsView->cursor()==myCursors["lineSourceMode"])
-        {
-            deleteShadedLinesItem();
-            releaseLineSourceEdition();
 
+        // add acoustic barrier
+        else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
+                 && sceneEvent->button() == Qt::LeftButton
+                 && ui->graphicsView->cursor()==myCursors["barrierCursor"]){
+            // there aren't any declared vertice in the line
+            if(singleLine == nullptr){
+                createShadedLinesItem(sceneEvent->scenePos());
+                singleLine = new QLineF();
+                if(acousticBarrier == nullptr){
+                    acousticBarrier = new MyQGraphicsAcousticBarrierItem();
+                    scene.addItem(acousticBarrier);
+                    singleLine->setLine(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(),
+                                           sceneEvent->scenePos().x(), sceneEvent->scenePos().y());
+                }
+
+            }
+            // there is at least one declared vertice in the line
+            else if(singleLine != nullptr){
+                if(acousticBarrier->childItems().isEmpty()){
+                    singleLine->setP1(QPointF(singleLine->x2(),
+                                              singleLine->y2()));
+
+                deleteShadedLinesItem();
+                }else{
+
+                    // this lines take the first vertice of the current line as exactly the second vertice of the previous line
+
+                    singleLine->setP1( singleLine->p2() );
+                    deleteShadedLinesItem();
+                }
+
+                singleLine->setP2(QPointF(
+                                          sceneEvent->scenePos().x(),
+                                          sceneEvent->scenePos().y()
+                                          )
+                                  );
+
+                createShadedLinesItem(sceneEvent->scenePos());
+                if(singleLine->p1() != singleLine->p2()){ // it is not necessary to add lines of 0 distance
+                    acousticBarrier->addBarrierSegment(*singleLine, 10);
+                    singleLine = new QLineF(singleLine->x2(),
+                                            singleLine->y2(),
+                                            singleLine->x2(),
+                                            singleLine->y2());
+                }
+            }
         }
 
+        // release line source or acoustic barrier edition
+        else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
+                 && sceneEvent->button() == Qt::RightButton
+                 && (ui->graphicsView->cursor()==myCursors["lineSourceMode"] || ui->graphicsView->cursor()==myCursors["barrierCursor"])
+
+                 )
+        {
+            deleteShadedLinesItem();
+            releaseLineItemEdition();
+
+        }
 
         // dropping items
         else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
@@ -446,7 +531,8 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             // next conditional guarantees that the user dropp any object that
             // currently is dragging before proccessing TouchUpdate event
             deleteShadedLinesItem();
-        }    
+        }
+
      return QMainWindow::eventFilter(target, event);
     }
 
@@ -459,7 +545,7 @@ void MainWindow::on_actionAdd_point_source_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
     ui->graphicsView->setCursor(myCursors["pointSource"]);
-    releaseLineSourceEdition();
+    releaseLineItemEdition();
 
 }
 
@@ -468,7 +554,7 @@ void MainWindow::on_actioneditMode_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
     ui->graphicsView->setCursor(myCursors["arrowMode"]);   
-    releaseLineSourceEdition();
+    releaseLineItemEdition();
 
 }
 
@@ -476,7 +562,7 @@ void MainWindow::on_actiongrid_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
     ui->graphicsView->setCursor(myCursors["gridMode"]);
-    releaseLineSourceEdition();
+    releaseLineItemEdition();
 }
 
 void MainWindow::on_actioncalculateGrid_triggered()
@@ -485,7 +571,7 @@ void MainWindow::on_actioncalculateGrid_triggered()
     ui->graphicsView->setCursor(myCursors["arrowMode"]);
     resetPixmapArea();
     receivers.resetNoiseReceiver();
-    releaseLineSourceEdition();
+    releaseLineItemEdition();
 
 
     if( !isThereNoiseSources() ){
@@ -523,7 +609,7 @@ void MainWindow::on_actioncalculateGrid_triggered()
 void MainWindow::on_actiondrag_mode_triggered()
 {
     ui->graphicsView->setCursor(myCursors["dragMode"]);
-    releaseLineSourceEdition();
+    releaseLineItemEdition();
 
 }
 
@@ -543,5 +629,12 @@ void MainWindow::on_action_add_line_source_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
     ui->graphicsView->setCursor(myCursors["lineSourceMode"]);
-    releaseLineSourceEdition();
+    releaseLineItemEdition();
+}
+
+void MainWindow::on_actionAcoustic_Barrier_triggered()
+{
+    on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
+    ui->graphicsView->setCursor(myCursors["barrierCursor"]);
+    releaseLineItemEdition();
 }

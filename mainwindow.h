@@ -12,10 +12,11 @@
 
 
 class MinimalPointSource;
+class MinimalAcousticBarrier;
 class QLineF;
-//class QGraphicsPolyLineSourceItem;
 class MyQGraphicsMultiLineSource;
 class PointSourcePixmapItem;
+class MyQGraphicsAcousticBarrierItem;
 class QProgressDialog;
 class MyGraphicsShadedLineItem;
 
@@ -45,6 +46,8 @@ private slots:
 
     void on_action_add_line_source_triggered();
 
+    void on_actionAcoustic_Barrier_triggered();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene scene;
@@ -57,22 +60,24 @@ private:
     void loadCursors();
     void loadDefaultGrid();
     bool calculateNoiseFromSources(QProgressDialog &progress);
-    void resetPixmapArea();    
+    QList<MyQGraphicsAcousticBarrierItem *> barrierList() const; // returns all barriers from the scene
+    std::vector<MinimalAcousticBarrier*> barrierSegmentsToStdVector() const;
+    void resetPixmapArea();
     void movingItemsOnTheScene(const QGraphicsSceneMouseEvent *sceneMouseEvent);
     void updateShadedLinesItem(QPointF pos);
     void createShadedLinesItem(QPointF pos);
     void deleteShadedLinesItem();
     void droppingItemsOnTheScene(QGraphicsSceneMouseEvent *sceneEvent);
     bool isThereNoiseSources() const;
-    void releaseLineSourceEdition();
+    void releaseLineItemEdition();
 
 
     MyGraphicsShadedLineItem *shaded_line = nullptr; // auxiliary line when dragging items
     QPointF p1_shaded_line; // initial coordinate for shaded_line
 
     QLineF *singleLine;
-//    QGraphicsPolyLineSourceItem * polyLineSource;
     MyQGraphicsMultiLineSource * polyLineSource;
+    MyQGraphicsAcousticBarrierItem * acousticBarrier;
 
 
 protected:

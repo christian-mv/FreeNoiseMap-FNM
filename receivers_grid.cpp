@@ -8,7 +8,7 @@ using namespace std;
 ReceiversGrid::ReceiversGrid()
 {
     // Defining default gradien.
-    gradientColor.addStep(0.0/255.0,      255.0/255.0,      0.0/255.0,      20.0);
+    gradientColor.addStep(0.0/255.0,      255.0/255.0,      0.0/255.0,      -88.0);
     gradientColor.addStep(0.0/255.0,      255.0/255.0,      0.0/255.0,      35.0);
     gradientColor.addStep(85.0/255.0,     170.0/255.0,      0.0/255.0,      40.0);
     gradientColor.addStep(255.0/255.0,    255.0/255.0,      0.0/255.0,      45.0);
@@ -117,7 +117,7 @@ bool ReceiversGrid::paintGrid(QImage &image, const GridSettings &myGrid, QProgre
 
             r = matrix.at(i).at(j);
 
-            setNoiseColor(r->get_Leq(), &decibelColor);
+            setNoiseColor(r->get_Leq(), &decibelColor);            
             painter.setBrush(QBrush(decibelColor));
             painter.drawRect(receiverRect(r));
         }
