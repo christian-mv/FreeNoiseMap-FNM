@@ -12,14 +12,14 @@
 
 
 class MinimalPointSource;
-class MinimalAcousticBarrier;
+class FnmAcousticBarrierSegment;
 class QLineF;
 class MyQGraphicsMultiLineSource;
 class PointSourcePixmapItem;
 class MyQGraphicsAcousticBarrierItem;
 class QProgressDialog;
 class MyGraphicsShadedLineItem;
-
+class QActionGroup;
 
 namespace Ui {
 class MainWindow;
@@ -48,6 +48,8 @@ private slots:
 
     void on_actionAcoustic_Barrier_triggered();
 
+    void on_actionadd_polyline_triggered();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene scene;
@@ -58,10 +60,11 @@ private:
     QHash<QString, QCursor> myCursors;
     QImage invertImageOnYAxes(const QImage &image);
     void loadCursors();
+    void makeMenuMutualExclusive();
     void loadDefaultGrid();
     bool calculateNoiseFromSources(QProgressDialog &progress);
     QList<MyQGraphicsAcousticBarrierItem *> barrierList() const; // returns all barriers from the scene
-    std::vector<MinimalAcousticBarrier*> barrierSegmentsToStdVector() const;
+    std::vector<FnmAcousticBarrierSegment*> barrierSegmentsToStdVector() const;
     void resetPixmapArea();
     void movingItemsOnTheScene(const QGraphicsSceneMouseEvent *sceneMouseEvent);
     void updateShadedLinesItem(QPointF pos);

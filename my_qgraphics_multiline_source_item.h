@@ -2,7 +2,7 @@
 #define MY_QGRAPHICS_MULTILINE_SOURCE_ITEM_H
 
 #include <QGraphicsItem>
-#include "minimal_line_source.h"
+#include "fnm_line_segment_source.h"
 
 
 class MyQGraphicsMultiLineSource : public QGraphicsItem
@@ -14,17 +14,17 @@ public:
     QPainterPath shape() const override;
     int	type() const override;
 
-    void addLineSource(MinimalLineSource *lineSource);
+    void addLineSource(FnmLineSegmentSource *lineSource);
     void addLineSource(const QLineF &line, double Lw_total);
-    QVector<MinimalLineSource*> * getLineSources();
+    QVector<FnmLineSegmentSource*> * getLineSources();
     void setBufferDistance(const double &newValue);
 
 
 private:    
     double xMin, xMax, yMin, yMax; // this is intended to calculate bounding box
     double bufferDistance;
-    QVector<MinimalLineSource*> *lineSources;
-    void updateBoundingRectangle(MinimalLineSource *newSource);
+    QVector<FnmLineSegmentSource*> *lineSources;
+    void updateBoundingRectangle(FnmLineSegmentSource *newSource);
     QPainterPath multilineBuffer; // this is return from shape()
     QPainterPath singleLineBuffer(QLineF line, const double &distance);
     void updateMultilineBuffer(QPainterPath newLineBuffer);

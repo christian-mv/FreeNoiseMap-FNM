@@ -66,6 +66,7 @@
    <addaction name="actiondrag_mode"/>
    <addaction name="actionAdd_point_source"/>
    <addaction name="action_add_line_source"/>
+   <addaction name="actionadd_polyline"/>
    <addaction name="actionAcoustic_Barrier"/>
    <addaction name="actiongrid"/>
    <addaction name="actionzoom_full"/>
@@ -124,7 +125,7 @@
      <normaloff>:/images/icons/drag_mode.png</normaloff>:/images/icons/drag_mode.png</iconset>
    </property>
    <property name="text">
-    <string>drag mode</string>
+    <string>Drag mode</string>
    </property>
   </action>
   <action name="actionzoom_full">
@@ -155,6 +156,15 @@
    </property>
    <property name="text">
     <string>Acoustic Barrier</string>
+   </property>
+  </action>
+  <action name="actionadd_polyline">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/icons/polyline.png</normaloff>:/images/icons/polyline.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add polyline</string>
    </property>
   </action>
  </widget>

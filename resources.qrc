@@ -10,6 +10,7 @@
         <file>icons/line_source.png</file>
         <file>icons/target.png</file>
         <file>icons/acoustic_barrier.png</file>
-        <file>icons/barrier_cursor.png</file>
+        <file>icons/polyline.png</file>
+        <file>icons/polyline_cursor.png</file>
     </qresource>
 </RCC>

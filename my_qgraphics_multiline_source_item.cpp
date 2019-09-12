@@ -6,7 +6,7 @@
 
 MyQGraphicsMultiLineSource::MyQGraphicsMultiLineSource():
     xMin(0), xMax(0), yMin(0), yMax(0), bufferDistance(10.0),
-    lineSources(new QVector<MinimalLineSource*>)
+    lineSources(new QVector<FnmLineSegmentSource*>)
 {
     setFlag(QGraphicsItem::ItemIsMovable, false);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -96,7 +96,7 @@ int MyQGraphicsMultiLineSource::type() const
     return FNM_TypeId::MultiLineSourceItemType;
 }
 
-void MyQGraphicsMultiLineSource::addLineSource(MinimalLineSource *newSource)
+void MyQGraphicsMultiLineSource::addLineSource(FnmLineSegmentSource *newSource)
 {
     prepareGeometryChange();
     QPainterPath newSegmentBuffer = singleLineBuffer(QLineF(newSource->get_x1(),
@@ -127,14 +127,14 @@ void MyQGraphicsMultiLineSource::addLineSource(MinimalLineSource *newSource)
 
 void MyQGraphicsMultiLineSource::addLineSource(const QLineF &line, double Lw_total)
 {
-    MinimalLineSource *source = new MinimalLineSource();
+    FnmLineSegmentSource *source = new FnmLineSegmentSource();
     source->set_p1(line.x1(), line.y1(), 0);
     source->set_p2(line.x2(), line.y2(), 0);
     source->set_Lw_total(Lw_total);
     addLineSource(source);
 }
 
-QVector<MinimalLineSource*> *MyQGraphicsMultiLineSource::getLineSources()
+QVector<FnmLineSegmentSource*> *MyQGraphicsMultiLineSource::getLineSources()
 {
     return lineSources;
 }
@@ -147,7 +147,7 @@ void MyQGraphicsMultiLineSource::setBufferDistance(const double &newValue)
 
 
 
-void MyQGraphicsMultiLineSource::updateBoundingRectangle(MinimalLineSource *newSource)
+void MyQGraphicsMultiLineSource::updateBoundingRectangle(FnmLineSegmentSource *newSource)
 {
     double temp;
 

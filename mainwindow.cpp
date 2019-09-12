@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowTitle(QString(MY_APP_NAME)+" - version "+QString(VERSION_OF_APP));
 
     loadCursors();
+    makeMenuMutualExclusive();
 
 
     loadDefaultGrid();
@@ -76,27 +77,31 @@ QImage MainWindow::invertImageOnYAxes(const QImage &image)
 void MainWindow::loadCursors()
 {
 
+
+    auto polyLineCursorPixmap = QPixmap(":/images/icons/polyline_cursor.png").scaled(30,30,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+    myCursors["barrierCursor"] = QCursor( polyLineCursorPixmap.copy() );
+    myCursors["polyLineCursor"] = QCursor( polyLineCursorPixmap.copy() );
+    myCursors["lineSourceMode"] = QCursor( polyLineCursorPixmap.copy() );
+
     myCursors["arrowMode"] = QCursor(Qt::ArrowCursor);
-
-    myCursors["backUpCursor"] = myCursors["arrowMode"];
-
-    myCursors["pointSource"] = QCursor(
-                QPixmap(":/images/icons/point_source.png").scaled(20,20,Qt::KeepAspectRatio,Qt::SmoothTransformation));
-
-    myCursors["barrierCursor"] = QCursor(
-                QPixmap(":/images/icons/barrier_cursor.png").scaled(20,20,Qt::KeepAspectRatio,Qt::SmoothTransformation));
-
     myCursors["editMode"] = QCursor(Qt::PointingHandCursor);
-
     myCursors["gridMode"] = QCursor(Qt::CrossCursor);
-
     myCursors["dragMode"] = QCursor(Qt::OpenHandCursor);
 
-    myCursors["lineSourceMode"] = QCursor(
+    myCursors["pointSource"] = QCursor(
                 QPixmap(":/images/icons/target.png").scaled(20,20,Qt::KeepAspectRatio,Qt::SmoothTransformation));
 
+}
 
-
+void MainWindow::makeMenuMutualExclusive()
+{
+    auto actionsList = ui->toolBar->actions();
+    static QActionGroup alignmentGroup(this);
+    qDebug()<<"action";
+    for(auto action: actionsList){
+        action->setCheckable(true);
+        alignmentGroup.addAction(action);
+    }
 
 }
 
@@ -268,7 +273,7 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
                     currentLineSource = (static_cast<MyQGraphicsMultiLineSource *>(currentItem));
                     // Here we iterate a multi line source to obtain a list of
                     // segmets, then each segment is split in point sources
-                    for(MinimalLineSource *segment: *currentLineSource->getLineSources()){
+                    for(FnmLineSegmentSource *segment: *currentLineSource->getLineSources()){
                         for(MinimalPointSource subPointSource: NoiseEngine::fromLineToPointSources(segment,22.0)){
                             NoiseEngine::P2P(&subPointSource, currentReceiver, barriersSegments);
                         }
@@ -293,10 +298,10 @@ QList<MyQGraphicsAcousticBarrierItem *> MainWindow::barrierList() const
     return barriers;
 }
 
-std::vector<MinimalAcousticBarrier *> MainWindow::barrierSegmentsToStdVector() const
+std::vector<FnmAcousticBarrierSegment *> MainWindow::barrierSegmentsToStdVector() const
 {
-    std::vector<MinimalAcousticBarrier *> segments;
-    QVector<MinimalAcousticBarrier*> temp;
+    std::vector<FnmAcousticBarrierSegment *> segments;
+    QVector<FnmAcousticBarrierSegment*> temp;
 
     for(auto item: scene.items()){
         if(item->type() == FNM_TypeId::AcousticBarrierItemType){
@@ -636,5 +641,12 @@ void MainWindow::on_actionAcoustic_Barrier_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
     ui->graphicsView->setCursor(myCursors["barrierCursor"]);
+    releaseLineItemEdition();
+}
+
+void MainWindow::on_actionadd_polyline_triggered()
+{
+    on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
+    ui->graphicsView->setCursor(myCursors["polyLineCursor"]);
     releaseLineItemEdition();
 }

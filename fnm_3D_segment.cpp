@@ -1,6 +1,7 @@
-#include "Fnm3DSegment.h"
+#include "fnm_3D_segment.h"
 #include "noise_engine.h"
-Fnm3DSegment::Fnm3DSegment()
+Fnm3DSegment::Fnm3DSegment() :
+    x1(0), y1(0), z1(0)
 {
 
 }

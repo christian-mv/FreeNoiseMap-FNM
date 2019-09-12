@@ -7,10 +7,10 @@
 #include <ctime>
 #include <vector>
 #include "minimal_point_source.h"
-#include "minimal_line_source.h"
+#include "fnm_line_segment_source.h"
 #include "single_receiver.h"
 #include "receivers_grid.h"
-#include "minimal_acoustic_barrier.h"
+#include "fnm_acoustic_barrier_segment.h"
 
 
 namespace  NoiseEngine
@@ -29,7 +29,7 @@ namespace  NoiseEngine
 
     std::vector< std::tuple<double, double, double> > calculateDiffractionPathPoints(const double &x0, const double &y0, const double &z0,
                                                                                const double &x1, const double &y1, const double &z1,
-                                                                               const std::vector<MinimalAcousticBarrier*> &barrierSegments);
+                                                                               const std::vector<FnmAcousticBarrierSegment*> &barrierSegments);
 
 
 
@@ -44,14 +44,14 @@ namespace  NoiseEngine
     int intRandom(int min, int max);
 
     void P2P(MinimalPointSource *pointSource, SingleReceiver *receiver,
-             const std::vector<MinimalAcousticBarrier*> &barrierSegments);
+             const std::vector<FnmAcousticBarrierSegment*> &barrierSegments);
 
 
     double attenuation_divergence(const double & distance);
 
     double attenuation_barrier(const MinimalPointSource* const pointSource,
                                const SingleReceiver* const receiver,
-                               const std::vector<MinimalAcousticBarrier*> &barrierSegments,
+                               const std::vector<FnmAcousticBarrierSegment*> &barrierSegments,
                                const double &frequency);
 
 
@@ -87,7 +87,7 @@ namespace  NoiseEngine
                             const double &t3,
                             const double &y3);
 
-    std::vector<MinimalPointSource> fromLineToPointSources(const MinimalLineSource *line,
+    std::vector<MinimalPointSource> fromLineToPointSources(const FnmLineSegmentSource *line,
                                                            const double &delta);
 
 

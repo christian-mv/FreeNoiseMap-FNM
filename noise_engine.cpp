@@ -51,7 +51,7 @@ double distanceBetweenPoints(double x1, double y1, double z1, double x2, double 
 
 void P2P(MinimalPointSource *pointSource,
          SingleReceiver *receiver,
-         const std::vector<MinimalAcousticBarrier*> &barrierSegments)
+         const std::vector<FnmAcousticBarrierSegment*> &barrierSegments)
 {
     double distance = distanceBetweenPoints(pointSource->get_x(),
                                             pointSource->get_y(),
@@ -131,7 +131,7 @@ int greatestIntegerFunction(int x, int dx, int dy)
 }
 
 
-std::vector<MinimalPointSource> fromLineToPointSources(const MinimalLineSource *line,
+std::vector<MinimalPointSource> fromLineToPointSources(const FnmLineSegmentSource *line,
                                                        const double &distanceBetweenPoints)
 {
     std::vector<MinimalPointSource> results;
@@ -161,7 +161,7 @@ double attenuation_divergence(const double &distance)
 
 double attenuation_barrier(const MinimalPointSource* const pointSource,
                            const SingleReceiver* const receiver,
-                           const std::vector<MinimalAcousticBarrier*> &barrierSegments,
+                           const std::vector<FnmAcousticBarrierSegment*> &barrierSegments,
                            const double &frequency)
 {
 
@@ -258,7 +258,7 @@ bool areTheseParallelLines(double p0x, double p0y, double p1x, double p1y,
 
 std::vector< std::tuple<double, double, double> > calculateDiffractionPathPoints(const double &x0, const double &y0, const double &z0,
                                                                            const double &x1, const double &y1, const double &z1,
-                                                                           const std::vector<MinimalAcousticBarrier*> &barrierSegments)
+                                                                           const std::vector<FnmAcousticBarrierSegment*> &barrierSegments)
 {
     std::vector< std::tuple<double, double, double> > pathPoints;
 

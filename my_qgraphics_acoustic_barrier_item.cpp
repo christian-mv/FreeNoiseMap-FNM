@@ -5,7 +5,7 @@
 
 
 MyQGraphicsAcousticBarrierItem::MyQGraphicsAcousticBarrierItem():
-    xMin(0), xMax(0), yMin(0), yMax(0), bufferDistance(3.0)
+    xMin(0), xMax(0), yMin(0), yMax(0), bufferDistance(8.0)
 {
     setFlag(QGraphicsItem::ItemIsMovable, false);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -109,7 +109,7 @@ int MyQGraphicsAcousticBarrierItem::type() const
     return FNM_TypeId::AcousticBarrierItemType;
 }
 
-void MyQGraphicsAcousticBarrierItem::addBarrierSegment(MinimalAcousticBarrier *newSegment)
+void MyQGraphicsAcousticBarrierItem::addBarrierSegment(FnmAcousticBarrierSegment *newSegment)
 {
     prepareGeometryChange();
     QPainterPath newSegmentBuffer = singleLineBuffer(QLineF(newSegment->get_x1(),
@@ -140,13 +140,13 @@ void MyQGraphicsAcousticBarrierItem::addBarrierSegment(MinimalAcousticBarrier *n
 
 void MyQGraphicsAcousticBarrierItem::addBarrierSegment(const QLineF &line, double Lw_total)
 {
-    MinimalAcousticBarrier *newSegment = new MinimalAcousticBarrier();
-    newSegment->set_p1(line.x1(), line.y1());
-    newSegment->set_p2(line.x2(), line.y2());
+    FnmAcousticBarrierSegment *newSegment = new FnmAcousticBarrierSegment();
+    newSegment->set_p1(line.x1(), line.y1(), 0.0);
+    newSegment->set_p2(line.x2(), line.y2(), 0.0 );
     addBarrierSegment(newSegment);
 }
 
-QVector<MinimalAcousticBarrier*> MyQGraphicsAcousticBarrierItem::getBarrierSegments()
+QVector<FnmAcousticBarrierSegment*> MyQGraphicsAcousticBarrierItem::getBarrierSegments()
 {
     return barrierSegments;
 }
@@ -159,7 +159,7 @@ void MyQGraphicsAcousticBarrierItem::setBufferDistance(const double &newValue)
 
 
 
-void MyQGraphicsAcousticBarrierItem::updateBoundingRectangle(MinimalAcousticBarrier *newSegment)
+void MyQGraphicsAcousticBarrierItem::updateBoundingRectangle(FnmAcousticBarrierSegment *newSegment)
 {
     double temp;
 
@@ -217,7 +217,7 @@ QVariant MyQGraphicsAcousticBarrierItem::itemChange(QGraphicsItem::GraphicsItemC
         double dy = newPos.y()  - pos().y();
 
         for(auto segment: barrierSegments){
-            segment->moveBy(dx, dy);
+            segment->moveBy(dx, dy, 0.0);
         }
 
     }

@@ -18,9 +18,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++14
 
 SOURCES += \
+    fnm_3D_segment.cpp \
+    fnm_multiLine_graphics_Item.cpp \
         main.cpp \
     grid_settings.cpp \
-    minimal_acoustic_barrier.cpp \
     my_qgraphics_acoustic_barrier_item.cpp \
     my_qgraphics_multiline_source_item.cpp \
     receivers_grid.cpp \
@@ -33,11 +34,13 @@ SOURCES += \
     myrasterpixmapitemarea.cpp \
     mygraphicsshadedlineitem.cpp \
     myqgraphicssimpletextitem.cpp \
-    minimal_point_source.cpp \
-    minimal_line_source.h.cpp
+    minimal_point_source.cpp
 
 HEADERS += \
-    minimal_acoustic_barrier.h \
+    fnm_3D_segment.h \
+    fnm_acoustic_barrier_segment.h \
+    fnm_line_segment_source.h \
+    fnm_multiLine_graphics_Item.h \
     my_qgraphics_acoustic_barrier_item.h \
     my_qgraphics_multiline_source_item.h \
     receivers_grid.h \
@@ -52,8 +55,7 @@ HEADERS += \
     mygraphicsshadedlineitem.h \
     myqgraphicssimpletextitem.h \
     fnm_types.h \
-    minimal_point_source.h \
-    minimal_line_source.h
+    minimal_point_source.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
