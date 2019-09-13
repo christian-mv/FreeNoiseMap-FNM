@@ -13,6 +13,7 @@
 
 class MinimalPointSource;
 class FnmAcousticBarrierSegment;
+class FnmMultilineGraphicsItem;
 class QLineF;
 class MyQGraphicsMultiLineSource;
 class PointSourcePixmapItem;
@@ -79,8 +80,9 @@ private:
     QPointF p1_shaded_line; // initial coordinate for shaded_line
 
     QLineF *singleLine;
-    MyQGraphicsMultiLineSource * polyLineSource;
-    MyQGraphicsAcousticBarrierItem * acousticBarrier;
+    FnmMultilineGraphicsItem *polyLine;
+    MyQGraphicsMultiLineSource *multiLineSource;
+    MyQGraphicsAcousticBarrierItem *acousticBarrier;
 
 
 protected:

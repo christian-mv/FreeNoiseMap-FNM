@@ -14,17 +14,17 @@ public:
     QPainterPath shape() const override;
     int	type() const override;
 
-    void addLineSource(Fnm3DSegment *lineSource);
-    void addLineSource(const QLineF &line);
-    QVector<Fnm3DSegment*> * getLineSources();
+    void addLineSegment(Fnm3DSegment *segment);
+    void addLineSegment(const QLineF &line);
+    QVector<Fnm3DSegment*> * getLineSegments();
     void setBufferDistance(const double &newValue);
 
 
 private:
     double xMin, xMax, yMin, yMax; // this is intended to calculate bounding box
     double bufferDistance;
-    QVector<Fnm3DSegment*> *lineSources;
-    void updateBoundingRectangle(Fnm3DSegment *newSource);
+    QVector<Fnm3DSegment*> *lineSegmentsList;
+    void updateBoundingRectangle(Fnm3DSegment *newSegment);
     QPainterPath multilineBuffer; // this is return from shape()
     QPainterPath singleLineBuffer(QLineF line, const double &distance);
     void updateMultilineBuffer(QPainterPath newLineBuffer);

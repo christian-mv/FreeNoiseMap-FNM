@@ -14,6 +14,7 @@
 #include "mygraphicsshadedlineitem.h"
 #include "my_qgraphics_multiline_source_item.h"
 #include "my_qgraphics_acoustic_barrier_item.h"
+#include "fnm_multiLine_graphics_Item.h"
 
 #define VERSION_OF_APP "beta"
 #define MY_APP_NAME "Free Noise Map"
@@ -21,7 +22,10 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow),
-    singleLine(nullptr), polyLineSource(nullptr), acousticBarrier(nullptr)
+    singleLine(nullptr), 
+    polyLine(nullptr), 
+    multiLineSource(nullptr), 
+    acousticBarrier(nullptr)
 
 {
 
@@ -159,7 +163,9 @@ void MainWindow::movingItemsOnTheScene(const QGraphicsSceneMouseEvent *sceneMous
         {
             //  while shade_line exist we shouldn't change the position of Line source since
             // it doesn't work well
-            if( (moving_item->type() == FNM_TypeId::MultiLineSourceItemType || moving_item->type() == FNM_TypeId::AcousticBarrierItemType)
+            if( (moving_item->type() == FNM_TypeId::MultiLineSourceItemType
+                 || moving_item->type() == FNM_TypeId::AcousticBarrierItemType
+                 || moving_item->type() == FNM_TypeId::PolyLineItemType)
                     && shaded_line == nullptr){
                 moving_item->moveBy(-sceneMouseEvent->lastScenePos().x()+sceneMouseEvent->scenePos().x(),
                                     -sceneMouseEvent->lastScenePos().y()+sceneMouseEvent->scenePos().y());
@@ -239,7 +245,8 @@ bool MainWindow::isThereNoiseSources() const
 void MainWindow::releaseLineItemEdition()
 {    
     singleLine = nullptr;
-    polyLineSource = nullptr;
+    polyLine = nullptr;
+    multiLineSource = nullptr;
     acousticBarrier = nullptr;
 }
 
@@ -404,12 +411,69 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                     break;
                 case FNM_TypeId::AcousticBarrierItemType:
                     break;
+                case FNM_TypeId::PolyLineItemType:
+                    break;
                 default:
                     createShadedLinesItem(sceneEvent->scenePos());
                     break;
                 }
             }
         }
+                
+        
+        // add polyLine
+                else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
+                         && sceneEvent->button() == Qt::LeftButton
+                         && ui->graphicsView->cursor()==myCursors["polyLineCursor"])
+                {
+
+                    // there aren't any declared vertice in the line
+                    if(singleLine == nullptr){
+                        createShadedLinesItem(sceneEvent->scenePos());
+                        singleLine = new QLineF();
+                        if(polyLine == nullptr){
+                            polyLine = new FnmMultilineGraphicsItem();
+                            scene.addItem(polyLine);
+                            singleLine->setLine(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(),
+                                                   sceneEvent->scenePos().x(), sceneEvent->scenePos().y());
+                        }
+
+                    }
+                    // there is at least one declared vertice in the line
+                    else if(singleLine != nullptr){
+                        if(polyLine->childItems().isEmpty()){
+                            singleLine->setP1(QPointF(singleLine->x2(),
+                                                      singleLine->y2()));
+
+                        deleteShadedLinesItem();
+                        }else{
+
+                            // this lines take the first vertice of the current line as exactly the second vertice of the previous line
+
+                            singleLine->setP1( singleLine->p2() );
+                            deleteShadedLinesItem();
+                        }
+
+                        singleLine->setP2(QPointF(
+                                                  sceneEvent->scenePos().x(),
+                                                  sceneEvent->scenePos().y()
+                                                  )
+                                          );
+
+                        createShadedLinesItem(sceneEvent->scenePos());
+                        if(singleLine->p1() != singleLine->p2()){ // it is not necessary to add lines of 0 distance
+        //                    polyLineSource->addLine(new MyQGraphicsLineItem(*singleLine));
+                            polyLine->addLineSegment(*singleLine);
+                            singleLine = new QLineF(singleLine->x2(),
+                                                    singleLine->y2(),
+                                                    singleLine->x2(),
+                                                    singleLine->y2());
+                        }
+                    }
+
+                }
+
+        
 
         // add line source
         else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
@@ -421,9 +485,9 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             if(singleLine == nullptr){
                 createShadedLinesItem(sceneEvent->scenePos());
                 singleLine = new QLineF();
-                if(polyLineSource == nullptr){
-                    polyLineSource = new MyQGraphicsMultiLineSource();                    
-                    scene.addItem(polyLineSource);
+                if(multiLineSource == nullptr){
+                    multiLineSource = new MyQGraphicsMultiLineSource();
+                    scene.addItem(multiLineSource);
                     singleLine->setLine(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(),
                                            sceneEvent->scenePos().x(), sceneEvent->scenePos().y());
                 }
@@ -431,7 +495,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             }
             // there is at least one declared vertice in the line
             else if(singleLine != nullptr){
-                if(polyLineSource->childItems().isEmpty()){
+                if(multiLineSource->childItems().isEmpty()){
                     singleLine->setP1(QPointF(singleLine->x2(),
                                               singleLine->y2()));
 
@@ -453,7 +517,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                 createShadedLinesItem(sceneEvent->scenePos());
                 if(singleLine->p1() != singleLine->p2()){ // it is not necessary to add lines of 0 distance
 //                    polyLineSource->addLine(new MyQGraphicsLineItem(*singleLine));
-                    polyLineSource->addLineSource(*singleLine, 90.0);
+                    multiLineSource->addLineSource(*singleLine, 90.0);
                     singleLine = new QLineF(singleLine->x2(),
                                             singleLine->y2(),
                                             singleLine->x2(),
@@ -512,10 +576,12 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             }
         }
 
-        // release line source or acoustic barrier edition
+        // release polyLine or line source or acoustic barrier edition
         else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
                  && sceneEvent->button() == Qt::RightButton
-                 && (ui->graphicsView->cursor()==myCursors["lineSourceMode"] || ui->graphicsView->cursor()==myCursors["barrierCursor"])
+                 && (ui->graphicsView->cursor()==myCursors["lineSourceMode"]
+                     || ui->graphicsView->cursor()==myCursors["barrierCursor"]
+                     || ui->graphicsView->cursor()==myCursors["polyLineCursor"])
 
                  )
         {

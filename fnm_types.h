@@ -6,7 +6,8 @@ namespace FNM_TypeId{
         RasterPixmapItemType =  65536,
         PointSourceItemType = 65537,
         MultiLineSourceItemType = 65538,
-        AcousticBarrierItemType= 65539
+        AcousticBarrierItemType= 65539,
+        PolyLineItemType= 65540
          };
 }
 
