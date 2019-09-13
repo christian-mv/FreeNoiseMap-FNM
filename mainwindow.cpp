@@ -432,7 +432,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                         createShadedLinesItem(sceneEvent->scenePos());
                         singleLine = new QLineF();
                         if(polyLine == nullptr){
-                            polyLine = new FnmMultilineGraphicsItem();
+                            polyLine = new FnmPolyLineGraphicsItem();
                             scene.addItem(polyLine);
                             singleLine->setLine(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(),
                                                    sceneEvent->scenePos().x(), sceneEvent->scenePos().y());
@@ -463,7 +463,11 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                         createShadedLinesItem(sceneEvent->scenePos());
                         if(singleLine->p1() != singleLine->p2()){ // it is not necessary to add lines of 0 distance
         //                    polyLineSource->addLine(new MyQGraphicsLineItem(*singleLine));
-                            polyLine->addLineSegment(*singleLine);
+
+                            Fnm3DSegment *newSegment = new Fnm3DSegment();
+                            newSegment->set_p1(singleLine->x1(), singleLine->y1(), 0);
+                            newSegment->set_p2(singleLine->x2(), singleLine->y2(), 0);
+                            polyLine->addSegment(newSegment);
                             singleLine = new QLineF(singleLine->x2(),
                                                     singleLine->y2(),
                                                     singleLine->x2(),

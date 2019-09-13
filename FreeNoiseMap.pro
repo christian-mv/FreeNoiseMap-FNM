@@ -19,6 +19,7 @@ CONFIG += c++14
 
 SOURCES += \
     fnm_3D_segment.cpp \
+    fnm_abstract_polyline_graphics_Item.cpp \
     fnm_multiLine_graphics_Item.cpp \
         main.cpp \
     grid_settings.cpp \
@@ -38,6 +39,7 @@ SOURCES += \
 
 HEADERS += \
     fnm_3D_segment.h \
+    fnm_abstract_polyline_graphics_Item.h \
     fnm_acoustic_barrier_segment.h \
     fnm_line_segment_source.h \
     fnm_multiLine_graphics_Item.h \

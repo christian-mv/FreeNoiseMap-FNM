@@ -10,10 +10,9 @@
 #include "myrasterpixmapitemarea.h"
 
 
-
 class MinimalPointSource;
 class FnmAcousticBarrierSegment;
-class FnmMultilineGraphicsItem;
+class FnmPolyLineGraphicsItem;
 class QLineF;
 class MyQGraphicsMultiLineSource;
 class PointSourcePixmapItem;
@@ -80,7 +79,7 @@ private:
     QPointF p1_shaded_line; // initial coordinate for shaded_line
 
     QLineF *singleLine;
-    FnmMultilineGraphicsItem *polyLine;
+    FnmPolyLineGraphicsItem *polyLine;
     MyQGraphicsMultiLineSource *multiLineSource;
     MyQGraphicsAcousticBarrierItem *acousticBarrier;
 
