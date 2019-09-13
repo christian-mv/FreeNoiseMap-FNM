@@ -1,7 +1,8 @@
 #include "fnm_abstract_polyline_graphics_Item.h"
 #include "fnm_types.h"
-
+#include "fnm_3D_segment.h"
 #include <QPainter>
+
 #include <QDebug>
 
 
@@ -33,12 +34,12 @@ void FnmAbstractPolyLineGraphicsItem::paint(QPainter *painter,
     }
 
     QPen pen(Qt::black);
+//    pen.setStyle(Qt::PenStyle::DashLine);
     painter->setPen(pen);
     painter->setRenderHint(QPainter::Antialiasing);
     pen.setCosmetic(true); // line doesn't change when zoomming
     pen.setWidth(1);
     painter->setPen(pen);
-
 
     QPointF point1;
     QPointF point2;

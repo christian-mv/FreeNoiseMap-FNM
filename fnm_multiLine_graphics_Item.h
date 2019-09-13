@@ -11,6 +11,7 @@ public:
     FnmPolyLineGraphicsItem();
 
     void addSegment(Fnm3DSegment *segment);
+    QVector<Fnm3DSegment*> * getSegments();
     int	type() const override;    
 
 };

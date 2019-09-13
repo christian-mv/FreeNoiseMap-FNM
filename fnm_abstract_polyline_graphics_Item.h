@@ -2,7 +2,8 @@
 #define FNMABSTRACTPOLYLINEGRAPHICSITEM_H
 
 #include <QGraphicsItem>
-#include "fnm_3D_segment.h"
+class Fnm3DSegment;
+
 
 class FnmAbstractPolyLineGraphicsItem : public QGraphicsItem
 {
@@ -13,13 +14,13 @@ public:
     QPainterPath shape() const override;
     virtual int	type() const override = 0;
 
-    QVector<Fnm3DSegment*> * getSegments();
+
     void setBufferDistance(const double &newValue);
 
 private:
     double xMin, xMax, yMin, yMax; // this is intended to calculate bounding box
     double bufferDistance;
-    QVector<Fnm3DSegment*> *lineSegmentsList;
+
     void updateBoundingRectangle(Fnm3DSegment *newSegment);
     QPainterPath multilineBuffer; // this is return from shape()
     QPainterPath singleLineBuffer(QLineF line, const double &distance);
@@ -28,6 +29,8 @@ private:
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
     void addSegment(Fnm3DSegment *segment);
+    QVector<Fnm3DSegment*> * getSegments();
+    QVector<Fnm3DSegment*> *lineSegmentsList;
 };
 
 #endif // FNMABSTRACTPOLYLINEGRAPHICSITEM_H

@@ -14,7 +14,12 @@ FnmPolyLineGraphicsItem::FnmPolyLineGraphicsItem():
 void FnmPolyLineGraphicsItem::addSegment(Fnm3DSegment *segment)
 {
    // call protected superclass method
-   FnmAbstractPolyLineGraphicsItem::addSegment(segment);
+    FnmAbstractPolyLineGraphicsItem::addSegment(segment);
+}
+
+QVector<Fnm3DSegment *> *FnmPolyLineGraphicsItem::getSegments()
+{
+    return FnmAbstractPolyLineGraphicsItem::getSegments();
 }
 
 

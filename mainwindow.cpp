@@ -280,7 +280,7 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
                     currentLineSource = (static_cast<MyQGraphicsMultiLineSource *>(currentItem));
                     // Here we iterate a multi line source to obtain a list of
                     // segmets, then each segment is split in point sources
-                    for(FnmLineSegmentSource *segment: *currentLineSource->getLineSources()){
+                    for(FnmLineSegmentSource *segment: currentLineSource->getSegments()){
                         for(MinimalPointSource subPointSource: NoiseEngine::fromLineToPointSources(segment,22.0)){
                             NoiseEngine::P2P(&subPointSource, currentReceiver, barriersSegments);
                         }
@@ -521,14 +521,17 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                 createShadedLinesItem(sceneEvent->scenePos());
                 if(singleLine->p1() != singleLine->p2()){ // it is not necessary to add lines of 0 distance
 //                    polyLineSource->addLine(new MyQGraphicsLineItem(*singleLine));
-                    multiLineSource->addLineSource(*singleLine, 90.0);
+                    FnmLineSegmentSource *newSourceSegment = new FnmLineSegmentSource();
+                    newSourceSegment->set_p1(singleLine->x1(), singleLine->y1(), 0);
+                    newSourceSegment->set_p2(singleLine->x2(), singleLine->y2(), 0);
+                    newSourceSegment->set_Lw_total(90);
+                    multiLineSource->addSegment(newSourceSegment);
                     singleLine = new QLineF(singleLine->x2(),
                                             singleLine->y2(),
                                             singleLine->x2(),
                                             singleLine->y2());
                 }
             }
-
         }
 
 
