@@ -312,7 +312,7 @@ std::vector<FnmAcousticBarrierSegment *> MainWindow::barrierSegmentsToStdVector(
 
     for(auto item: scene.items()){
         if(item->type() == FNM_TypeId::AcousticBarrierItemType){
-            temp = (static_cast<MyQGraphicsAcousticBarrierItem *>(item)->getBarrierSegments());
+            temp = (static_cast<MyQGraphicsAcousticBarrierItem *>(item)->getSegments());
             for(auto singleSegment: temp){
                 segments.push_back(singleSegment);
             }
@@ -574,7 +574,11 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
                 createShadedLinesItem(sceneEvent->scenePos());
                 if(singleLine->p1() != singleLine->p2()){ // it is not necessary to add lines of 0 distance
-                    acousticBarrier->addBarrierSegment(*singleLine, 10);
+                    FnmAcousticBarrierSegment *newSourceSegment = new FnmAcousticBarrierSegment();
+                    newSourceSegment->set_p1(singleLine->x1(), singleLine->y1(), 0);
+                    newSourceSegment->set_p2(singleLine->x2(), singleLine->y2(), 0);
+                    newSourceSegment->set_height(10.5);
+                    acousticBarrier->addSegment(newSourceSegment);
                     singleLine = new QLineF(singleLine->x2(),
                                             singleLine->y2(),
                                             singleLine->x2(),

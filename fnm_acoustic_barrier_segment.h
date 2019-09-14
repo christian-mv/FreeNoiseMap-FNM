@@ -10,9 +10,10 @@
 class FnmAcousticBarrierSegment : public Fnm3DSegment
 {
 public:
-    explicit FnmAcousticBarrierSegment(): Fnm3DSegment(), height(0){}
+    explicit FnmAcousticBarrierSegment(): Fnm3DSegment(), height(10){}
     ~FnmAcousticBarrierSegment();
     double get_height() const {return height;}
+    void set_height(double value){this->height = value;}
 
 private:
     double height; // in meters
