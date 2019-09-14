@@ -1,7 +1,7 @@
 
 QT       += core gui widgets
 
-TARGET = freeNoiseMap
+TARGET = FreeNoiseMap
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -18,46 +18,44 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++14
 
 SOURCES += \
-    fnm_3D_segment.cpp \
-    fnm_abstract_polyline_graphics_Item.cpp \
-    fnm_multiLine_graphics_Item.cpp \
-        main.cpp \
-    grid_settings.cpp \
-    my_qgraphics_acoustic_barrier_item.cpp \
-    my_qgraphics_multiline_source_item.cpp \
-    receivers_grid.cpp \
-    single_receiver.cpp \
-    gradientcolor.cpp \
-    mainwindow.cpp \
-    noise_engine.cpp \
-    mygraphicsview.cpp \
-    pointsourcepixmap.cpp \
-    myrasterpixmapitemarea.cpp \
-    mygraphicsshadedlineitem.cpp \
-    myqgraphicssimpletextitem.cpp \
-    minimal_point_source.cpp
+    fnm_core_3D_segment.cpp \
+    fnm_core_gradient_color.cpp \
+    fnm_core_grid_settings.cpp \
+    fnm_core_noise_engine.cpp \
+    fnm_ui_main_window.cpp \
+    fnm_ui_qgraphics_item_abstract_polyline.cpp \
+    fnm_ui_qgraphics_item_barrier.cpp \
+    fnm_ui_qgraphics_item_multiline_source.cpp \
+    fnm_ui_qgraphics_item_point_source.cpp \
+    fnm_ui_qgraphics_item_polyline.cpp \
+    fnm_ui_qgraphics_item_raster_pixmap_area.cpp \
+    fnm_ui_qgraphics_item_shaded_line.cpp \
+    fnm_ui_qgraphics_item_simple_text.cpp \
+    fnm_ui_qgraphics_view.cpp \
+    fnm_ui_receivers_grid.cpp \
+        main.cpp
 
 HEADERS += \
-    fnm_3D_segment.h \
-    fnm_abstract_polyline_graphics_Item.h \
-    fnm_acoustic_barrier_segment.h \
-    fnm_line_segment_source.h \
-    fnm_multiLine_graphics_Item.h \
-    my_qgraphics_acoustic_barrier_item.h \
-    my_qgraphics_multiline_source_item.h \
-    receivers_grid.h \
-    grid_settings.h \
-    single_receiver.h \
-    gradientcolor.h \
-    noise_engine.h \
-    mainwindow.h \
-    mygraphicsview.h \
-    pointsourcepixmapitem.h \
-    myrasterpixmapitemarea.h \
-    mygraphicsshadedlineitem.h \
-    myqgraphicssimpletextitem.h \
-    fnm_types.h \
-    minimal_point_source.h
+    fnm_core_3D_segment.h \
+    fnm_core_barrier_segment.h \
+    fnm_core_gradient_color.h \
+    fnm_core_grid_settings.h \
+    fnm_core_line_source_segment.h \
+    fnm_core_noise_engine.h \
+    fnm_core_point_source.h \
+    fnm_core_single_receiver.h \
+    fnm_core_types_namespace.h \
+    fnm_ui_main_window.h \
+    fnm_ui_qgraphics_item_abstract_polyline.h \
+    fnm_ui_qgraphics_item_barrier.h \
+    fnm_ui_qgraphics_item_multiline_source.h \
+    fnm_ui_qgraphics_item_point_source.h \
+    fnm_ui_qgraphics_item_polyline.h \
+    fnm_ui_qgraphics_item_raster_pixmap_area.h \
+    fnm_ui_qgraphics_item_shaded_line.h \
+    fnm_ui_qgraphics_item_simple_text.h \
+    fnm_ui_qgraphics_view.h \
+    fnm_ui_receivers_grid.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
