@@ -58,6 +58,7 @@ private:
     FnmCoreGridSettings myGrid;
     FnmReceiversGrid receivers;
     QHash<QString, QCursor> myCursors;
+    QActionGroup *menuActionsGroup; // used to make the grapic menu mutually exclusive
     QImage invertImageOnYAxes(const QImage &image);
     void loadCursors();
     void makeMenuMutualExclusive();

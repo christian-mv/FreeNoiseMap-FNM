@@ -22,6 +22,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow),
+    menuActionsGroup(new QActionGroup(this)),
     singleLine(nullptr), 
     polyLine(nullptr), 
     multiLineSource(nullptr), 
@@ -100,13 +101,11 @@ void MainWindow::loadCursors()
 void MainWindow::makeMenuMutualExclusive()
 {
     auto actionsList = ui->toolBar->actions();
-    static QActionGroup alignmentGroup(this);
     qDebug()<<"action";
     for(auto action: actionsList){
         action->setCheckable(true);
-        alignmentGroup.addAction(action);
+        menuActionsGroup->addAction(action);
     }
-
 }
 
 void MainWindow::loadDefaultGrid()
