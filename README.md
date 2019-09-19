@@ -2,7 +2,7 @@
 
 Multi-platform, free environmental noise modelling software targeting the main desktop and mobile operating systems.
 
-In the first stage of FNM intends to implement the standard ISO 9613 and its user graphic interface integrating web map services such as google maps and openstreet maps.
+In the first stage of FNM, it is intended to implement the standard ISO 9613 and its user graphic interface with integration with web map services such as google maps and openstreet maps.
 
 For the second stage, the European calculation method CNOSSOS-EU will be the goal as well as support for GIS and CAD files formats DXF and SHP. 
 
