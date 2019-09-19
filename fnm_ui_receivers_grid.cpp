@@ -44,7 +44,7 @@ void FnmReceiversGrid::setGrid(const FnmCoreGridSettings &gridSettings)
     for(unsigned int i = 0; i < nRows; i++){
         for(unsigned int j = 0; j < nColumns; j++){
 //            qDebug()<<i<<" , "<<j;
-            matrix.at(j).at(i) = new FnmCoreSingleReceiver(gridSettings.getLeft()
+            matrix.at(j).at(i) = new FnmCorePointReceiver(gridSettings.getLeft()
                                                     + i*gridSettings.getDeltaX(),
                                                     gridSettings.getTop()+j*gridSettings.getDeltaY(),
                                                     false); //matrix.[i][j];
@@ -102,8 +102,8 @@ bool FnmReceiversGrid::paintGrid(QImage &image, const FnmCoreGridSettings &myGri
     // calculate single rectangles
     QColor decibelColor;
     QBrush brush;
-    FnmCoreSingleReceiver interpolatedReceiver;
-    FnmCoreSingleReceiver *r;
+    FnmCorePointReceiver interpolatedReceiver;
+    FnmCorePointReceiver *r;
 
 
     for(unsigned int i = 0; i<matrix.size(); i++){
@@ -216,10 +216,10 @@ void FnmReceiversGrid::interpolateGrid()
     unsigned int factor = getGridSettings().getInterpolatorFactor();
     if(factor<=1){return;}
 
-    FnmCoreSingleReceiver interpolatedReceiver;
-    FnmCoreSingleReceiver *r;
-    vector<FnmCoreSingleReceiver *> temprow;
-    vector<vector<FnmCoreSingleReceiver *>> tempMatrix; // esto es una matriz intermedia de receptores
+    FnmCorePointReceiver interpolatedReceiver;
+    FnmCorePointReceiver *r;
+    vector<FnmCorePointReceiver *> temprow;
+    vector<vector<FnmCorePointReceiver *>> tempMatrix; // esto es una matriz intermedia de receptores
 
     double dx = getGridSettings().getDeltaX()/factor;
     double dy = getGridSettings().getDeltaY()/factor;
@@ -243,7 +243,7 @@ void FnmReceiversGrid::interpolateGrid()
 
 
                     matrix.at(i).insert(matrix.at(i).begin()+j+1,
-                                                   new FnmCoreSingleReceiver(r->get_x()+k*dx,
+                                                   new FnmCorePointReceiver(r->get_x()+k*dx,
                                                                       r->get_y(),
                                                                       r->get_z(),
                                                                       Leqx_temp,true));
@@ -257,7 +257,7 @@ void FnmReceiversGrid::interpolateGrid()
 
     // interpolated rectangles on y axes
 
-    std::vector<FnmCoreSingleReceiver *> centinel = matrix.back();
+    std::vector<FnmCorePointReceiver *> centinel = matrix.back();
 
     for(unsigned int i = 0; ; i=i+factor){
 
@@ -278,7 +278,7 @@ void FnmReceiversGrid::interpolateGrid()
                                                   matrix.at(i+1).at(j)->get_Leq());
 
 
-                temprow.push_back(new FnmCoreSingleReceiver(r->get_x(),
+                temprow.push_back(new FnmCorePointReceiver(r->get_x(),
                                                      r->get_y()+k*dy,
                                                      r->get_z(),
                                                      Leqy_temp,true));
@@ -298,7 +298,7 @@ void FnmReceiversGrid::clearInterpolatedReceivers()
 {
     // delete full interpolated rows
     unsigned int i = 0;
-    std::vector<FnmCoreSingleReceiver *> row = matrix.at(i);
+    std::vector<FnmCorePointReceiver *> row = matrix.at(i);
     while(row != matrix.back()){
         // delete rows of full interpolated receivers
         if(row.at(0)->isInterpolated()){
@@ -328,7 +328,7 @@ void FnmReceiversGrid::clearInterpolatedReceivers()
 }
 
 
-QRectF  FnmReceiversGrid::receiverRect(FnmCoreSingleReceiver * receiver)
+QRectF  FnmReceiversGrid::receiverRect(FnmCorePointReceiver * receiver)
 {
 
     return receiverRect(receiver->get_x(), receiver->get_y());

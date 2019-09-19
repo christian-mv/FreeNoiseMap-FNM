@@ -65,6 +65,7 @@
    <addaction name="actioneditMode"/>
    <addaction name="actiondrag_mode"/>
    <addaction name="actionAdd_point_source"/>
+   <addaction name="actionAdd_Receiver"/>
    <addaction name="action_add_line_source"/>
    <addaction name="actionadd_polyline"/>
    <addaction name="actionAcoustic_Barrier"/>
@@ -165,6 +166,15 @@
    </property>
    <property name="text">
     <string>Add polyline</string>
+   </property>
+  </action>
+  <action name="actionAdd_Receiver">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/icons/receiver.png</normaloff>:/images/icons/receiver.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add Receiver</string>
    </property>
   </action>
  </widget>

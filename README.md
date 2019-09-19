@@ -1,13 +1,15 @@
 # FNM
 Multi-platform, free environmental noise modelling software targeting the main desktop and mobile operating systems:
 
-FNM on android:
-
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_android.png)
 
 FNM on Linux (Debian and ubuntu):
 
 ![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_Linux.png)
+
+FNM on android:
+
+![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_android.png)
+
 
 FNM on Windows:
 

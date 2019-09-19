@@ -23,6 +23,7 @@ SOURCES += \
     fnm_ui_qgraphics_item_abstract_polyline.cpp \
     fnm_ui_qgraphics_item_barrier.cpp \
     fnm_ui_qgraphics_item_multiline_source.cpp \
+    fnm_ui_qgraphics_item_point_receiver.cpp \
     fnm_ui_qgraphics_item_point_source.cpp \
     fnm_ui_qgraphics_item_polyline.cpp \
     fnm_ui_qgraphics_item_raster_pixmap_area.cpp \
@@ -40,14 +41,15 @@ HEADERS += \
     fnm_core_line_source_segment.h \
     fnm_core_noise_engine.h \
     fnm_core_point.h \
+    fnm_core_point_receiver.h \
     fnm_core_point_source.h \
-    fnm_core_single_receiver.h \
     fnm_core_types_namespace.h \
     fnm_ui_main_window.h \
     fnm_ui_qgraphics_item_abstract_point.h \
     fnm_ui_qgraphics_item_abstract_polyline.h \
     fnm_ui_qgraphics_item_barrier.h \
     fnm_ui_qgraphics_item_multiline_source.h \
+    fnm_ui_qgraphics_item_point_receiver.h \
     fnm_ui_qgraphics_item_point_source.h \
     fnm_ui_qgraphics_item_polyline.h \
     fnm_ui_qgraphics_item_raster_pixmap_area.h \

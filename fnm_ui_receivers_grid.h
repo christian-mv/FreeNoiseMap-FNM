@@ -6,7 +6,7 @@
 #include <QPainter>
 #include <QObject>
 #include "fnm_core_grid_settings.h"
-#include "fnm_core_single_receiver.h"
+#include "fnm_core_point_receiver.h"
 #include "fnm_core_gradient_color.h"
 
 class  QProgressDialog;
@@ -23,7 +23,7 @@ public:
     void setGradient(const FnmCoreGradientColor gradientColor);
     bool paintGrid(QImage &image, const FnmCoreGridSettings &myGrid,  QProgressDialog &progress);
     void setNoiseColor(const double Leq, QColor * colorDecibel);
-    std::vector< std::vector<FnmCoreSingleReceiver *> > matrix;
+    std::vector< std::vector<FnmCorePointReceiver *> > matrix;
     FnmCoreGridSettings getGridSettings()const {return this->gridSettings;}
     void resetNoiseReceiver();
 //    string gridStatistics(); // this doesn't work on android NDK
@@ -33,7 +33,7 @@ public:
 private:
     FnmCoreGridSettings gridSettings;
     void setMatrixOfReceivers(unsigned int n, unsigned int m);
-    QRectF receiverRect(FnmCoreSingleReceiver * receiver);
+    QRectF receiverRect(FnmCorePointReceiver * receiver);
     QRectF receiverRect(const double x, const double y);
     FnmCoreGradientColor gradientColor;
 

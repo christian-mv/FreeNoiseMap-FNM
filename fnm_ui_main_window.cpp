@@ -8,9 +8,11 @@
 #include "fnm_ui_main_window.h"
 #include "fnm_core_types_namespace.h"
 #include "fnm_core_point_source.h"
+#include "fnm_core_point_receiver.h"
 #include "ui_mainwindow.h"
 #include "fnm_core_noise_engine.h"
 #include "fnm_ui_qgraphics_item_point_source.h"
+#include "fnm_ui_qgraphics_item_point_receiver.h"
 #include "fnm_ui_qgraphics_item_shaded_line.h"
 #include "fnm_ui_qgraphics_item_multiline_source.h"
 #include "fnm_ui_qgraphics_item_barrier.h"
@@ -82,19 +84,20 @@ QImage MainWindow::invertImageOnYAxes(const QImage &image)
 void MainWindow::loadCursors()
 {
 
-
-    auto polyLineCursorPixmap = QPixmap(":/images/icons/polyline_cursor.png").scaled(30,30,Qt::KeepAspectRatio,Qt::SmoothTransformation);
-    myCursors["barrierCursor"] = QCursor( polyLineCursorPixmap.copy() );
-    myCursors["polyLineCursor"] = QCursor( polyLineCursorPixmap.copy() );
-    myCursors["lineSourceMode"] = QCursor( polyLineCursorPixmap.copy() );
+    auto polyLineObjectPixmap = QPixmap(":/images/icons/polyline_cursor.png").scaled(30,30,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+    myCursors["barrierCursor"] = QCursor( polyLineObjectPixmap.copy() );
+    myCursors["polyLineCursor"] = QCursor( polyLineObjectPixmap.copy() );
+    myCursors["lineSourceMode"] = QCursor( polyLineObjectPixmap.copy() );
 
     myCursors["arrowMode"] = QCursor(Qt::ArrowCursor);
     myCursors["editMode"] = QCursor(Qt::PointingHandCursor);
     myCursors["gridMode"] = QCursor(Qt::CrossCursor);
     myCursors["dragMode"] = QCursor(Qt::OpenHandCursor);
 
-    myCursors["pointSource"] = QCursor(
-                QPixmap(":/images/icons/target.png").scaled(20,20,Qt::KeepAspectRatio,Qt::SmoothTransformation));
+    auto pointObjectPixmap = QPixmap(":/images/icons/target.png").scaled(20,20,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+    myCursors["pointSource"] = QCursor(pointObjectPixmap.copy());
+
+    myCursors["receiver"] = QCursor(pointObjectPixmap.copy());
 
 }
 
@@ -385,7 +388,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
           }
 
-        // drag point source
+        // draggin polyline tipe elements
         else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
                  && sceneEvent->button() == Qt::LeftButton
                  && ui->graphicsView->cursor()==myCursors["arrowMode"]){
@@ -419,6 +422,42 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
         }
                 
         
+        // add receiver
+        else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
+                 && sceneEvent->button() == Qt::LeftButton
+                 && ui->graphicsView->cursor()==myCursors["receiver"])
+          {
+            qDebug()<<"HERE";
+            FnmCorePointReceiver *myReceiver = new FnmCorePointReceiver(
+                        sceneEvent->scenePos().x(),
+                        sceneEvent->scenePos().y(),
+                        1.2,0);
+
+            // create pixmapItem for the receiver
+
+            QPixmap myPixmap(":/images/icons/receiver.png");
+
+            // add pixmapItems in a size that depends on the platform
+
+            #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
+                        myPixmap = myPixmap.scaled(36,36,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+            #else
+                        myPixmap = myPixmap.scaled(18,18,Qt::KeepAspectRatio,Qt::SmoothTransformation);
+            #endif
+
+            FnmQgraphicsItemPointReceiver * myPixmapReceiver = new FnmQgraphicsItemPointReceiver();
+
+            myPixmapReceiver->setPixmap(myPixmap);
+            myPixmapReceiver->setPointReceiver(myReceiver);
+
+
+            scene.addItem(myPixmapReceiver);
+            deleteShadedLinesItem();
+
+          }
+
+
+
         // add polyLine
                 else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
                          && sceneEvent->button() == Qt::LeftButton
@@ -585,7 +624,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
             }
         }
 
-        // release polyLine or line source or acoustic barrier edition
+        // release polyLine-type opbjects
         else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
                  && sceneEvent->button() == Qt::RightButton
                  && (ui->graphicsView->cursor()==myCursors["lineSourceMode"]
@@ -724,4 +763,12 @@ void MainWindow::on_actionadd_polyline_triggered()
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
     ui->graphicsView->setCursor(myCursors["polyLineCursor"]);
     releaseLineItemEdition();
+}
+
+void MainWindow::on_actionAdd_Receiver_triggered()
+{
+    on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
+    ui->graphicsView->setCursor(myCursors["receiver"]);
+    releaseLineItemEdition();
+
 }

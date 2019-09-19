@@ -7,7 +7,8 @@ namespace FNM_TypeId{
         PointSourceItemType = 65537,
         MultiLineSourceItemType = 65538,
         AcousticBarrierItemType= 65539,
-        PolyLineItemType= 65540
+        PolyLineItemType = 65540,
+        PointReceiverItemType = 65541
          };
 }
 

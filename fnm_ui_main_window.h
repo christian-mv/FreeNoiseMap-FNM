@@ -50,6 +50,8 @@ private slots:
 
     void on_actionadd_polyline_triggered();
 
+    void on_actionAdd_Receiver_triggered();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene scene;

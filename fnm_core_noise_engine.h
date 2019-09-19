@@ -8,7 +8,7 @@
 #include <vector>
 #include "fnm_core_point_source.h"
 #include "fnm_core_line_source_segment.h"
-#include "fnm_core_single_receiver.h"
+#include "fnm_core_point_receiver.h"
 #include "fnm_ui_receivers_grid.h"
 #include "fnm_core_barrier_segment.h"
 
@@ -43,14 +43,14 @@ namespace  FnmCoreNoiseEngine
     void initSeed(); // initializes the seed only once
     int intRandom(int min, int max);
 
-    void P2P(FnmCorePointSource *pointSource, FnmCoreSingleReceiver *receiver,
+    void P2P(FnmCorePointSource *pointSource, FnmCorePointReceiver *receiver,
              const std::vector<FnmCoreBarrierSegment*> &barrierSegments);
 
 
     double attenuation_divergence(const double & distance);
 
     double attenuation_barrier(const FnmCorePointSource* const pointSource,
-                               const FnmCoreSingleReceiver* const receiver,
+                               const FnmCorePointReceiver* const receiver,
                                const std::vector<FnmCoreBarrierSegment*> &barrierSegments,
                                const double &frequency);
 

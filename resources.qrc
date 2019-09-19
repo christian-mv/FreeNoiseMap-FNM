@@ -12,5 +12,7 @@
         <file>icons/acoustic_barrier.png</file>
         <file>icons/polyline.png</file>
         <file>icons/polyline_cursor.png</file>
+        <file>icons/receiver.png</file>
     </qresource>
+    <qresource prefix="/"/>
 </RCC>

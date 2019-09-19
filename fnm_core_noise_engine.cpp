@@ -50,7 +50,7 @@ double distanceBetweenPoints(double x1, double y1, double z1, double x2, double 
 
 
 void P2P(FnmCorePointSource *pointSource,
-         FnmCoreSingleReceiver *receiver,
+         FnmCorePointReceiver *receiver,
          const std::vector<FnmCoreBarrierSegment*> &barrierSegments)
 {
     double distance = distanceBetweenPoints(pointSource->get_x(),
@@ -160,7 +160,7 @@ double attenuation_divergence(const double &distance)
 }
 
 double attenuation_barrier(const FnmCorePointSource* const pointSource,
-                           const FnmCoreSingleReceiver* const receiver,
+                           const FnmCorePointReceiver* const receiver,
                            const std::vector<FnmCoreBarrierSegment*> &barrierSegments,
                            const double &frequency)
 {
