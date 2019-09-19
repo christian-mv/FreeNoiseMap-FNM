@@ -10,10 +10,6 @@ TEMPLATE = app
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 
-# You can also make your code fail to compile if you use deprecated APIs.
-# In order to do so, uncomment the following line.
-# You can also select to disable deprecated APIs only up to a certain version of Qt.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 CONFIG += c++14
 
@@ -23,6 +19,7 @@ SOURCES += \
     fnm_core_grid_settings.cpp \
     fnm_core_noise_engine.cpp \
     fnm_ui_main_window.cpp \
+    fnm_ui_qgraphics_item_abstract_point.cpp \
     fnm_ui_qgraphics_item_abstract_polyline.cpp \
     fnm_ui_qgraphics_item_barrier.cpp \
     fnm_ui_qgraphics_item_multiline_source.cpp \
@@ -42,10 +39,12 @@ HEADERS += \
     fnm_core_grid_settings.h \
     fnm_core_line_source_segment.h \
     fnm_core_noise_engine.h \
+    fnm_core_point.h \
     fnm_core_point_source.h \
     fnm_core_single_receiver.h \
     fnm_core_types_namespace.h \
     fnm_ui_main_window.h \
+    fnm_ui_qgraphics_item_abstract_point.h \
     fnm_ui_qgraphics_item_abstract_polyline.h \
     fnm_ui_qgraphics_item_barrier.h \
     fnm_ui_qgraphics_item_multiline_source.h \

@@ -101,7 +101,6 @@ void MainWindow::loadCursors()
 void MainWindow::makeMenuMutualExclusive()
 {
     auto actionsList = ui->toolBar->actions();
-    qDebug()<<"action";
     for(auto action: actionsList){
         action->setCheckable(true);
         menuActionsGroup->addAction(action);

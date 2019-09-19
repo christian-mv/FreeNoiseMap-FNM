@@ -1,38 +1,18 @@
 #ifndef FNM_QGRAPHICS_ITEM_POINT_SOURCE_H
 #define FNM_QGRAPHICS_ITEM_POINT_SOURCE_H
 
-#include <QGraphicsPixmapItem>
-
+#include "fnm_ui_qgraphics_item_abstract_point.h"
 class FnmCorePointSource;
 
 
-class FnmQgraphicsItemPointSource : public QGraphicsPixmapItem
+class FnmQgraphicsItemPointSource : public FnmQgraphicsItemAbstractPointSource
 {
 public:
     FnmQgraphicsItemPointSource();
     void setPointSource(FnmCorePointSource *source);
-    FnmCorePointSource * getPointSource()const;
-    QRectF boundingRect() const override;
-    QPainterPath shape() const override;
+    FnmCorePointSource * getPointSource()const;    
     virtual int	type() const override;
-
-
-private:
-    FnmCorePointSource *source;
-
-
-protected:
-    void paint(QPainter *painter,
-               const QStyleOptionGraphicsItem *option,
-               QWidget *widget) override;
-
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
-
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
-//    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-
-
 
 };
 
-#endif // ACOUSTICSOURCEPIXMAP_H
+#endif
