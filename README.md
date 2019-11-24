@@ -2,7 +2,7 @@
 
 Universal multi-platform free environmental noise modelling software targeting the main desktop and mobile operating systems as well as the web.
 
-For performance reasons, FNM is being deveoped in C++ which lets the application to run natively on traditional desktop and mobile operating systems as well as the most popular browsers.
+As performance is an importan objective, FNM is being deveoped in C++ which lets the application run natively on both traditional desktop and mobile operating systems as well as the most popular browsers.
 It is worth mentioning that FNM runs on the web thanks to webassembly keeping almost the same performance as it were running in a traditional operating system.
 
 
