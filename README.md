@@ -2,7 +2,7 @@
 
 Universal multi-platform free environmental noise modelling software targeting the main desktop and mobile operating systems as well as the web.
 
-## Try out FNM on you favorite web browser [Here](https://christian-mv.github.io/Free_Noise_Map_Demo/FreeNoiseMap.html)
+## Try out FNM in your favorite web browser [Here](https://christian-mv.github.io/Free_Noise_Map_Demo/FreeNoiseMap.html)
 
 
 As performance is an importan objective, FNM is being deveoped in C++ which lets the application run natively on both traditional desktop and mobile operating systems as well as the most popular browsers.
@@ -108,8 +108,5 @@ Factor 4:
 
 
 
-### Please feel free to contribute to FNM :)
+### As FNM still in its early days, please feel free to contribute to it :)
 
-
-
-![Under construction](https://pngimg.com/uploads/under_construction/under_construction_PNG46.png)
