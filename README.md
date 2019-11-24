@@ -1,10 +1,36 @@
 # FNM
 
-Multi-platform, free environmental noise modelling software targeting the main desktop and mobile operating systems.
+Universal multi-platform free environmental noise modelling software targeting the main desktop and mobile operating systems as well as the web.
 
-In the first stage of FNM, it is intended to implement the standard ISO 9613 and its user graphic interface with integration with web map services such as google maps and openstreet maps.
+For performance reasons, FNM is being deveoped in C++ which lets the application to run natively on traditional desktop and mobile operating systems as well as the most popular browsers.
+It is worth mentioning that FNM runs on the web thanks to webassembly keeping almost the same performance as it were running in a traditional operating system.
+
+FNM supports the following systems:
+
+    Desktop OS:
+        -linux
+        -windows
+        -macOS
+    
+    Mobile OS:
+        -Android
+        -iOS
+    
+    Web Browser:
+        -Google Chrome
+        -Mozilla FireFox 
+        -Opera
+        -safari
+        -Microsoft Edge.
+        
+
+
+
+In the first stage of FNM, it is intended to implement the standard ISO 9613 and the user graphic interface with integration with web map services such as google maps and openstreet maps.
 
 For the second stage, the European calculation method CNOSSOS-EU will be the goal as well as support for GIS and CAD files formats DXF and SHP. 
+
+--------------------------------------------
 
 FNM on Linux (Debian and ubuntu):
 
@@ -26,6 +52,16 @@ FNM on MacOS:
 FNM on IOS:
 
 ![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_IOS.png)
+
+
+FNM on Google Chrome:
+
+![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_Google_Chrome.png)
+
+
+FNM on Mozilla FireFox:
+
+![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_FireFox.png)
 
 
 
