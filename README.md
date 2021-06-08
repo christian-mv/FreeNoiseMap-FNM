@@ -29,7 +29,7 @@ FNM is a piece of software developed in C++. An implementation for web is intend
 
 
 
-For the first stage of FNM, it is intended the standard ISO 9613 is intended to be implemented along with its user graphic interface. Integration with web map services such as google maps and openstreet maps is also part of the first stage of FNM.
+For the first stage of FNM, the standard ISO 9613 is intended to be implemented along with a user user graphic interface developed in Qt. Integration with web map services such as google maps and openstreet maps is also part of the first stage of FNM.
 
 For the second stage, the European calculation method CNOSSOS-EU will be targeted. Support for GIS and CAD files formats, i.e., DXF and SHP will be considered by integration with the GDAL library. 
 
