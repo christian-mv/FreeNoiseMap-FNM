@@ -1,11 +1,11 @@
 # FNM
 
-Universal multi-platform free environmental noise modelling software targeting the main desktop and mobile operating systems as well as the web.
+Multi-platform free environmental noise modelling software targeting the main desktop and mobile operating systems as well as the web.
 
-## Try out FNM in your browser (limited)[Here](https://christian-mv.github.io/Free_Noise_Map_Demo/FreeNoiseMap.html)
+## Try out FNM in your browser (limited) [Here](https://christian-mv.github.io/Free_Noise_Map_Demo/FreeNoiseMap.html)
 
 
-FNM is being developed in C++. An implementation for web is intended, however, it might be limited by the suport of webassemebly in Qt. It is recommended to compile the source code to native implementations such as linux, windows and mac. 
+FNM is a piece of software developed in C++. An implementation for web is intended, but it might be limited by the suport of webassemebly in Qt. It is recommended to compile the source code to native implementations such as linux, windows, and mac. 
 
 
 ## FNM supports the following systems:
@@ -29,9 +29,9 @@ FNM is being developed in C++. An implementation for web is intended, however, i
 
 
 
-In the first stage of FNM, it is intended to implement the standard ISO 9613 and the user graphic interface with integration with web map services such as google maps and openstreet maps.
+For the first stage of FNM, it is intended the standard ISO 9613 is intended to be implemented along with its user graphic interface. Integration with web map services such as google maps and openstreet maps is also part of the first stage of FNM.
 
-For the second stage, the European calculation method CNOSSOS-EU will be the goal as well as support for GIS and CAD files formats DXF and SHP. 
+For the second stage, the European calculation method CNOSSOS-EU will be targeted. Support for GIS and CAD files formats, i.e., DXF and SHP will be considered for integration by uding the GDAL library into FNM. 
 
 
 
