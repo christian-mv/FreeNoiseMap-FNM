@@ -8,7 +8,7 @@ Multi-platform free environmental noise modelling software targeting the main de
 FNM is a piece of software developed in C++. An implementation for web is intended too although it might be limited by the suport of webassemebly in Qt. It is recommended to compile the source code in an operating system such as linux, windows, and mac. 
 
 
-## FNM supports the following systems:
+## FNM supports the following systems: 
 
     Desktop OS:
         -linux
