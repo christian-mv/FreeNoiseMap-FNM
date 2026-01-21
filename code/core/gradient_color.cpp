@@ -1,4 +1,4 @@
-#include "fnm_core_gradient_color.h"
+#include "gradient_color.h"
 #include <QDebug>
 
 

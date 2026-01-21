@@ -1,7 +1,5 @@
-#include "core/fnm_core_noise_engine.h"
-#include "ui/fnm_ui_receivers_grid.h"
-#include <cstdlib>
-#include <ctime>
+#include "noise_engine.h"
+#include <chrono>
 #include <cmath>
 #include <QtDebug>
 using namespace std;
@@ -27,19 +25,14 @@ MATRIX_OF_DOUBLES createMatrixOfDoubles(unsigned int m, unsigned int n){
 // this function generate a integer random
 int intRandom(int min, int max)
 {
-    initSeed(); // this guarantees that seed has been initialized at least once
-    int result;
-    result = min + rand() % ( (max+1) - min );
-    return result;
-}
-
-void initSeed()
-{
-    static bool flagSeed=false;
-    if(!flagSeed){
-        srand( static_cast<unsigned int>(time(nullptr)) );
-        flagSeed = true; // now flag will be always true
-    }
+    static std::mt19937 generator = []() {
+        std::mt19937 gen;
+        auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+        gen.seed(static_cast<unsigned int>(seed));
+        return gen;
+    }();
+    std::uniform_int_distribution<int> distribution(min, max);
+    return distribution(generator);
 }
 
 

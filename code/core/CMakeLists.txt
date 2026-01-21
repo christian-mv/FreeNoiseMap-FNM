@@ -1,0 +1,20 @@
+add_library(core STATIC
+    3D_segment.cpp
+    3D_segment.h
+    barrier_segment.h
+    gradient_color.cpp
+    gradient_color.h
+    grid_settings.cpp
+    grid_settings.h
+    line_source_segment.h
+    noise_engine.cpp
+    noise_engine.h
+    point.h
+    point_receiver.h
+    point_source.h
+    types_namespace.h
+)
+
+target_include_directories(core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+target_link_libraries(core PRIVATE Qt6::Core Qt6::Gui)

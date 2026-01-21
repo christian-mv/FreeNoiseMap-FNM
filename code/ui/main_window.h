@@ -5,9 +5,9 @@
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
-#include "fnm_core_grid_settings.h"
-#include "fnm_ui_receivers_grid.h"
-#include "fnm_ui_qgraphics_item_raster_pixmap_area.h"
+#include "grid_settings.h"
+#include "receivers_grid.h"
+#include "qgraphics_item_raster_pixmap_area.h"
 
 
 class FnmCorePointSource;

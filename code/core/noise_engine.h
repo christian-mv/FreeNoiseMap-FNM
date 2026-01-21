@@ -3,13 +3,12 @@
 
 #define MATRIX_OF_DOUBLES std::vector< std::vector<double> >
 
-#include <cstdlib>
-#include <ctime>
 #include <vector>
-#include "fnm_core_point_source.h"
-#include "fnm_core_line_source_segment.h"
-#include "fnm_core_point_receiver.h"
-#include "fnm_core_barrier_segment.h"
+#include <random>
+#include "point_source.h"
+#include "line_source_segment.h"
+#include "point_receiver.h"
+#include "barrier_segment.h"
 
 
 namespace  FnmCoreNoiseEngine
@@ -39,7 +38,6 @@ namespace  FnmCoreNoiseEngine
 
 
     MATRIX_OF_DOUBLES createMatrixOfDoubles(unsigned int m, unsigned int n);
-    void initSeed(); // initializes the seed only once
     int intRandom(int min, int max);
 
     void P2P(FnmCorePointSource *pointSource, FnmCorePointReceiver *receiver,

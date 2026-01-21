@@ -5,9 +5,9 @@
 #include <vector>
 #include <QPainter>
 #include <QObject>
-#include "fnm_core_grid_settings.h"
-#include "fnm_core_point_receiver.h"
-#include "fnm_core_gradient_color.h"
+#include "grid_settings.h"
+#include "point_receiver.h"
+#include "gradient_color.h"
 
 class  QProgressDialog;
 

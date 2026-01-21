@@ -1,6 +1,6 @@
 #ifndef FNM_CORE_POINT_SOURCE_H
 #define FNM_CORE_POINT_SOURCE_H
-#include "fnm_core_point.h"
+#include "point.h"
 
 class FnmCorePointSource: public FnmCorePoint
 {

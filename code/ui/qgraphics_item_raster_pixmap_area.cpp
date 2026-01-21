@@ -1,5 +1,5 @@
-#include "fnm_ui_qgraphics_item_raster_pixmap_area.h"
-#include "fnm_core_types_namespace.h"
+#include "qgraphics_item_raster_pixmap_area.h"
+#include "types_namespace.h"
 #include <QPainter>
 
 

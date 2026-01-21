@@ -1,6 +1,6 @@
 #ifndef FNM_CORE_RECEIVER_H
 #define FNM_CORE_RECEIVER_H
-#include "fnm_core_point.h"
+#include "point.h"
 
 
 class FnmCorePointReceiver: public FnmCorePoint

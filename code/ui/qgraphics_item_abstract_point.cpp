@@ -1,6 +1,6 @@
-#include "fnm_ui_qgraphics_item_abstract_point.h"
+#include "qgraphics_item_abstract_point.h"
 #include <QCursor>
-#include "fnm_core_point.h"
+#include "point.h"
 #include <QRectF>
 #include <QDebug>
 #include <QPainter>

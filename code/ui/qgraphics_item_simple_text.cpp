@@ -1,4 +1,4 @@
-#include "fnm_ui_qgraphics_item_simple_text.h"
+#include "qgraphics_item_simple_text.h"
 #include <QPainter>
 
 

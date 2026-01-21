@@ -1,5 +1,5 @@
-#include "fnm_core_3D_segment.h"
-#include "fnm_core_noise_engine.h"
+#include "3D_segment.h"
+#include "noise_engine.h"
 FnmCore3DSegment::FnmCore3DSegment() :
     x1(0), y1(0), z1(0)
 {

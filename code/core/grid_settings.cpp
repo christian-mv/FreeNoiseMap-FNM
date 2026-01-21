@@ -1,4 +1,4 @@
-#include "fnm_core_grid_settings.h"
+#include "grid_settings.h"
 #include <QDebug>
 
 FnmCoreGridSettings::FnmCoreGridSettings(QRectF rect)

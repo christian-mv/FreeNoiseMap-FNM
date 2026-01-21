@@ -1,6 +1,6 @@
-#include "fnm_ui_qgraphics_item_barrier.h"
-#include "fnm_core_barrier_segment.h"
-#include "fnm_core_types_namespace.h"
+#include "qgraphics_item_barrier.h"
+#include "barrier_segment.h"
+#include "types_namespace.h"
 #include <QPainter>
 #include <QDebug>
 

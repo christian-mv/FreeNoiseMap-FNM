@@ -182,7 +182,7 @@
   <customwidget>
    <class>FnmQGraphicsView</class>
    <extends>QGraphicsView</extends>
-   <header>fnm_ui_qgraphics_view.h</header>
+   <header>qgraphics_view.h</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -1,5 +1,5 @@
-#include "fnm_ui_receivers_grid.h"
-#include "fnm_core_noise_engine.h"
+#include "receivers_grid.h"
+#include "noise_engine.h"
 #include <QtDebug>
 #include <tuple>
 #include <QtWidgets>

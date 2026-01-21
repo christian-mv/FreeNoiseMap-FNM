@@ -1,6 +1,6 @@
-#include "fnm_ui_qgraphics_item_polyline.h"
+#include "qgraphics_item_polyline.h"
 
-#include "fnm_core_types_namespace.h"
+#include "types_namespace.h"
 #include <QPainter>
 #include <QDebug>
 

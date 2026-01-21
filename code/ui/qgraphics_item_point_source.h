@@ -1,7 +1,7 @@
 #ifndef FNM_QGRAPHICS_ITEM_POINT_SOURCE_H
 #define FNM_QGRAPHICS_ITEM_POINT_SOURCE_H
 
-#include "fnm_ui_qgraphics_item_abstract_point.h"
+#include "qgraphics_item_abstract_point.h"
 class FnmCorePointSource;
 
 

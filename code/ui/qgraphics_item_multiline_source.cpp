@@ -1,6 +1,6 @@
-#include "fnm_ui_qgraphics_item_multiline_source.h"
-#include "fnm_core_line_source_segment.h"
-#include "fnm_core_types_namespace.h"
+#include "qgraphics_item_multiline_source.h"
+#include "line_source_segment.h"
+#include "types_namespace.h"
 #include <QPainter>
 #include <QDebug>
 

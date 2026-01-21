@@ -1,4 +1,4 @@
-#include "fnm_ui_qgraphics_view.h"
+#include "qgraphics_view.h"
 #include <QDebug>
 #include <QPointF>
 #include <QScrollBar>

@@ -1,6 +1,6 @@
 #ifndef FNM_CORE_LINE_SOURCE_SEGMENT_H
 #define FNM_CORE_LINE_SOURCE_SEGMENT_H
-#include "fnm_core_3D_segment.h"
+#include "3D_segment.h"
 
 
 class FnmLineSourceSegment : public FnmCore3DSegment

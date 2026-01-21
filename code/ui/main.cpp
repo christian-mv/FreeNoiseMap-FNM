@@ -1,4 +1,4 @@
-#include "fnm_ui_main_window.h"
+#include "main_window.h"
 #include <QApplication>
 #include <QByteArray>
 

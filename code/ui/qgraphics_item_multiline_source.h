@@ -1,7 +1,7 @@
 #ifndef FNM_UI_QGRAPHICS_ITEM_MULTILINE_SOURCE_H
 #define FNM_UI_QGRAPHICS_ITEM_MULTILINE_SOURCE_H
 
-#include "fnm_ui_qgraphics_item_abstract_polyline.h"
+#include "qgraphics_item_abstract_polyline.h"
 
 class FnmLineSourceSegment;
 
