@@ -6,11 +6,11 @@
 
 namespace fnm_ui {
 
-class QGraphicsView : public ::QGraphicsView
+class FnmView : public ::QGraphicsView
 {
 
 public:
-    QGraphicsView(QWidget *parent = nullptr);
+    FnmView(QWidget *parent = nullptr);
 
     void setCursor(const QCursor &cursor);
     void resetTotalScaleFactor();

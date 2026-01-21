@@ -1,4 +1,4 @@
-#include "3D_segment.h"
+#include "segment.h"
 #include "noise_engine.h"
 
 namespace fnm_core {

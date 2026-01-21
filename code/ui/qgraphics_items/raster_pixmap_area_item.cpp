@@ -1,20 +1,20 @@
-#include "raster_pixmap_area.h"
+#include "raster_pixmap_area_item.h"
 #include "types_namespace.h"
 #include <QPainter>
 
 namespace fnm_ui {
 
-RasterPixmap::RasterPixmap()
+RasterPixmapItem::RasterPixmapItem()
 {
     setAcceptHoverEvents(true);
 }
 
-int RasterPixmap::type() const
+int RasterPixmapItem::type() const
 {
     return fnm_core::TypeId::RasterPixmapItemType; // represents a custom item
 }
 
-void RasterPixmap::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void RasterPixmapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QGraphicsPixmapItem::paint(painter, option, widget);
 

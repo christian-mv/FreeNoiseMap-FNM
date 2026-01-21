@@ -1,4 +1,4 @@
-#include "multiline_source.h"
+#include "multiline_source_item.h"
 #include "line_source_segment.h"
 #include "types_namespace.h"
 #include <QPainter>
@@ -6,13 +6,13 @@
 
 namespace fnm_ui {
 
-MultiLineSource::MultiLineSource():
-    AbstractPolyLine()
+MultiLineSourceItem::MultiLineSourceItem():
+    AbstractPolyLineItem()
 {
 
 }
 
-void MultiLineSource::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt, QWidget *w)
+void MultiLineSourceItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt, QWidget *w)
 {
     Q_UNUSED(opt)
     Q_UNUSED(w)
@@ -57,14 +57,14 @@ void MultiLineSource::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     painter->drawPath(shape());
 }
 
-void MultiLineSource::addSegment(fnm_core::LineSourceSegment *segment)
+void MultiLineSourceItem::addSegment(fnm_core::LineSourceSegment *segment)
 {
-    AbstractPolyLine::addSegment(segment);
+    AbstractPolyLineItem::addSegment(segment);
 }
 
-QVector<fnm_core::LineSourceSegment *> MultiLineSource::getSegments()
+QVector<fnm_core::LineSourceSegment *> MultiLineSourceItem::getSegments()
 {
-    QVector<fnm_core::Segment*> *listSegments = AbstractPolyLine::getSegments();
+    QVector<fnm_core::Segment*> *listSegments = AbstractPolyLineItem::getSegments();
     QVector<fnm_core::LineSourceSegment *> results;
     for(auto segment: *listSegments){
         results.append(static_cast<fnm_core::LineSourceSegment *>(segment));
@@ -75,7 +75,7 @@ QVector<fnm_core::LineSourceSegment *> MultiLineSource::getSegments()
 
 
 
-int MultiLineSource::type() const
+int MultiLineSourceItem::type() const
 {
     return fnm_core::TypeId::MultiLineSourceItemType;
 }

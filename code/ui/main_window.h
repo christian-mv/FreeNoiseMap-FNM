@@ -7,7 +7,7 @@
 #include <QPixmap>
 #include "grid_settings.h"
 #include "receivers_grid.h"
-#include "qgraphics_items/raster_pixmap_area.h"
+#include "qgraphics_items/raster_pixmap_area_item.h"
 
 namespace fnm_core {
 class PointSource;
@@ -15,12 +15,12 @@ class BarrierSegment;
 }
 
 namespace fnm_ui {
-class PolyLine;
-class MultiLineSource;
-class PointSource;
-class Barrier;
-class ShadedLine;
-class RasterPixmap;
+class PolyLineItem;
+class MultiLineSourceItem;
+class PointSourceItem;
+class BarrierItem;
+class ShadedLineItem;
+class RasterPixmapItem;
 }
 
 class QLineF;
@@ -62,7 +62,7 @@ private:
     Ui::MainWindow *ui;
     QGraphicsScene scene;
     QImage *image;
-    fnm_ui::RasterPixmap pixmapItem;
+    fnm_ui::RasterPixmapItem pixmapItem;
     fnm_core::GridSettings myGrid;
     fnm_ui::ReceiversGrid receivers;
     QHash<QString, QCursor> myCursors;
@@ -72,7 +72,7 @@ private:
     void makeMenuMutualExclusive();
     void loadDefaultGrid();
     bool calculateNoiseFromSources(QProgressDialog &progress);
-    QList<fnm_ui::Barrier *> barrierList() const; // returns all barriers from the scene
+    QList<fnm_ui::BarrierItem *> barrierList() const; // returns all barriers from the scene
     std::vector<fnm_core::BarrierSegment*> barrierSegmentsToStdVector() const;
     void resetPixmapArea();
     void movingItemsOnTheScene(const QGraphicsSceneMouseEvent *sceneMouseEvent);
@@ -84,13 +84,13 @@ private:
     void releaseLineItemEdition();
 
 
-    fnm_ui::ShadedLine *shaded_line = nullptr; // auxiliary line when dragging items
+    fnm_ui::ShadedLineItem *shaded_line = nullptr; // auxiliary line when dragging items
     QPointF p1_shaded_line; // initial coordinate for shaded_line
 
     QLineF *singleLine;
-    fnm_ui::PolyLine *polyLine;
-    fnm_ui::MultiLineSource *multiLineSource;
-    fnm_ui::Barrier *acousticBarrier;
+    fnm_ui::PolyLineItem *polyLine;
+    fnm_ui::MultiLineSourceItem *multiLineSource;
+    fnm_ui::BarrierItem *acousticBarrier;
 
 
 protected:

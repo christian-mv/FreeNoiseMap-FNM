@@ -7,12 +7,12 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QTransform>
-#include "shaded_line.h"
-#include "simple_text.h"
+#include "shaded_line_item.h"
+#include "simple_text_item.h"
 
 namespace fnm_ui {
 
-ShadedLine::ShadedLine()
+ShadedLineItem::ShadedLineItem()
 {
     distanceText = new SimpleTextItem(this);
     horizontalText = new SimpleTextItem(this);
@@ -25,7 +25,7 @@ ShadedLine::ShadedLine()
 
 }
 
-QRectF ShadedLine::boundingRect() const
+QRectF ShadedLineItem::boundingRect() const
 {
 
     // expandimos un poco el rectangulo para garantizar que el
@@ -38,7 +38,7 @@ QRectF ShadedLine::boundingRect() const
 }
 
 
-void ShadedLine::paint(QPainter *painter,
+void ShadedLineItem::paint(QPainter *painter,
                                      const QStyleOptionGraphicsItem *option,
                                      QWidget *widget)
 {
@@ -189,13 +189,13 @@ void ShadedLine::paint(QPainter *painter,
 
 }
 
-double ShadedLine::theta() const
+double ShadedLineItem::theta() const
 {
     // return angle between this.line1 and this.line2
     return atan(line().dy()/line().dx())* 180 / 3.14159265;
 }
 
-void ShadedLine::updateShadedLines()
+void ShadedLineItem::updateShadedLines()
 {
     if(line().dx()>0 && line().dy()>0){
         line1.setLine(line().p2().x(), line().p1().y(), line().p2().x(), line().p2().y());
@@ -212,7 +212,7 @@ void ShadedLine::updateShadedLines()
     }
 }
 
-void ShadedLine::drawLines(QPainter *painter) const
+void ShadedLineItem::drawLines(QPainter *painter) const
 {
     painter->drawLine(line()); //diagonal
     painter->drawLine(line1);  // horizontal line

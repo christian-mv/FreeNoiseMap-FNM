@@ -1,6 +1,6 @@
 #ifndef FNM_CORE_BARRIER_SEGMENT_H
 #define FNM_CORE_BARRIER_SEGMENT_H
-#include "3D_segment.h"
+#include "segment.h"
 
 /*
  * This acoustic barrier is essentially defined as a line

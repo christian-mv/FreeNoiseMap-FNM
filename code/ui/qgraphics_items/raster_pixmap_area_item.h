@@ -6,10 +6,10 @@ class QPainter;
 
 namespace fnm_ui {
 
-class RasterPixmap : public QGraphicsPixmapItem
+class RasterPixmapItem : public QGraphicsPixmapItem
 {
 public:
-    RasterPixmap();
+    RasterPixmapItem();
     virtual int	type() const override;
 
 

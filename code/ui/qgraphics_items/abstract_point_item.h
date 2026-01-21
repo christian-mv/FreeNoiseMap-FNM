@@ -7,10 +7,10 @@ namespace fnm_core { class Point; }
 
 namespace fnm_ui {
 
-class AbstractPointSource : public QGraphicsPixmapItem
+class AbstractPointSourceItem : public QGraphicsPixmapItem
 {
 public:
-    AbstractPointSource();
+    AbstractPointSourceItem();
     QRectF boundingRect() const override;
     QPainterPath shape() const override;
     virtual int	type() const override = 0;

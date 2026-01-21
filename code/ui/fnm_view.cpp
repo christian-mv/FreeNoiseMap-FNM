@@ -1,4 +1,4 @@
-#include "qgraphics_view.h"
+#include "fnm_view.h"
 #include <QDebug>
 #include <QPointF>
 #include <QScrollBar>
@@ -7,7 +7,7 @@
 
 namespace fnm_ui {
 
-QGraphicsView::QGraphicsView(QWidget *parent):
+FnmView::FnmView(QWidget *parent):
     ::QGraphicsView(parent),
     totalScaleFactor(1)
 {
@@ -21,7 +21,7 @@ QGraphicsView::QGraphicsView(QWidget *parent):
 
 }
 
-void QGraphicsView::setCursor(const QCursor &newCursor)
+void FnmView::setCursor(const QCursor &newCursor)
 {
 
 //    QList<QGraphicsItem *> sceneItems = items();
@@ -58,7 +58,7 @@ void QGraphicsView::setCursor(const QCursor &newCursor)
     ::QGraphicsView::setCursor(newCursor);
 }
 
-void QGraphicsView::resetTotalScaleFactor()
+void FnmView::resetTotalScaleFactor()
 {
     totalScaleFactor = 1;
 }
@@ -67,7 +67,7 @@ void QGraphicsView::resetTotalScaleFactor()
 
 
 
-void QGraphicsView::wheelEvent(QWheelEvent *e)
+void FnmView::wheelEvent(QWheelEvent *e)
 {
 
     double zoomFactor = 1.25;
@@ -100,7 +100,7 @@ void QGraphicsView::wheelEvent(QWheelEvent *e)
 
 // this method provides support for zooming in touch screens
 // reference: http://doc.qt.io/archives/qt-4.8/qt-touch-pinchzoom-example.html
-bool QGraphicsView::viewportEvent(QEvent *event)
+bool FnmView::viewportEvent(QEvent *event)
 {
     switch (event->type()) {
         case QEvent::TouchBegin:

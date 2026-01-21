@@ -1,4 +1,4 @@
-#include "barrier.h"
+#include "barrier_item.h"
 #include "barrier_segment.h"
 #include "types_namespace.h"
 #include <QPainter>
@@ -6,13 +6,13 @@
 
 namespace fnm_ui {
 
-Barrier::Barrier():
-    AbstractPolyLine()
+BarrierItem::BarrierItem():
+    AbstractPolyLineItem()
 {
 
 }
 
-void Barrier::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt, QWidget *w)
+void BarrierItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt, QWidget *w)
 {
     Q_UNUSED(opt)
     Q_UNUSED(w)
@@ -57,14 +57,14 @@ void Barrier::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt, QWid
 //    painter->drawPath(shape());
 }
 
-void Barrier::addSegment(fnm_core::BarrierSegment *segment)
+void BarrierItem::addSegment(fnm_core::BarrierSegment *segment)
 {
-    AbstractPolyLine::addSegment(segment);
+    AbstractPolyLineItem::addSegment(segment);
 }
 
-QVector<fnm_core::BarrierSegment *> Barrier::getSegments()
+QVector<fnm_core::BarrierSegment *> BarrierItem::getSegments()
 {
-    QVector<fnm_core::Segment*> *listSegments = AbstractPolyLine::getSegments();
+    QVector<fnm_core::Segment*> *listSegments = AbstractPolyLineItem::getSegments();
     QVector<fnm_core::BarrierSegment *> results;
     for(auto segment: *listSegments){
         results.append(static_cast<fnm_core::BarrierSegment *>(segment));
@@ -75,7 +75,7 @@ QVector<fnm_core::BarrierSegment *> Barrier::getSegments()
 
 
 
-int Barrier::type() const
+int BarrierItem::type() const
 {
     return fnm_core::TypeId::AcousticBarrierItemType;
 }

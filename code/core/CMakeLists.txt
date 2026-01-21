@@ -1,6 +1,6 @@
 add_library(core STATIC
-    3D_segment.cpp
-    3D_segment.h
+    segment.cpp
+    segment.h
     barrier_segment.h
     gradient_color.cpp
     gradient_color.h

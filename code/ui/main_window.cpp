@@ -12,12 +12,12 @@
 #include "point_receiver.h"
 #include "ui_mainwindow.h"
 #include "noise_engine.h"
-#include "qgraphics_items/point_source.h"
-#include "qgraphics_items/point_receiver.h"
-#include "qgraphics_items/shaded_line.h"
-#include "qgraphics_items/multiline_source.h"
-#include "qgraphics_items/barrier.h"
-#include "qgraphics_items/polyline.h"
+#include "qgraphics_items/point_source_item.h"
+#include "qgraphics_items/point_receiver_item.h"
+#include "qgraphics_items/shaded_line_item.h"
+#include "qgraphics_items/multiline_source_item.h"
+#include "qgraphics_items/barrier_item.h"
+#include "qgraphics_items/polyline_item.h"
 
 #define VERSION_OF_APP "alpha"
 #define MY_APP_NAME "Free Noise Map"
@@ -194,7 +194,7 @@ void MainWindow::updateShadedLinesItem(QPointF pos)
 void MainWindow::createShadedLinesItem(QPointF pos)
 {
     if(shaded_line == nullptr){
-        shaded_line = new fnm_ui::ShadedLine;
+        shaded_line = new fnm_ui::ShadedLineItem;
         p1_shaded_line = pos;
 
         // init line with 0 lenth (it is necessary to avoid flip)
@@ -263,8 +263,8 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
             return false;
         }
 
-        fnm_ui::PointSource *currentPixmapItemPointSource;
-        fnm_ui::MultiLineSource *currentLineSource;
+        fnm_ui::PointSourceItem *currentPixmapItemPointSource;
+        fnm_ui::MultiLineSourceItem *currentLineSource;
         auto barriersSegments = barrierSegmentsToStdVector();
 //        MinimalAcousticBarrier* barrierSegment;
 
@@ -272,7 +272,7 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
             for(auto currentItem : scene.items()){
                 // noise from point sources
                 if(currentItem->type() == fnm_core::TypeId::PointSourceItemType){
-                    currentPixmapItemPointSource = (static_cast<fnm_ui::PointSource *>(currentItem));
+                    currentPixmapItemPointSource = (static_cast<fnm_ui::PointSourceItem *>(currentItem));
 
                     fnm_core::NoiseEngine::P2P(currentPixmapItemPointSource->getPointSource(),
                                                              currentReceiver, barriersSegments);
@@ -281,7 +281,7 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
                 }
                 // noise from line sources
                 if(currentItem->type() == fnm_core::TypeId::MultiLineSourceItemType){
-                    currentLineSource = (static_cast<fnm_ui::MultiLineSource *>(currentItem));
+                    currentLineSource = (static_cast<fnm_ui::MultiLineSourceItem *>(currentItem));
                     // Here we iterate a multi line source to obtain a list of
                     // segmets, then each segment is split in point sources
                     for(fnm_core::LineSourceSegment *segment: currentLineSource->getSegments()){
@@ -298,12 +298,12 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
     return true;
 }
 
-QList<fnm_ui::Barrier *> MainWindow::barrierList() const
+QList<fnm_ui::BarrierItem *> MainWindow::barrierList() const
 {
-    QList<fnm_ui::Barrier *> barriers;
+    QList<fnm_ui::BarrierItem *> barriers;
     for(auto item: scene.items()){
         if(item->type() == fnm_core::TypeId::AcousticBarrierItemType){
-            barriers.append(static_cast<fnm_ui::Barrier *>(item));
+            barriers.append(static_cast<fnm_ui::BarrierItem *>(item));
         }
     }
     return barriers;
@@ -316,7 +316,7 @@ std::vector<fnm_core::BarrierSegment *> MainWindow::barrierSegmentsToStdVector()
 
     for(auto item: scene.items()){
         if(item->type() == fnm_core::TypeId::AcousticBarrierItemType){
-            temp = (static_cast<fnm_ui::Barrier *>(item)->getSegments());
+            temp = (static_cast<fnm_ui::BarrierItem *>(item)->getSegments());
             for(auto singleSegment: temp){
                 segments.push_back(singleSegment);
             }
@@ -380,7 +380,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                         myPixmap = myPixmap.scaled(18,18,Qt::KeepAspectRatio,Qt::SmoothTransformation);
             #endif
 
-            fnm_ui::PointSource * myPixmapPointSourceItem = new fnm_ui::PointSource();
+            fnm_ui::PointSourceItem * myPixmapPointSourceItem = new fnm_ui::PointSourceItem();
 
             myPixmapPointSourceItem->setPixmap(myPixmap);
             myPixmapPointSourceItem->setPointSource(myPointSource);
@@ -448,7 +448,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                         myPixmap = myPixmap.scaled(18,18,Qt::KeepAspectRatio,Qt::SmoothTransformation);
             #endif
 
-            fnm_ui::PointReceiver * myPixmapReceiver = new fnm_ui::PointReceiver();
+            fnm_ui::PointReceiverItem * myPixmapReceiver = new fnm_ui::PointReceiverItem();
 
             myPixmapReceiver->setPixmap(myPixmap);
             myPixmapReceiver->setPointReceiver(myReceiver);
@@ -472,7 +472,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                         createShadedLinesItem(sceneEvent->scenePos());
                         singleLine = new QLineF();
                         if(polyLine == nullptr){
-                            polyLine = new fnm_ui::PolyLine();
+                            polyLine = new fnm_ui::PolyLineItem();
                             scene.addItem(polyLine);
                             singleLine->setLine(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(),
                                                    sceneEvent->scenePos().x(), sceneEvent->scenePos().y());
@@ -530,7 +530,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                 createShadedLinesItem(sceneEvent->scenePos());
                 singleLine = new QLineF();
                 if(multiLineSource == nullptr){
-                    multiLineSource = new fnm_ui::MultiLineSource();
+                    multiLineSource = new fnm_ui::MultiLineSourceItem();
                     scene.addItem(multiLineSource);
                     singleLine->setLine(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(),
                                            sceneEvent->scenePos().x(), sceneEvent->scenePos().y());
@@ -584,7 +584,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                 createShadedLinesItem(sceneEvent->scenePos());
                 singleLine = new QLineF();
                 if(acousticBarrier == nullptr){
-                    acousticBarrier = new fnm_ui::Barrier();
+                    acousticBarrier = new fnm_ui::BarrierItem();
                     scene.addItem(acousticBarrier);
                     singleLine->setLine(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(),
                                            sceneEvent->scenePos().x(), sceneEvent->scenePos().y());

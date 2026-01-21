@@ -1,4 +1,4 @@
-#include "simple_text.h"
+#include "simple_text_item.h"
 #include <QPainter>
 
 namespace fnm_ui {
