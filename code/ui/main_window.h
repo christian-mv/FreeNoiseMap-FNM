@@ -7,7 +7,7 @@
 #include <QPixmap>
 #include "grid_settings.h"
 #include "receivers_grid.h"
-#include "qgraphics_item_raster_pixmap_area.h"
+#include "qgraphics_items/qgraphics_item_raster_pixmap_area.h"
 
 
 class FnmCorePointSource;

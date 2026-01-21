@@ -5,32 +5,32 @@ set(CMAKE_AUTOMOC ON)
 set(PROJECT_SOURCES
     main.cpp
     main_window.cpp
-    qgraphics_item_abstract_point.cpp
-    qgraphics_item_abstract_polyline.cpp
-    qgraphics_item_barrier.cpp
-    qgraphics_item_multiline_source.cpp
-    qgraphics_item_point_receiver.cpp
-    qgraphics_item_point_source.cpp
-    qgraphics_item_polyline.cpp
-    qgraphics_item_raster_pixmap_area.cpp
-    qgraphics_item_shaded_line.cpp
-    qgraphics_item_simple_text.cpp
+    qgraphics_items/qgraphics_item_abstract_point.cpp
+    qgraphics_items/qgraphics_item_abstract_polyline.cpp
+    qgraphics_items/qgraphics_item_barrier.cpp
+    qgraphics_items/qgraphics_item_multiline_source.cpp
+    qgraphics_items/qgraphics_item_point_receiver.cpp
+    qgraphics_items/qgraphics_item_point_source.cpp
+    qgraphics_items/qgraphics_item_polyline.cpp
+    qgraphics_items/qgraphics_item_raster_pixmap_area.cpp
+    qgraphics_items/qgraphics_item_shaded_line.cpp
+    qgraphics_items/qgraphics_item_simple_text.cpp
     qgraphics_view.cpp
     receivers_grid.cpp
 )
 
 set(PROJECT_HEADERS
     main_window.h
-    qgraphics_item_abstract_point.h
-    qgraphics_item_abstract_polyline.h
-    qgraphics_item_barrier.h
-    qgraphics_item_multiline_source.h
-    qgraphics_item_point_receiver.h
-    qgraphics_item_point_source.h
-    qgraphics_item_polyline.h
-    qgraphics_item_raster_pixmap_area.h
-    qgraphics_item_shaded_line.h
-    qgraphics_item_simple_text.h
+    qgraphics_items/qgraphics_item_abstract_point.h
+    qgraphics_items/qgraphics_item_abstract_polyline.h
+    qgraphics_items/qgraphics_item_barrier.h
+    qgraphics_items/qgraphics_item_multiline_source.h
+    qgraphics_items/qgraphics_item_point_receiver.h
+    qgraphics_items/qgraphics_item_point_source.h
+    qgraphics_items/qgraphics_item_polyline.h
+    qgraphics_items/qgraphics_item_raster_pixmap_area.h
+    qgraphics_items/qgraphics_item_shaded_line.h
+    qgraphics_items/qgraphics_item_simple_text.h
     qgraphics_view.h
     receivers_grid.h
 )
