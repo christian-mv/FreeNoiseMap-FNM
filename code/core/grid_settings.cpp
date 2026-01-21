@@ -1,7 +1,7 @@
 #include "grid_settings.h"
 #include <QDebug>
 
-namespace fnm {
+namespace fnm_core {
 
 CoreGridSettings::CoreGridSettings(QRectF rect)
 {

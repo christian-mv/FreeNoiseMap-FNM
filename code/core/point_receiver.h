@@ -2,7 +2,7 @@
 #define FNM_CORE_RECEIVER_H
 #include "point.h"
 
-namespace fnm {
+namespace fnm_core {
 
 class CorePointReceiver: public CorePoint
 {

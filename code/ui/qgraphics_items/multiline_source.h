@@ -3,7 +3,7 @@
 
 #include "abstract_polyline.h"
 
-namespace fnm { class LineSourceSegment; }
+namespace fnm_core { class LineSourceSegment; }
 
 namespace fnm_ui {
 
@@ -13,8 +13,8 @@ public:
     MultiLineSource();
 
     void paint(QPainter *p, const QStyleOptionGraphicsItem *opt, QWidget *w) override;
-    void addSegment(fnm::LineSourceSegment *segment);
-    QVector<fnm::LineSourceSegment*> getSegments();
+    void addSegment(fnm_core::LineSourceSegment *segment);
+    QVector<fnm_core::LineSourceSegment*> getSegments();
     int	type() const override;
 
 };

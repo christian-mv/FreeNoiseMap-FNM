@@ -3,7 +3,7 @@
 
 #include <QGraphicsPixmapItem>
 
-namespace fnm { class CorePoint; }
+namespace fnm_core { class CorePoint; }
 
 namespace fnm_ui {
 
@@ -16,11 +16,11 @@ public:
     virtual int	type() const override = 0;
 
 private:
-    fnm::CorePoint *fnmCorePoint;
+    fnm_core::CorePoint *fnmCorePoint;
 
 protected:
-    void setPoint(fnm::CorePoint *fnmCorePoint);
-    fnm::CorePoint * getPoint()const;
+    void setPoint(fnm_core::CorePoint *fnmCorePoint);
+    fnm_core::CorePoint * getPoint()const;
 
     void paint(QPainter *painter,const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 

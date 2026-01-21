@@ -9,7 +9,7 @@ namespace fnm_ui {
 
 AbstractPolyLine::AbstractPolyLine():
     xMin(0), xMax(0), yMin(0), yMax(0), bufferDistance(10.0),
-    lineSegmentsList(new QVector<fnm::Core3DSegment*>)
+    lineSegmentsList(new QVector<fnm_core::Core3DSegment*>)
 {
     setFlag(QGraphicsItem::ItemIsMovable, false);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -97,7 +97,7 @@ QPainterPath AbstractPolyLine::shape() const
 
 
 
-void AbstractPolyLine::addSegment(fnm::Core3DSegment *segment)
+void AbstractPolyLine::addSegment(fnm_core::Core3DSegment *segment)
 {
     prepareGeometryChange();
     QPainterPath newSegmentBuffer = singleLineBuffer(QLineF(segment->get_x1(),
@@ -127,7 +127,7 @@ void AbstractPolyLine::addSegment(fnm::Core3DSegment *segment)
 }
 
 
-QVector<fnm::Core3DSegment*> *AbstractPolyLine::getSegments()
+QVector<fnm_core::Core3DSegment*> *AbstractPolyLine::getSegments()
 {
     return lineSegmentsList;
 }
@@ -140,7 +140,7 @@ void AbstractPolyLine::setBufferDistance(const double &newValue)
 
 
 
-void AbstractPolyLine::updateBoundingRectangle(fnm::Core3DSegment *newSegment)
+void AbstractPolyLine::updateBoundingRectangle(fnm_core::Core3DSegment *newSegment)
 {
     double temp;
 

@@ -10,21 +10,21 @@ PointSource::PointSource():
 
 }
 
-void PointSource::setPointSource(fnm::CorePointSource *source)
+void PointSource::setPointSource(fnm_core::CorePointSource *source)
 {
     AbstractPointSource::setPoint(source);
 }
 
-fnm::CorePointSource *PointSource::getPointSource() const
+fnm_core::CorePointSource *PointSource::getPointSource() const
 {
     auto source  = AbstractPointSource::getPoint();
-    return static_cast<fnm::CorePointSource *>(source);
+    return static_cast<fnm_core::CorePointSource *>(source);
 }
 
 
 int PointSource::type() const
 {
-    return fnm::TypeId::PointSourceItemType; // represents a custom item
+    return fnm_core::TypeId::PointSourceItemType; // represents a custom item
 }
 
 }

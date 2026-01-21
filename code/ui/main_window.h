@@ -9,7 +9,7 @@
 #include "receivers_grid.h"
 #include "qgraphics_items/raster_pixmap_area.h"
 
-namespace fnm {
+namespace fnm_core {
 class CorePointSource;
 class CoreBarrierSegment;
 }
@@ -63,7 +63,7 @@ private:
     QGraphicsScene scene;
     QImage *image;
     fnm_ui::RasterPixmap pixmapItem;
-    fnm::CoreGridSettings myGrid;
+    fnm_core::CoreGridSettings myGrid;
     fnm_ui::ReceiversGrid receivers;
     QHash<QString, QCursor> myCursors;
     QActionGroup *menuActionsGroup; // used to make the grapic menu mutually exclusive
@@ -73,7 +73,7 @@ private:
     void loadDefaultGrid();
     bool calculateNoiseFromSources(QProgressDialog &progress);
     QList<fnm_ui::Barrier *> barrierList() const; // returns all barriers from the scene
-    std::vector<fnm::CoreBarrierSegment*> barrierSegmentsToStdVector() const;
+    std::vector<fnm_core::CoreBarrierSegment*> barrierSegmentsToStdVector() const;
     void resetPixmapArea();
     void movingItemsOnTheScene(const QGraphicsSceneMouseEvent *sceneMouseEvent);
     void updateShadedLinesItem(QPointF pos);

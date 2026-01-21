@@ -19,7 +19,7 @@ AbstractPointSource::AbstractPointSource()
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
 }
 
-void AbstractPointSource::setPoint(fnm::CorePoint *source)
+void AbstractPointSource::setPoint(fnm_core::CorePoint *source)
 {
     this->fnmCorePoint = source;
 
@@ -37,7 +37,7 @@ void AbstractPointSource::setPoint(fnm::CorePoint *source)
     this->setTransform(transform);
 }
 
-fnm::CorePoint *AbstractPointSource::getPoint() const
+fnm_core::CorePoint *AbstractPointSource::getPoint() const
 {
     return fnmCorePoint;
 }

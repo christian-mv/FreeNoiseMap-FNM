@@ -12,13 +12,13 @@ PolyLine::PolyLine():
 
 }
 
-void PolyLine::addSegment(fnm::Core3DSegment *segment)
+void PolyLine::addSegment(fnm_core::Core3DSegment *segment)
 {
    // call protected superclass method
     AbstractPolyLine::addSegment(segment);
 }
 
-QVector<fnm::Core3DSegment *> *PolyLine::getSegments()
+QVector<fnm_core::Core3DSegment *> *PolyLine::getSegments()
 {
     return AbstractPolyLine::getSegments();
 }
@@ -26,7 +26,7 @@ QVector<fnm::Core3DSegment *> *PolyLine::getSegments()
 
 int PolyLine::type() const
 {
-    return fnm::TypeId::PolyLineItemType;
+    return fnm_core::TypeId::PolyLineItemType;
 }
 
 }

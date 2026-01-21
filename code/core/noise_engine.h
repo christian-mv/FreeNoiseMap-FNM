@@ -11,7 +11,7 @@
 #include "barrier_segment.h"
 
 
-namespace fnm {
+namespace fnm_core {
 namespace  NoiseEngine
 {    
     const double pi = 3.14159265359;

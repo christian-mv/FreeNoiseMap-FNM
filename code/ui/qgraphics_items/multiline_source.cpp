@@ -57,17 +57,17 @@ void MultiLineSource::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     painter->drawPath(shape());
 }
 
-void MultiLineSource::addSegment(fnm::LineSourceSegment *segment)
+void MultiLineSource::addSegment(fnm_core::LineSourceSegment *segment)
 {
     AbstractPolyLine::addSegment(segment);
 }
 
-QVector<fnm::LineSourceSegment *> MultiLineSource::getSegments()
+QVector<fnm_core::LineSourceSegment *> MultiLineSource::getSegments()
 {
-    QVector<fnm::Core3DSegment*> *listSegments = AbstractPolyLine::getSegments();
-    QVector<fnm::LineSourceSegment *> results;
+    QVector<fnm_core::Core3DSegment*> *listSegments = AbstractPolyLine::getSegments();
+    QVector<fnm_core::LineSourceSegment *> results;
     for(auto segment: *listSegments){
-        results.append(static_cast<fnm::LineSourceSegment *>(segment));
+        results.append(static_cast<fnm_core::LineSourceSegment *>(segment));
     }
 
     return results;
@@ -77,7 +77,7 @@ QVector<fnm::LineSourceSegment *> MultiLineSource::getSegments()
 
 int MultiLineSource::type() const
 {
-    return fnm::TypeId::MultiLineSourceItemType;
+    return fnm_core::TypeId::MultiLineSourceItemType;
 }
 
 }

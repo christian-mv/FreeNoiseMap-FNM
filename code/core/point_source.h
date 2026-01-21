@@ -2,7 +2,7 @@
 #define FNM_CORE_POINT_SOURCE_H
 #include "point.h"
 
-namespace fnm {
+namespace fnm_core {
 
 class CorePointSource: public CorePoint
 {

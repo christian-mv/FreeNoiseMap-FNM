@@ -2,7 +2,7 @@
 #define FNM_CORE_GRID_SETTINGS_H
 #include<QRectF>
 
-namespace fnm {
+namespace fnm_core {
 
 class CoreGridSettings
 {

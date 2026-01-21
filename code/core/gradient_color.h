@@ -13,7 +13,7 @@
 // this has to be fixed in the future in order to avoid Qt dependencies
 // in the core functionality of FNM
 
-namespace fnm {
+namespace fnm_core {
 
 class CoreGradientColor
 {

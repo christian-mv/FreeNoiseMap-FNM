@@ -11,7 +11,7 @@ RasterPixmap::RasterPixmap()
 
 int RasterPixmap::type() const
 {
-    return fnm::TypeId::RasterPixmapItemType; // represents a custom item
+    return fnm_core::TypeId::RasterPixmapItemType; // represents a custom item
 }
 
 void RasterPixmap::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

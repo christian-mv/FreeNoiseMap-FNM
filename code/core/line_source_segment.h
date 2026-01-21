@@ -2,7 +2,7 @@
 #define FNM_CORE_LINE_SOURCE_SEGMENT_H
 #include "3D_segment.h"
 
-namespace fnm {
+namespace fnm_core {
 
 class LineSourceSegment : public Core3DSegment
 {

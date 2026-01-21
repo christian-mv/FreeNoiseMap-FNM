@@ -6,7 +6,7 @@
  * This acoustic barrier is essentially defined as a line
  * with a height
 */
-namespace fnm {
+namespace fnm_core {
 
 class CoreBarrierSegment : public Core3DSegment
 {

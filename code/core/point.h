@@ -1,7 +1,7 @@
 #ifndef FNM_CORE_POINT_H
 #define FNM_CORE_POINT_H
 
-namespace fnm {
+namespace fnm_core {
 
 class CorePoint
 {

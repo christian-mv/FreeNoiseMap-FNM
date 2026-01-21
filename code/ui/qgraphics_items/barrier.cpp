@@ -57,17 +57,17 @@ void Barrier::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt, QWid
 //    painter->drawPath(shape());
 }
 
-void Barrier::addSegment(fnm::CoreBarrierSegment *segment)
+void Barrier::addSegment(fnm_core::CoreBarrierSegment *segment)
 {
     AbstractPolyLine::addSegment(segment);
 }
 
-QVector<fnm::CoreBarrierSegment *> Barrier::getSegments()
+QVector<fnm_core::CoreBarrierSegment *> Barrier::getSegments()
 {
-    QVector<fnm::Core3DSegment*> *listSegments = AbstractPolyLine::getSegments();
-    QVector<fnm::CoreBarrierSegment *> results;
+    QVector<fnm_core::Core3DSegment*> *listSegments = AbstractPolyLine::getSegments();
+    QVector<fnm_core::CoreBarrierSegment *> results;
     for(auto segment: *listSegments){
-        results.append(static_cast<fnm::CoreBarrierSegment *>(segment));
+        results.append(static_cast<fnm_core::CoreBarrierSegment *>(segment));
     }
 
     return results;
@@ -77,7 +77,7 @@ QVector<fnm::CoreBarrierSegment *> Barrier::getSegments()
 
 int Barrier::type() const
 {
-    return fnm::TypeId::AcousticBarrierItemType;
+    return fnm_core::TypeId::AcousticBarrierItemType;
 }
 
 }

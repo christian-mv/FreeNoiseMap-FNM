@@ -1,7 +1,7 @@
 #ifndef FNM_CORE_3D_SEGMENT_H
 #define FNM_CORE_3D_SEGMENT_H
 
-namespace fnm {
+namespace fnm_core {
 
 class Core3DSegment
 {

@@ -1,7 +1,7 @@
 #ifndef FNM_CORE_TYPES_NAMESPACE_H
 #define FNM_CORE_TYPES_NAMESPACE_H
 
-namespace fnm {
+namespace fnm_core {
 namespace TypeId{
     enum {
         RasterPixmapItemType =  65536,

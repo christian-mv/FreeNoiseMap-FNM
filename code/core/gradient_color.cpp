@@ -1,7 +1,7 @@
 #include "gradient_color.h"
 #include <QDebug>
 
-namespace fnm {
+namespace fnm_core {
 
 CoreGradientColor::CoreGradientColor()
 {

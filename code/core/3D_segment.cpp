@@ -1,7 +1,7 @@
 #include "3D_segment.h"
 #include "noise_engine.h"
 
-namespace fnm {
+namespace fnm_core {
 
 Core3DSegment::Core3DSegment() :
     x1(0), y1(0), z1(0)
@@ -25,7 +25,7 @@ void Core3DSegment::set_p2(const double &x, const double &y, const double &z)
 
 double Core3DSegment::distance() const
 {
-    return fnm::NoiseEngine::distanceBetweenPoints(x1, y1, z1, x2, y2, z2);
+    return fnm_core::NoiseEngine::distanceBetweenPoints(x1, y1, z1, x2, y2, z2);
 }
 
 void Core3DSegment::moveBy(const double &dx, const double &dy, const double &dz)

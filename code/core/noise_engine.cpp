@@ -4,7 +4,7 @@
 #include <QtDebug>
 using namespace std;
 
-namespace fnm {
+namespace fnm_core {
 namespace NoiseEngine
 {
 MATRIX_OF_DOUBLES createMatrixOfDoubles(unsigned int m, unsigned int n){
@@ -44,9 +44,9 @@ double distanceBetweenPoints(double x1, double y1, double z1, double x2, double 
 
 
 
-void P2P(fnm::CorePointSource *pointSource,
-         fnm::CorePointReceiver *receiver,
-         const std::vector<fnm::CoreBarrierSegment*> &barrierSegments)
+void P2P(fnm_core::CorePointSource *pointSource,
+         fnm_core::CorePointReceiver *receiver,
+         const std::vector<fnm_core::CoreBarrierSegment*> &barrierSegments)
 {
     double distance = distanceBetweenPoints(pointSource->get_x(),
                                             pointSource->get_y(),
@@ -126,11 +126,11 @@ int greatestIntegerFunction(int x, int dx, int dy)
 }
 
 
-std::vector<fnm::CorePointSource> fromLineToPointSources(const fnm::LineSourceSegment *line,
+std::vector<fnm_core::CorePointSource> fromLineToPointSources(const fnm_core::LineSourceSegment *line,
                                                        const double &distanceBetweenPoints)
 {
-    std::vector<fnm::CorePointSource> results;
-    fnm::CorePointSource point;
+    std::vector<fnm_core::CorePointSource> results;
+    fnm_core::CorePointSource point;
     int n = static_cast<int>(line->distance()/distanceBetweenPoints);
     double dx = line->get_x2() - line->get_x1();
     double dy = line->get_y2() - line->get_y1();
@@ -154,9 +154,9 @@ double attenuation_divergence(const double &distance)
     return A_div;
 }
 
-double attenuation_barrier(const fnm::CorePointSource* const pointSource,
-                           const fnm::CorePointReceiver* const receiver,
-                           const std::vector<fnm::CoreBarrierSegment*> &barrierSegments,
+double attenuation_barrier(const fnm_core::CorePointSource* const pointSource,
+                           const fnm_core::CorePointReceiver* const receiver,
+                           const std::vector<fnm_core::CoreBarrierSegment*> &barrierSegments,
                            const double &frequency)
 {
 
@@ -253,7 +253,7 @@ bool areTheseParallelLines(double p0x, double p0y, double p1x, double p1y,
 
 std::vector< std::tuple<double, double, double> > calculateDiffractionPathPoints(const double &x0, const double &y0, const double &z0,
                                                                            const double &x1, const double &y1, const double &z1,
-                                                                           const std::vector<fnm::CoreBarrierSegment*> &barrierSegments)
+                                                                           const std::vector<fnm_core::CoreBarrierSegment*> &barrierSegments)
 {
     std::vector< std::tuple<double, double, double> > pathPoints;
 
