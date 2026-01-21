@@ -1,110 +1,110 @@
-# FNM
+# Free Noise Map (FNM)
 
-Multi-platform free environmental noise modelling software targeting the main desktop and mobile operating systems as well as the web.
+**Free Noise Map (FNM)** is a multi-platform, free, and open-source environmental noise modelling software. It targets major desktop and mobile operating systems, as well as the web, providing an accessible tool for acoustic simulation.
 
-## Try out FNM in your browser (limited) [Here](https://christian-mv.github.io/Free_Noise_Map_Demo/FreeNoiseMap.html)
+## 🚀 Live Demo
+Try out FNM directly in your browser (limited functionality):  
+👉 **[Launch FNM Web Demo](https://christian-mv.github.io/Free_Noise_Map_Demo/FreeNoiseMap.html)**
 
+---
 
-FNM is a piece of software developed in C++. An implementation for web is intended too although it might be limited by the suport of webassemebly in Qt. It is recommended to compile the source code in an operating system such as linux, windows, and mac. 
+## ✨ Features
+*   **Acoustic Standards**: Currently implements **ISO 9613-2** for attenuation calculations.
+*   **Noise Sources**: Support for Point Sources, Line Sources, and Multi-line Sources.
+*   **Barriers**: Modeling of acoustic barriers and diffraction.
+*   **Visualization**:
+    *   Receiver grids with configurable resolution.
+    *   Noise contour maps (Heatmaps).
+    *   Result interpolation for smooth visualization.
+*   **Cross-Platform**: Runs natively on Linux, Windows, macOS, Android, and iOS.
 
+## 🖥️ Supported Platforms
 
-## FNM supports the following systems: 
+| Platform | Status |
+| :--- | :--- |
+| **Desktop** | Linux, Windows, macOS |
+| **Mobile** | Android, iOS |
+| **Web** | Chrome, Firefox, Opera, Safari, Edge (via WebAssembly) |
 
-    Desktop OS:
-        -linux
-        -windows
-        -macOS
-    
-    Mobile OS:
-        -Android
-        -iOS
-    
-    Web Browser:
-        -Google Chrome
-        -Mozilla FireFox 
-        -Opera
-        -safari
-        -Microsoft Edge.
-        
+---
 
+## 🛠️ Building from Source
 
+FNM is developed in **C++20** using the **Qt 6** framework.
 
-For the first stage of FNM, the standard ISO 9613 is intended to be implemented along with a user user graphic interface developed in Qt. Integration with web map services such as google maps and openstreet maps is also part of the first stage of FNM.
+### Prerequisites
+*   **C++ Compiler**: Compatible with C++20 (GCC, Clang, MSVC).
+*   **Qt 6**: Core, Gui, and Widgets modules.
+*   **CMake**: Version 3.16 or higher.
 
-For the second stage, the European calculation method CNOSSOS-EU will be targeted. Support for GIS and CAD files formats, i.e., DXF and SHP will be considered by integration with the GDAL library. 
+### Build Steps
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/christian-mv/Free-Noise-Map.git
+    cd Free-Noise-Map
+    ```
 
+2.  **Create a build directory**:
+    ```bash
+    mkdir build && cd build
+    ```
 
+3.  **Configure with CMake**:
+    ```bash
+    cmake ..
+    ```
+    *Note: You may need to provide the path to your Qt installation if it's not in your system path (e.g., `-DCMAKE_PREFIX_PATH=/path/to/Qt/6.x.x/gcc_64`).*
 
---------------------------------------------
+4.  **Build**:
+    ```bash
+    cmake --build .
+    ```
 
-FNM on Linux (Debian and ubuntu):
+---
 
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_Linux.png)
+## 🗺️ Roadmap
 
-FNM on android:
+### Stage 1 (Current Focus)
+- [x] ISO 9613-2 implementation.
+- [x] Basic Qt User Interface.
+- [ ] Integration with web map services (Google Maps, OpenStreetMap).
 
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_android.png)
+### Stage 2 (Planned)
+- [ ] **CNOSSOS-EU** calculation method implementation.
+- [ ] GIS and CAD file support (DXF, SHP) via GDAL library integration.
 
+---
 
-FNM on Windows:
+## 📸 Gallery
 
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_windows.png)
+### Desktop & Mobile GUI
+| Linux | Android | Windows |
+| :---: | :---: | :---: |
+| ![Linux](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_Linux.png) | ![Android](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_android.png) | ![Windows](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_windows.png) |
 
-FNM on MacOS:
+| macOS | iOS |
+| :---: | :---: |
+| ![macOS](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_MacOS.png) | ![iOS](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_IOS.png) |
 
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_MacOS.png)
+### Web Assembly
+| Chrome | Firefox |
+| :---: | :---: |
+| ![Chrome](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_Google_Chrome.png) | ![Firefox](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_FireFox.png) |
 
-FNM on IOS:
+### Visualization Features
+**Noise Contours & Gradient Scales**
+![Contours](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/contourAreas.png)
+![Raster](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/raster_test.png)
 
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_IOS.png)
+**Interpolation Levels**
+| No Interpolation | Factor 2 | Factor 3 | Factor 4 |
+| :---: | :---: | :---: | :---: |
+| ![1](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation1.png) | ![2](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation2.png) | ![3](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation3.png) | ![4](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation4.png) |
 
+---
 
-FNM on Google Chrome:
+## 🤝 Contributing
+FNM is in its early stages of development. Contributions, bug reports, and feature requests are welcome!
 
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_Google_Chrome.png)
-
-
-FNM on Mozilla FireFox:
-
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_FireFox.png)
-
-
-
-This software is intended to produce noise contours:
-
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/contourAreas.png)
-
-
-FNM also represent the results in a gradient color scale:
-
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/raster_test.png)
-
-
-
-
-
-Interpolation of results is supported as well:
-
-Factor 1 (no interpolation):
-
-
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation1.png)
-
-Factor 2:
-
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation2.png)
-
-Factor 3:
-
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation3.png)
-
-Factor 4:
-
-![Screenshot](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation4.png)
-
-
-
-
-
-### As FNM still in its early days, please feel free to contribute to it :)
-
+## 📄 License
+This project is licensed under the terms of the LICENSE file located in the root directory.
