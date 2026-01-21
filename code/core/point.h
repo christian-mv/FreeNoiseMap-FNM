@@ -3,11 +3,11 @@
 
 namespace fnm_core {
 
-class CorePoint
+class Point
 {
 public:
 
-    explicit CorePoint(double in_x=0.0, double in_y=0.0,
+    explicit Point(double in_x=0.0, double in_y=0.0,
                                 double in_z=0.0):
         x(in_x), y(in_y), z(in_z){}
 

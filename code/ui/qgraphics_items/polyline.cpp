@@ -12,13 +12,13 @@ PolyLine::PolyLine():
 
 }
 
-void PolyLine::addSegment(fnm_core::Core3DSegment *segment)
+void PolyLine::addSegment(fnm_core::Segment *segment)
 {
    // call protected superclass method
     AbstractPolyLine::addSegment(segment);
 }
 
-QVector<fnm_core::Core3DSegment *> *PolyLine::getSegments()
+QVector<fnm_core::Segment *> *PolyLine::getSegments()
 {
     return AbstractPolyLine::getSegments();
 }

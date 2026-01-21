@@ -15,10 +15,10 @@
 
 namespace fnm_core {
 
-class CoreGradientColor
+class GradientColor
 {
 public:
-    CoreGradientColor();
+    GradientColor();
 
 
     void addStep(double red, double green, double blue, double value);

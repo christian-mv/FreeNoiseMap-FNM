@@ -11,8 +11,8 @@ class PolyLine : public AbstractPolyLine
 public:
     PolyLine();
 
-    void addSegment(fnm_core::Core3DSegment *segment);
-    QVector<fnm_core::Core3DSegment*> * getSegments();
+    void addSegment(fnm_core::Segment *segment);
+    QVector<fnm_core::Segment*> * getSegments();
     int	type() const override;    
 
 };

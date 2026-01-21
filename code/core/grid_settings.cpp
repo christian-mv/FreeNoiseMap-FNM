@@ -3,25 +3,25 @@
 
 namespace fnm_core {
 
-CoreGridSettings::CoreGridSettings(QRectF rect)
+GridSettings::GridSettings(QRectF rect)
 {
-    CoreGridSettings(); // default parameters
+    GridSettings(); // default parameters
     setRect(rect);
 }
 
-unsigned int CoreGridSettings::countRows()
+unsigned int GridSettings::countRows()
 {
 
 
     return static_cast<unsigned int>( this->getRect().width() / getDeltaX() );
 }
 
-unsigned int CoreGridSettings::countColumns()
+unsigned int GridSettings::countColumns()
 {
     return static_cast<unsigned int>( this->getRect().height() / getDeltaY() );
 }
 
-CoreGridSettings::CoreGridSettings()
+GridSettings::GridSettings()
 {
     // grid is 10x10 mt by default
     setDeltaX(10);

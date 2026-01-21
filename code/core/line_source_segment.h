@@ -4,10 +4,10 @@
 
 namespace fnm_core {
 
-class LineSourceSegment : public Core3DSegment
+class LineSourceSegment : public Segment
 {
 public:
-    explicit LineSourceSegment() : Core3DSegment(), Lw_total(0){}
+    explicit LineSourceSegment() : Segment(), Lw_total(0){}
 
     void set_Lw_total(const double &Lw_total){this->Lw_total = Lw_total;}
 

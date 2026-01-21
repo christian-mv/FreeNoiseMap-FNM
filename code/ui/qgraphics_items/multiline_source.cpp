@@ -64,7 +64,7 @@ void MultiLineSource::addSegment(fnm_core::LineSourceSegment *segment)
 
 QVector<fnm_core::LineSourceSegment *> MultiLineSource::getSegments()
 {
-    QVector<fnm_core::Core3DSegment*> *listSegments = AbstractPolyLine::getSegments();
+    QVector<fnm_core::Segment*> *listSegments = AbstractPolyLine::getSegments();
     QVector<fnm_core::LineSourceSegment *> results;
     for(auto segment: *listSegments){
         results.append(static_cast<fnm_core::LineSourceSegment *>(segment));

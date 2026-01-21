@@ -8,10 +8,10 @@
 */
 namespace fnm_core {
 
-class CoreBarrierSegment : public Core3DSegment
+class BarrierSegment : public Segment
 {
 public:
-    explicit CoreBarrierSegment(): Core3DSegment(), height(10){}
+    explicit BarrierSegment(): Segment(), height(10){}
     double get_height() const {return height;}
     void set_height(double value){this->height = value;}
 

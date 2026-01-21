@@ -285,7 +285,7 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
                     // Here we iterate a multi line source to obtain a list of
                     // segmets, then each segment is split in point sources
                     for(fnm_core::LineSourceSegment *segment: currentLineSource->getSegments()){
-                        for(fnm_core::CorePointSource subPointSource: fnm_core::NoiseEngine::fromLineToPointSources(segment,22.0)){
+                        for(fnm_core::PointSource subPointSource: fnm_core::NoiseEngine::fromLineToPointSources(segment,22.0)){
                             fnm_core::NoiseEngine::P2P(&subPointSource, currentReceiver, barriersSegments);
                         }
                     }
@@ -309,10 +309,10 @@ QList<fnm_ui::Barrier *> MainWindow::barrierList() const
     return barriers;
 }
 
-std::vector<fnm_core::CoreBarrierSegment *> MainWindow::barrierSegmentsToStdVector() const
+std::vector<fnm_core::BarrierSegment *> MainWindow::barrierSegmentsToStdVector() const
 {
-    std::vector<fnm_core::CoreBarrierSegment *> segments;
-    QVector<fnm_core::CoreBarrierSegment*> temp;
+    std::vector<fnm_core::BarrierSegment *> segments;
+    QVector<fnm_core::BarrierSegment*> temp;
 
     for(auto item: scene.items()){
         if(item->type() == fnm_core::TypeId::AcousticBarrierItemType){
@@ -363,7 +363,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                  && ui->graphicsView->cursor()==myCursors["pointSource"])
           {
 
-            fnm_core::CorePointSource *myPointSource = new fnm_core::CorePointSource(
+            fnm_core::PointSource *myPointSource = new fnm_core::PointSource(
                         sceneEvent->scenePos().x(),
                         sceneEvent->scenePos().y(),
                         1.2,100);
@@ -431,7 +431,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                  && ui->graphicsView->cursor()==myCursors["receiver"])
           {
             qDebug()<<"HERE";
-            fnm_core::CorePointReceiver *myReceiver = new fnm_core::CorePointReceiver(
+            fnm_core::PointReceiver *myReceiver = new fnm_core::PointReceiver(
                         sceneEvent->scenePos().x(),
                         sceneEvent->scenePos().y(),
                         1.2,0);
@@ -504,7 +504,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                         if(singleLine->p1() != singleLine->p2()){ // it is not necessary to add lines of 0 distance
         //                    polyLineSource->addLine(new MyQGraphicsLineItem(*singleLine));
 
-                            fnm_core::Core3DSegment *newSegment = new fnm_core::Core3DSegment();
+                            fnm_core::Segment *newSegment = new fnm_core::Segment();
                             newSegment->set_p1(singleLine->x1(), singleLine->y1(), 0);
                             newSegment->set_p2(singleLine->x2(), singleLine->y2(), 0);
                             polyLine->addSegment(newSegment);
@@ -614,7 +614,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
                 createShadedLinesItem(sceneEvent->scenePos());
                 if(singleLine->p1() != singleLine->p2()){ // it is not necessary to add lines of 0 distance
-                    fnm_core::CoreBarrierSegment *newSourceSegment = new fnm_core::CoreBarrierSegment();
+                    fnm_core::BarrierSegment *newSourceSegment = new fnm_core::BarrierSegment();
                     newSourceSegment->set_p1(singleLine->x1(), singleLine->y1(), 0);
                     newSourceSegment->set_p2(singleLine->x2(), singleLine->y2(), 0);
                     newSourceSegment->set_height(10);

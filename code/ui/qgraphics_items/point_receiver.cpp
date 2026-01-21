@@ -10,15 +10,15 @@ PointReceiver::PointReceiver():
 
 }
 
-void PointReceiver::setPointReceiver(fnm_core::CorePointReceiver *source)
+void PointReceiver::setPointReceiver(fnm_core::PointReceiver *source)
 {
     AbstractPointSource::setPoint(source);
 }
 
-fnm_core::CorePointReceiver *PointReceiver::getPointReceiver() const
+fnm_core::PointReceiver *PointReceiver::getPointReceiver() const
 {
     auto source  = AbstractPointSource::getPoint();
-    return static_cast<fnm_core::CorePointReceiver *>(source);
+    return static_cast<fnm_core::PointReceiver *>(source);
 }
 
 

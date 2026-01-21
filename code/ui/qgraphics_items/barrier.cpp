@@ -57,17 +57,17 @@ void Barrier::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt, QWid
 //    painter->drawPath(shape());
 }
 
-void Barrier::addSegment(fnm_core::CoreBarrierSegment *segment)
+void Barrier::addSegment(fnm_core::BarrierSegment *segment)
 {
     AbstractPolyLine::addSegment(segment);
 }
 
-QVector<fnm_core::CoreBarrierSegment *> Barrier::getSegments()
+QVector<fnm_core::BarrierSegment *> Barrier::getSegments()
 {
-    QVector<fnm_core::Core3DSegment*> *listSegments = AbstractPolyLine::getSegments();
-    QVector<fnm_core::CoreBarrierSegment *> results;
+    QVector<fnm_core::Segment*> *listSegments = AbstractPolyLine::getSegments();
+    QVector<fnm_core::BarrierSegment *> results;
     for(auto segment: *listSegments){
-        results.append(static_cast<fnm_core::CoreBarrierSegment *>(segment));
+        results.append(static_cast<fnm_core::BarrierSegment *>(segment));
     }
 
     return results;

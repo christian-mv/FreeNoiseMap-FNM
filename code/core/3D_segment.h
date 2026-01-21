@@ -3,10 +3,10 @@
 
 namespace fnm_core {
 
-class Core3DSegment
+class Segment
 {
 public:
-    Core3DSegment();
+    Segment();
 
     void set_x1(const double &x1){this->x1 = x1;}
     void set_y1(const double &y1){this->y1 = y1;}

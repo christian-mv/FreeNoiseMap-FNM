@@ -4,13 +4,13 @@
 
 namespace fnm_core {
 
-class CorePointSource: public CorePoint
+class PointSource: public Point
 {
 public:
 
-    explicit CorePointSource(double in_x=0.0, double in_y=0.0,
+    explicit PointSource(double in_x=0.0, double in_y=0.0,
                                 double in_z=0.0, double in_Lw=-88.0):
-        CorePoint(in_x, in_y, in_z), Lw(in_Lw){}
+        Point(in_x, in_y, in_z), Lw(in_Lw){}
 
     void set_Lw(const double &Lw){this->Lw = Lw;}
 

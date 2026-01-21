@@ -4,11 +4,11 @@
 
 namespace fnm_core {
 
-class CoreGridSettings
+class GridSettings
 {
 public:
-    CoreGridSettings();
-    explicit CoreGridSettings(QRectF rect);
+    GridSettings();
+    explicit GridSettings(QRectF rect);
 
     void setRect(const QRectF &newRect){ this->rectGrid = newRect; }
     void setDeltaX(const double &dx=10){ this->dx=dx; }

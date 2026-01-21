@@ -28,7 +28,7 @@ namespace  NoiseEngine
 
     std::vector< std::tuple<double, double, double> > calculateDiffractionPathPoints(const double &x0, const double &y0, const double &z0,
                                                                                const double &x1, const double &y1, const double &z1,
-                                                                               const std::vector<CoreBarrierSegment*> &barrierSegments);
+                                                                               const std::vector<BarrierSegment*> &barrierSegments);
 
 
 
@@ -41,15 +41,15 @@ namespace  NoiseEngine
     MATRIX_OF_DOUBLES createMatrixOfDoubles(unsigned int m, unsigned int n);
     int intRandom(int min, int max);
 
-    void P2P(CorePointSource *pointSource, CorePointReceiver *receiver,
-             const std::vector<CoreBarrierSegment*> &barrierSegments);
+    void P2P(PointSource *pointSource, PointReceiver *receiver,
+             const std::vector<BarrierSegment*> &barrierSegments);
 
 
     double attenuation_divergence(const double & distance);
 
-    double attenuation_barrier(const CorePointSource* const pointSource,
-                               const CorePointReceiver* const receiver,
-                               const std::vector<CoreBarrierSegment*> &barrierSegments,
+    double attenuation_barrier(const PointSource* const pointSource,
+                               const PointReceiver* const receiver,
+                               const std::vector<BarrierSegment*> &barrierSegments,
                                const double &frequency);
 
 
@@ -85,7 +85,7 @@ namespace  NoiseEngine
                             const double &t3,
                             const double &y3);
 
-    std::vector<CorePointSource> fromLineToPointSources(const LineSourceSegment *line,
+    std::vector<PointSource> fromLineToPointSources(const LineSourceSegment *line,
                                                            const double &delta);
 
 

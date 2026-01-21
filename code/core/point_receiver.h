@@ -4,14 +4,14 @@
 
 namespace fnm_core {
 
-class CorePointReceiver: public CorePoint
+class PointReceiver: public Point
 {
 
 public:
-    explicit CorePointReceiver(double in_x=0.0, double in_y=0.0,
+    explicit PointReceiver(double in_x=0.0, double in_y=0.0,
                                    double in_z=0.0, double in_Leq=-88.0,
                                    bool interpolated = false):
-        CorePoint(in_x, in_y, in_z),
+        Point(in_x, in_y, in_z),
         Leq(in_Leq), interpolated(interpolated){}
 
     void set_Leq(const double &Leq){this->Leq = Leq;}
