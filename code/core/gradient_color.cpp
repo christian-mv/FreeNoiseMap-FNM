@@ -1,8 +1,9 @@
 #include "gradient_color.h"
 #include <QDebug>
 
+namespace fnm {
 
-FnmCoreGradientColor::FnmCoreGradientColor()
+CoreGradientColor::CoreGradientColor()
 {
 
 //    // try the next values
@@ -20,7 +21,7 @@ FnmCoreGradientColor::FnmCoreGradientColor()
 
 }
 
-void FnmCoreGradientColor::addStep(double red, double green, double blue, double value)
+void CoreGradientColor::addStep(double red, double green, double blue, double value)
 {
 
     if(red<0 || red >1 || green<0 || green >1 || blue<0 || blue >1){
@@ -32,7 +33,7 @@ void FnmCoreGradientColor::addStep(double red, double green, double blue, double
      steps.push_back(temp);
 }
 
-void FnmCoreGradientColor::sortStepsAscending()
+void CoreGradientColor::sortStepsAscending()
 {
 //     https://stackoverflow.com/questions/23030267/custom-sorting-a-vector-of-tuples
     std::sort(steps.begin(),steps.end(),
@@ -44,7 +45,7 @@ void FnmCoreGradientColor::sortStepsAscending()
 }
 
 
-COLOR_RGB FnmCoreGradientColor::colorAt(const double &Leq)
+COLOR_RGB CoreGradientColor::colorAt(const double &Leq)
 {
     COLOR_RGB colorResult;
 
@@ -92,14 +93,14 @@ COLOR_RGB FnmCoreGradientColor::colorAt(const double &Leq)
     return colorResult;
 }
 
-QVector<std::tuple<double, double, double, double>> FnmCoreGradientColor::getSteps() const
+QVector<std::tuple<double, double, double, double>> CoreGradientColor::getSteps() const
 {
     return this->steps;
 }
 
 
 
-COLOR_RGB FnmCoreGradientColor::interpolateColor(const double &r1, /* https://www.alanzucconi.com/2016/01/06/colour-interpolation/*/
+COLOR_RGB CoreGradientColor::interpolateColor(const double &r1, /* https://www.alanzucconi.com/2016/01/06/colour-interpolation/*/
                                           const double &g1,
                                           const double &b1,
                                           const double &r2,
@@ -115,3 +116,4 @@ COLOR_RGB FnmCoreGradientColor::interpolateColor(const double &r1, /* https://ww
     return color;
 }
 
+}

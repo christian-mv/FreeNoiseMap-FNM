@@ -2,18 +2,19 @@
 #include "types_namespace.h"
 #include <QPainter>
 
+namespace fnm {
 
-FnmQgraphicsItemRasterPixmap::FnmQgraphicsItemRasterPixmap()
+QgraphicsItemRasterPixmap::QgraphicsItemRasterPixmap()
 {
     setAcceptHoverEvents(true);
 }
 
-int FnmQgraphicsItemRasterPixmap::type() const
+int QgraphicsItemRasterPixmap::type() const
 {
-    return FNM_TypeId::RasterPixmapItemType; // represents a custom item
+    return fnm::TypeId::RasterPixmapItemType; // represents a custom item
 }
 
-void FnmQgraphicsItemRasterPixmap::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void QgraphicsItemRasterPixmap::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QGraphicsPixmapItem::paint(painter, option, widget);
 
@@ -27,6 +28,4 @@ void FnmQgraphicsItemRasterPixmap::paint(QPainter *painter, const QStyleOptionGr
 
 }
 
-
-
-
+}

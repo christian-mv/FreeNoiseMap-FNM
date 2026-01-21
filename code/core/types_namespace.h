@@ -1,7 +1,8 @@
 #ifndef FNM_CORE_TYPES_NAMESPACE_H
 #define FNM_CORE_TYPES_NAMESPACE_H
 
-namespace FNM_TypeId{
+namespace fnm {
+namespace TypeId{
     enum {
         RasterPixmapItemType =  65536,
         PointSourceItemType = 65537,
@@ -10,6 +11,7 @@ namespace FNM_TypeId{
         PolyLineItemType = 65540,
         PointReceiverItemType = 65541
          };
+}
 }
 
 

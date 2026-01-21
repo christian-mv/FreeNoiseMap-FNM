@@ -3,18 +3,21 @@
 
 #include "abstract_polyline.h"
 
-class FnmLineSourceSegment;
+namespace fnm { class LineSourceSegment; }
 
-class FnmGraphicsItemMultiLineSource : public FnmQgraphicsItemAbstractPolyLine
+namespace fnm {
+
+class GraphicsItemMultiLineSource : public QgraphicsItemAbstractPolyLine
 {
 public:
-    FnmGraphicsItemMultiLineSource();
+    GraphicsItemMultiLineSource();
 
     void paint(QPainter *p, const QStyleOptionGraphicsItem *opt, QWidget *w) override;
-    void addSegment(FnmLineSourceSegment *segment);
-    QVector<FnmLineSourceSegment*> getSegments();
+    void addSegment(fnm::LineSourceSegment *segment);
+    QVector<fnm::LineSourceSegment*> getSegments();
     int	type() const override;
 
 };
 
+}
 #endif // MY_QGRAPHICS_MULTILINE_SOURCE_ITEM_H

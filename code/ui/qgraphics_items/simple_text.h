@@ -3,11 +3,13 @@
 
 #include<QGraphicsSimpleTextItem>
 
-class FnmQGraphicsSimpleTextItem : public QGraphicsSimpleTextItem
+namespace fnm {
+
+class QGraphicsSimpleTextItem : public ::QGraphicsSimpleTextItem
 {
 public:
 
-    FnmQGraphicsSimpleTextItem(QGraphicsItem *parent = nullptr);
+    QGraphicsSimpleTextItem(QGraphicsItem *parent = nullptr);
 
 protected:
 
@@ -16,4 +18,5 @@ protected:
 
 };
 
+}
 #endif // MYQGRAPHICSSIMPLETEXTITEM_H

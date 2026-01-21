@@ -2,17 +2,19 @@
 #define FNM_QGRAPHICS_ITEM_POINT_SOURCE_H
 
 #include "abstract_point.h"
-class FnmCorePointSource;
+namespace fnm { class CorePointSource; }
 
+namespace fnm {
 
-class FnmQgraphicsItemPointSource : public FnmQgraphicsItemAbstractPointSource
+class QgraphicsItemPointSource : public QgraphicsItemAbstractPointSource
 {
 public:
-    FnmQgraphicsItemPointSource();
-    void setPointSource(FnmCorePointSource *source);
-    FnmCorePointSource * getPointSource()const;    
+    QgraphicsItemPointSource();
+    void setPointSource(fnm::CorePointSource *source);
+    fnm::CorePointSource * getPointSource()const;    
     virtual int	type() const override;
 
 };
 
+}
 #endif

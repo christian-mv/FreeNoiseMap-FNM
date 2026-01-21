@@ -2,13 +2,15 @@
 #define FNM_CORE_POINT_SOURCE_H
 #include "point.h"
 
-class FnmCorePointSource: public FnmCorePoint
+namespace fnm {
+
+class CorePointSource: public CorePoint
 {
 public:
 
-    explicit FnmCorePointSource(double in_x=0.0, double in_y=0.0,
+    explicit CorePointSource(double in_x=0.0, double in_y=0.0,
                                 double in_z=0.0, double in_Lw=-88.0):
-        FnmCorePoint(in_x, in_y, in_z), Lw(in_Lw){}
+        CorePoint(in_x, in_y, in_z), Lw(in_Lw){}
 
     void set_Lw(const double &Lw){this->Lw = Lw;}
 
@@ -20,4 +22,5 @@ private:
 
 };
 
+}
 #endif // POINTSOURCE_H

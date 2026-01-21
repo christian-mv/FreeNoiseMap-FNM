@@ -4,16 +4,18 @@
 #include "abstract_polyline.h"
 #include "3D_segment.h"
 
+namespace fnm {
 
-class FnmQgraphicsItemPolyLine : public FnmQgraphicsItemAbstractPolyLine
+class QgraphicsItemPolyLine : public QgraphicsItemAbstractPolyLine
 {
 public:
-    FnmQgraphicsItemPolyLine();
+    QgraphicsItemPolyLine();
 
-    void addSegment(FnmCore3DSegment *segment);
-    QVector<FnmCore3DSegment*> * getSegments();
+    void addSegment(fnm::Core3DSegment *segment);
+    QVector<fnm::Core3DSegment*> * getSegments();
     int	type() const override;    
 
 };
 
+}
 #endif

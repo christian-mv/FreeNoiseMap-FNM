@@ -14,30 +14,32 @@ class  QProgressDialog;
 
 using namespace std;
 
-class FnmReceiversGrid
+namespace fnm {
+
+class ReceiversGrid
 {
 public:
-    FnmReceiversGrid();
-    FnmReceiversGrid(const FnmCoreGridSettings &gridSettings);
-    void setGrid(const FnmCoreGridSettings &gridSettings);
-    void setGradient(const FnmCoreGradientColor gradientColor);
-    bool paintGrid(QImage &image, const FnmCoreGridSettings &myGrid,  QProgressDialog &progress);
+    ReceiversGrid();
+    ReceiversGrid(const fnm::CoreGridSettings &gridSettings);
+    void setGrid(const fnm::CoreGridSettings &gridSettings);
+    void setGradient(const fnm::CoreGradientColor gradientColor);
+    bool paintGrid(QImage &image, const fnm::CoreGridSettings &myGrid,  QProgressDialog &progress);
     void setNoiseColor(const double Leq, QColor * colorDecibel);
-    std::vector< std::vector<FnmCorePointReceiver *> > matrix;
-    FnmCoreGridSettings getGridSettings()const {return this->gridSettings;}
+    std::vector< std::vector<fnm::CorePointReceiver *> > matrix;
+    fnm::CoreGridSettings getGridSettings()const {return this->gridSettings;}
     void resetNoiseReceiver();
 //    string gridStatistics(); // this doesn't work on android NDK
     void interpolateGrid();
     void clearInterpolatedReceivers();
 
 private:
-    FnmCoreGridSettings gridSettings;
+    fnm::CoreGridSettings gridSettings;
     void setMatrixOfReceivers(unsigned int n, unsigned int m);
-    QRectF receiverRect(FnmCorePointReceiver * receiver);
+    QRectF receiverRect(fnm::CorePointReceiver * receiver);
     QRectF receiverRect(const double x, const double y);
-    FnmCoreGradientColor gradientColor;
+    fnm::CoreGradientColor gradientColor;
 
 };
 
-
+}
 #endif // RECEIVERSGRID_H

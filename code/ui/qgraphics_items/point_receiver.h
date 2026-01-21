@@ -2,17 +2,19 @@
 #define FNM_QGRAPHICS_ITEM_POINT_RECEIVER_H
 
 #include "abstract_point.h"
-class FnmCorePointReceiver;
+namespace fnm { class CorePointReceiver; }
 
+namespace fnm {
 
-class FnmQgraphicsItemPointReceiver : public FnmQgraphicsItemAbstractPointSource
+class QgraphicsItemPointReceiver : public QgraphicsItemAbstractPointSource
 {
 public:
-    FnmQgraphicsItemPointReceiver();
-    void setPointReceiver(FnmCorePointReceiver *source);
-    FnmCorePointReceiver* getPointReceiver()const;
+    QgraphicsItemPointReceiver();
+    void setPointReceiver(fnm::CorePointReceiver *source);
+    fnm::CorePointReceiver* getPointReceiver()const;
     virtual int	type() const override;
 
 };
 
+}
 #endif

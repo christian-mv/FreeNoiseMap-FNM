@@ -4,20 +4,21 @@
 
 #include "abstract_polyline.h"
 
-class FnmCoreBarrierSegment;
+namespace fnm { class CoreBarrierSegment; }
 
+namespace fnm {
 
-class FnmQGraphicsItemBarrier : public FnmQgraphicsItemAbstractPolyLine
+class QGraphicsItemBarrier : public QgraphicsItemAbstractPolyLine
 {
 public:
-    FnmQGraphicsItemBarrier();
+    QGraphicsItemBarrier();
 
     void paint(QPainter *p, const QStyleOptionGraphicsItem *opt, QWidget *w) override;
-    void addSegment(FnmCoreBarrierSegment *segment);
-    QVector<FnmCoreBarrierSegment*> getSegments();
+    void addSegment(fnm::CoreBarrierSegment *segment);
+    QVector<fnm::CoreBarrierSegment*> getSegments();
     int	type() const override;
 
 };
 
-
+}
 #endif

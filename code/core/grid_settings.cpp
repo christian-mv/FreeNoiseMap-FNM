@@ -1,28 +1,32 @@
 #include "grid_settings.h"
 #include <QDebug>
 
-FnmCoreGridSettings::FnmCoreGridSettings(QRectF rect)
+namespace fnm {
+
+CoreGridSettings::CoreGridSettings(QRectF rect)
 {
-    FnmCoreGridSettings(); // default parameters
+    CoreGridSettings(); // default parameters
     setRect(rect);
 }
 
-unsigned int FnmCoreGridSettings::countRows()
+unsigned int CoreGridSettings::countRows()
 {
 
 
     return static_cast<unsigned int>( this->getRect().width() / getDeltaX() );
 }
 
-unsigned int FnmCoreGridSettings::countColumns()
+unsigned int CoreGridSettings::countColumns()
 {
     return static_cast<unsigned int>( this->getRect().height() / getDeltaY() );
 }
 
-FnmCoreGridSettings::FnmCoreGridSettings()
+CoreGridSettings::CoreGridSettings()
 {
     // grid is 10x10 mt by default
     setDeltaX(10);
     setDeltaY(10);
     setInterpolationFactor(1); // 1 means not interpolated
+}
+
 }

@@ -4,11 +4,13 @@
 #include <QGraphicsView>
 #include <QMouseEvent>
 
-class FnmQGraphicsView : public QGraphicsView
+namespace fnm {
+
+class QGraphicsView : public ::QGraphicsView
 {
 
 public:
-    FnmQGraphicsView(QWidget *parent = nullptr);
+    QGraphicsView(QWidget *parent = nullptr);
 
     void setCursor(const QCursor &cursor);
     void resetTotalScaleFactor();
@@ -30,4 +32,5 @@ protected:
 
 };
 
+}
 #endif // MYGRAPHICSVIEW_H

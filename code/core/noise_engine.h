@@ -11,7 +11,8 @@
 #include "barrier_segment.h"
 
 
-namespace  FnmCoreNoiseEngine
+namespace fnm {
+namespace  NoiseEngine
 {    
     const double pi = 3.14159265359;
     const double euler = 2.71828182845;
@@ -27,7 +28,7 @@ namespace  FnmCoreNoiseEngine
 
     std::vector< std::tuple<double, double, double> > calculateDiffractionPathPoints(const double &x0, const double &y0, const double &z0,
                                                                                const double &x1, const double &y1, const double &z1,
-                                                                               const std::vector<FnmCoreBarrierSegment*> &barrierSegments);
+                                                                               const std::vector<CoreBarrierSegment*> &barrierSegments);
 
 
 
@@ -40,15 +41,15 @@ namespace  FnmCoreNoiseEngine
     MATRIX_OF_DOUBLES createMatrixOfDoubles(unsigned int m, unsigned int n);
     int intRandom(int min, int max);
 
-    void P2P(FnmCorePointSource *pointSource, FnmCorePointReceiver *receiver,
-             const std::vector<FnmCoreBarrierSegment*> &barrierSegments);
+    void P2P(CorePointSource *pointSource, CorePointReceiver *receiver,
+             const std::vector<CoreBarrierSegment*> &barrierSegments);
 
 
     double attenuation_divergence(const double & distance);
 
-    double attenuation_barrier(const FnmCorePointSource* const pointSource,
-                               const FnmCorePointReceiver* const receiver,
-                               const std::vector<FnmCoreBarrierSegment*> &barrierSegments,
+    double attenuation_barrier(const CorePointSource* const pointSource,
+                               const CorePointReceiver* const receiver,
+                               const std::vector<CoreBarrierSegment*> &barrierSegments,
                                const double &frequency);
 
 
@@ -84,11 +85,12 @@ namespace  FnmCoreNoiseEngine
                             const double &t3,
                             const double &y3);
 
-    std::vector<FnmCorePointSource> fromLineToPointSources(const FnmLineSourceSegment *line,
+    std::vector<CorePointSource> fromLineToPointSources(const LineSourceSegment *line,
                                                            const double &delta);
 
 
 
 };
+}
 
 #endif // DYNAMIC_MATRIX_H

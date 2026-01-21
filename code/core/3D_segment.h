@@ -1,11 +1,12 @@
 #ifndef FNM_CORE_3D_SEGMENT_H
 #define FNM_CORE_3D_SEGMENT_H
 
+namespace fnm {
 
-class FnmCore3DSegment
+class Core3DSegment
 {
 public:
-    FnmCore3DSegment();
+    Core3DSegment();
 
     void set_x1(const double &x1){this->x1 = x1;}
     void set_y1(const double &y1){this->y1 = y1;}
@@ -36,4 +37,5 @@ private:
 
 };
 
+}
 #endif // FNM3DSEGMENT_H

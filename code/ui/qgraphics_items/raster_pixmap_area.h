@@ -4,10 +4,12 @@
 
 class QPainter;
 
-class FnmQgraphicsItemRasterPixmap : public QGraphicsPixmapItem
+namespace fnm {
+
+class QgraphicsItemRasterPixmap : public QGraphicsPixmapItem
 {
 public:
-    FnmQgraphicsItemRasterPixmap();
+    QgraphicsItemRasterPixmap();
     virtual int	type() const override;
 
 
@@ -19,4 +21,5 @@ public:
 
 };
 
+}
 #endif // MYRASTERPIXMAPITEMAREA_H

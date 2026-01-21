@@ -4,14 +4,15 @@
 #include <QPainter>
 #include <QDebug>
 
+namespace fnm {
 
-FnmGraphicsItemMultiLineSource::FnmGraphicsItemMultiLineSource():
-    FnmQgraphicsItemAbstractPolyLine()
+GraphicsItemMultiLineSource::GraphicsItemMultiLineSource():
+    QgraphicsItemAbstractPolyLine()
 {
 
 }
 
-void FnmGraphicsItemMultiLineSource::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt, QWidget *w)
+void GraphicsItemMultiLineSource::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt, QWidget *w)
 {
     Q_UNUSED(opt)
     Q_UNUSED(w)
@@ -56,17 +57,17 @@ void FnmGraphicsItemMultiLineSource::paint(QPainter *painter, const QStyleOption
     painter->drawPath(shape());
 }
 
-void FnmGraphicsItemMultiLineSource::addSegment(FnmLineSourceSegment *segment)
+void GraphicsItemMultiLineSource::addSegment(fnm::LineSourceSegment *segment)
 {
-    FnmQgraphicsItemAbstractPolyLine::addSegment(segment);
+    QgraphicsItemAbstractPolyLine::addSegment(segment);
 }
 
-QVector<FnmLineSourceSegment *> FnmGraphicsItemMultiLineSource::getSegments()
+QVector<fnm::LineSourceSegment *> GraphicsItemMultiLineSource::getSegments()
 {
-    QVector<FnmCore3DSegment*> *listSegments = FnmQgraphicsItemAbstractPolyLine::getSegments();
-    QVector<FnmLineSourceSegment *> results;
+    QVector<fnm::Core3DSegment*> *listSegments = QgraphicsItemAbstractPolyLine::getSegments();
+    QVector<fnm::LineSourceSegment *> results;
     for(auto segment: *listSegments){
-        results.append(static_cast<FnmLineSourceSegment *>(segment));
+        results.append(static_cast<fnm::LineSourceSegment *>(segment));
     }
 
     return results;
@@ -74,7 +75,9 @@ QVector<FnmLineSourceSegment *> FnmGraphicsItemMultiLineSource::getSegments()
 
 
 
-int FnmGraphicsItemMultiLineSource::type() const
+int GraphicsItemMultiLineSource::type() const
 {
-    return FNM_TypeId::MultiLineSourceItemType;
+    return fnm::TypeId::MultiLineSourceItemType;
+}
+
 }

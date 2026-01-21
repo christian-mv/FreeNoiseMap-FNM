@@ -9,7 +9,9 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QStyleOptionGraphicsItem>
 
-FnmQgraphicsItemAbstractPointSource::FnmQgraphicsItemAbstractPointSource()
+namespace fnm {
+
+QgraphicsItemAbstractPointSource::QgraphicsItemAbstractPointSource()
 {    
     setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
 //    setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -17,7 +19,7 @@ FnmQgraphicsItemAbstractPointSource::FnmQgraphicsItemAbstractPointSource()
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
 }
 
-void FnmQgraphicsItemAbstractPointSource::setPoint(FnmCorePoint *source)
+void QgraphicsItemAbstractPointSource::setPoint(fnm::CorePoint *source)
 {
     this->fnmCorePoint = source;
 
@@ -35,14 +37,14 @@ void FnmQgraphicsItemAbstractPointSource::setPoint(FnmCorePoint *source)
     this->setTransform(transform);
 }
 
-FnmCorePoint *FnmQgraphicsItemAbstractPointSource::getPoint() const
+fnm::CorePoint *QgraphicsItemAbstractPointSource::getPoint() const
 {
     return fnmCorePoint;
 }
 
 
 
-QRectF FnmQgraphicsItemAbstractPointSource::boundingRect() const
+QRectF QgraphicsItemAbstractPointSource::boundingRect() const
 {
 
     // if the app is running in a mobile or tablet,
@@ -59,7 +61,7 @@ QRectF FnmQgraphicsItemAbstractPointSource::boundingRect() const
 
 // reimplamenting shape to guarantee that the selection area is enlarged
 // this is applying for android and IOS devices.
-QPainterPath FnmQgraphicsItemAbstractPointSource::shape() const
+QPainterPath QgraphicsItemAbstractPointSource::shape() const
 {
     QPainterPath path;
     path.addRect(this->boundingRect());
@@ -68,7 +70,7 @@ QPainterPath FnmQgraphicsItemAbstractPointSource::shape() const
 
 
 
-void FnmQgraphicsItemAbstractPointSource::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void QgraphicsItemAbstractPointSource::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     if(isSelected()){
         QPen pen(Qt::black);
@@ -85,7 +87,7 @@ void FnmQgraphicsItemAbstractPointSource::paint(QPainter *painter, const QStyleO
     }
 }
 
-QVariant FnmQgraphicsItemAbstractPointSource::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+QVariant QgraphicsItemAbstractPointSource::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
 
     if (change == ItemPositionChange &&  scene() ) {        
@@ -98,13 +100,10 @@ QVariant FnmQgraphicsItemAbstractPointSource::itemChange(QGraphicsItem::Graphics
     return QGraphicsItem::itemChange(change, value);
 }
 
-void FnmQgraphicsItemAbstractPointSource::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+void QgraphicsItemAbstractPointSource::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     setCursor(Qt::PointingHandCursor);
     QGraphicsPixmapItem::hoverEnterEvent(event);
 }
 
-//void PointSourcePixmapItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
-//{
-//    QGraphicsItem::hoverLeaveEvent(event);
-//}
+}

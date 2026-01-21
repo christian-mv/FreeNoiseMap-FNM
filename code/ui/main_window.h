@@ -9,16 +9,18 @@
 #include "receivers_grid.h"
 #include "qgraphics_items/raster_pixmap_area.h"
 
+namespace fnm {
+class CorePointSource;
+class CoreBarrierSegment;
+class QgraphicsItemPolyLine;
+class GraphicsItemMultiLineSource;
+class QgraphicsItemPointSource;
+class QGraphicsItemBarrier;
+class GraphicsItemShadedLine;
+}
 
-class FnmCorePointSource;
-class FnmCoreBarrierSegment;
-class FnmQgraphicsItemPolyLine;
 class QLineF;
-class FnmGraphicsItemMultiLineSource;
-class FnmQgraphicsItemPointSource;
-class FnmQGraphicsItemBarrier;
 class QProgressDialog;
-class FnmGraphicsItemShadedLine;
 #include <QActionGroup>
 
 namespace Ui {
@@ -56,9 +58,9 @@ private:
     Ui::MainWindow *ui;
     QGraphicsScene scene;
     QImage *image;
-    FnmQgraphicsItemRasterPixmap pixmapItem;
-    FnmCoreGridSettings myGrid;
-    FnmReceiversGrid receivers;
+    fnm::QgraphicsItemRasterPixmap pixmapItem;
+    fnm::CoreGridSettings myGrid;
+    fnm::ReceiversGrid receivers;
     QHash<QString, QCursor> myCursors;
     QActionGroup *menuActionsGroup; // used to make the grapic menu mutually exclusive
     QImage invertImageOnYAxes(const QImage &image);
@@ -66,8 +68,8 @@ private:
     void makeMenuMutualExclusive();
     void loadDefaultGrid();
     bool calculateNoiseFromSources(QProgressDialog &progress);
-    QList<FnmQGraphicsItemBarrier *> barrierList() const; // returns all barriers from the scene
-    std::vector<FnmCoreBarrierSegment*> barrierSegmentsToStdVector() const;
+    QList<fnm::QGraphicsItemBarrier *> barrierList() const; // returns all barriers from the scene
+    std::vector<fnm::CoreBarrierSegment*> barrierSegmentsToStdVector() const;
     void resetPixmapArea();
     void movingItemsOnTheScene(const QGraphicsSceneMouseEvent *sceneMouseEvent);
     void updateShadedLinesItem(QPointF pos);
@@ -78,13 +80,13 @@ private:
     void releaseLineItemEdition();
 
 
-    FnmGraphicsItemShadedLine *shaded_line = nullptr; // auxiliary line when dragging items
+    fnm::GraphicsItemShadedLine *shaded_line = nullptr; // auxiliary line when dragging items
     QPointF p1_shaded_line; // initial coordinate for shaded_line
 
     QLineF *singleLine;
-    FnmQgraphicsItemPolyLine *polyLine;
-    FnmGraphicsItemMultiLineSource *multiLineSource;
-    FnmQGraphicsItemBarrier *acousticBarrier;
+    fnm::QgraphicsItemPolyLine *polyLine;
+    fnm::GraphicsItemMultiLineSource *multiLineSource;
+    fnm::QGraphicsItemBarrier *acousticBarrier;
 
 
 protected:

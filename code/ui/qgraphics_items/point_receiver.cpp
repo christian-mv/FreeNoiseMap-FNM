@@ -2,26 +2,29 @@
 #include "types_namespace.h"
 #include "core/point_receiver.h"
 
+namespace fnm {
 
-FnmQgraphicsItemPointReceiver::FnmQgraphicsItemPointReceiver():
-    FnmQgraphicsItemAbstractPointSource()
+QgraphicsItemPointReceiver::QgraphicsItemPointReceiver():
+    QgraphicsItemAbstractPointSource()
 {    
 
 }
 
-void FnmQgraphicsItemPointReceiver::setPointReceiver(FnmCorePointReceiver *source)
+void QgraphicsItemPointReceiver::setPointReceiver(fnm::CorePointReceiver *source)
 {
-    FnmQgraphicsItemAbstractPointSource::setPoint(source);
+    QgraphicsItemAbstractPointSource::setPoint(source);
 }
 
-FnmCorePointReceiver *FnmQgraphicsItemPointReceiver::getPointReceiver() const
+fnm::CorePointReceiver *QgraphicsItemPointReceiver::getPointReceiver() const
 {
-    auto source  = FnmQgraphicsItemAbstractPointSource::getPoint();
-    return static_cast<FnmCorePointReceiver *>(source);
+    auto source  = QgraphicsItemAbstractPointSource::getPoint();
+    return static_cast<fnm::CorePointReceiver *>(source);
 }
 
 
-int FnmQgraphicsItemPointReceiver::type() const
+int QgraphicsItemPointReceiver::type() const
 {
-    return FNM_TypeId::PointReceiverItemType; // represents a custom item
+    return fnm::TypeId::PointReceiverItemType; // represents a custom item
+}
+
 }

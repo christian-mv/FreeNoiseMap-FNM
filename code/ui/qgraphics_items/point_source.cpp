@@ -2,26 +2,29 @@
 #include "types_namespace.h"
 #include "core/point_source.h"
 
+namespace fnm {
 
-FnmQgraphicsItemPointSource::FnmQgraphicsItemPointSource():
-    FnmQgraphicsItemAbstractPointSource()
+QgraphicsItemPointSource::QgraphicsItemPointSource():
+    QgraphicsItemAbstractPointSource()
 {    
 
 }
 
-void FnmQgraphicsItemPointSource::setPointSource(FnmCorePointSource *source)
+void QgraphicsItemPointSource::setPointSource(fnm::CorePointSource *source)
 {
-    FnmQgraphicsItemAbstractPointSource::setPoint(source);
+    QgraphicsItemAbstractPointSource::setPoint(source);
 }
 
-FnmCorePointSource *FnmQgraphicsItemPointSource::getPointSource() const
+fnm::CorePointSource *QgraphicsItemPointSource::getPointSource() const
 {
-    auto source  = FnmQgraphicsItemAbstractPointSource::getPoint();
-    return static_cast<FnmCorePointSource *>(source);
+    auto source  = QgraphicsItemAbstractPointSource::getPoint();
+    return static_cast<fnm::CorePointSource *>(source);
 }
 
 
-int FnmQgraphicsItemPointSource::type() const
+int QgraphicsItemPointSource::type() const
 {
-    return FNM_TypeId::PointSourceItemType; // represents a custom item
+    return fnm::TypeId::PointSourceItemType; // represents a custom item
+}
+
 }

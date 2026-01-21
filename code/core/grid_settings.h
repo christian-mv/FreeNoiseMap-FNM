@@ -2,11 +2,13 @@
 #define FNM_CORE_GRID_SETTINGS_H
 #include<QRectF>
 
-class FnmCoreGridSettings
+namespace fnm {
+
+class CoreGridSettings
 {
 public:
-    FnmCoreGridSettings();
-    explicit FnmCoreGridSettings(QRectF rect);
+    CoreGridSettings();
+    explicit CoreGridSettings(QRectF rect);
 
     void setRect(const QRectF &newRect){ this->rectGrid = newRect; }
     void setDeltaX(const double &dx=10){ this->dx=dx; }
@@ -34,4 +36,5 @@ private:
 
 };
 
+}
 #endif // NOISEGRID_H

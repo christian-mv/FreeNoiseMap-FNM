@@ -10,13 +10,14 @@
 #include "shaded_line.h"
 #include "simple_text.h"
 
+namespace fnm {
 
-FnmGraphicsItemShadedLine::FnmGraphicsItemShadedLine()
+GraphicsItemShadedLine::GraphicsItemShadedLine()
 {
-    distanceText = new FnmQGraphicsSimpleTextItem(this);
-    horizontalText = new FnmQGraphicsSimpleTextItem(this);
-    verticalText = new FnmQGraphicsSimpleTextItem(this);
-    degreesText = new FnmQGraphicsSimpleTextItem(this);
+    distanceText = new QGraphicsSimpleTextItem(this);
+    horizontalText = new QGraphicsSimpleTextItem(this);
+    verticalText = new QGraphicsSimpleTextItem(this);
+    degreesText = new QGraphicsSimpleTextItem(this);
 
 //    distanceText->setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
 //    horizontalText->setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
@@ -24,7 +25,7 @@ FnmGraphicsItemShadedLine::FnmGraphicsItemShadedLine()
 
 }
 
-QRectF FnmGraphicsItemShadedLine::boundingRect() const
+QRectF GraphicsItemShadedLine::boundingRect() const
 {
 
     // expandimos un poco el rectangulo para garantizar que el
@@ -37,7 +38,7 @@ QRectF FnmGraphicsItemShadedLine::boundingRect() const
 }
 
 
-void FnmGraphicsItemShadedLine::paint(QPainter *painter,
+void GraphicsItemShadedLine::paint(QPainter *painter,
                                      const QStyleOptionGraphicsItem *option,
                                      QWidget *widget)
 {
@@ -137,34 +138,34 @@ void FnmGraphicsItemShadedLine::paint(QPainter *painter,
         distanceText->setPos(line().p2().x()+offset,line().p2().y()+offset);
     }
 
-    if(verticalText->collidesWithItem(distanceText,Qt::IntersectsItemBoundingRect)){// vertical text and distance text
+    if(verticalText->collidesWithItem(distanceText,Qt::IntersectsItemBoundingRect)){
 
         verticalText->setPos(verticalText->x(),verticalText->y()-distanceText->sceneBoundingRect().height());
 
     }
 
-    if(verticalText->collidesWithItem(horizontalText,Qt::IntersectsItemBoundingRect)){// vertical text and distance text
+    if(verticalText->collidesWithItem(horizontalText,Qt::IntersectsItemBoundingRect)){
 
         verticalText->setPos(horizontalText->x(),horizontalText->y()-horizontalText->sceneBoundingRect().height());
     }
 
 
-    if(horizontalText->collidesWithItem(distanceText,Qt::IntersectsItemBoundingRect)){ // horizontal text and distance text
+    if(horizontalText->collidesWithItem(distanceText,Qt::IntersectsItemBoundingRect)){
 
         horizontalText->setPos(distanceText->x(),distanceText->y()-distanceText->sceneBoundingRect().height());
     }
 
-    if(horizontalText->collidesWithItem(degreesText,Qt::IntersectsItemBoundingRect)){ // horizontal text and degrees text
+    if(horizontalText->collidesWithItem(degreesText,Qt::IntersectsItemBoundingRect)){
 
         degreesText->setPos(degreesText->x(),degreesText->y()-horizontalText->sceneBoundingRect().height());
     }
 
-    if(verticalText->collidesWithItem(degreesText,Qt::IntersectsItemBoundingRect)){ // horizontal text and degrees text
+    if(verticalText->collidesWithItem(degreesText,Qt::IntersectsItemBoundingRect)){
 
         degreesText->setPos(verticalText->x(),degreesText->y()-verticalText->sceneBoundingRect().height());
     }
 
-    if(distanceText->collidesWithItem(degreesText,Qt::IntersectsItemBoundingRect)){ // horizontal text and degrees text
+    if(distanceText->collidesWithItem(degreesText,Qt::IntersectsItemBoundingRect)){
 
         textContainer = QString("d:")+QString::number(line().length(),'d',1)+QString("m");
         textContainer = textContainer + "\n" + QString("dx:")+QString::number(line().dx(),'d',1)+QString("m");
@@ -188,13 +189,13 @@ void FnmGraphicsItemShadedLine::paint(QPainter *painter,
 
 }
 
-double FnmGraphicsItemShadedLine::theta() const
+double GraphicsItemShadedLine::theta() const
 {
     // return angle between this.line1 and this.line2
     return atan(line().dy()/line().dx())* 180 / 3.14159265;
 }
 
-void FnmGraphicsItemShadedLine::updateShadedLines()
+void GraphicsItemShadedLine::updateShadedLines()
 {
     if(line().dx()>0 && line().dy()>0){
         line1.setLine(line().p2().x(), line().p1().y(), line().p2().x(), line().p2().y());
@@ -211,7 +212,7 @@ void FnmGraphicsItemShadedLine::updateShadedLines()
     }
 }
 
-void FnmGraphicsItemShadedLine::drawLines(QPainter *painter) const
+void GraphicsItemShadedLine::drawLines(QPainter *painter) const
 {
     painter->drawLine(line()); //diagonal
     painter->drawLine(line1);  // horizontal line
@@ -219,9 +220,4 @@ void FnmGraphicsItemShadedLine::drawLines(QPainter *painter) const
 //            painter->drawRect(boundingRect()); // drawRectangle
 }
 
-
-
-
-
-
-
+}

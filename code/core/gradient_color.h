@@ -13,11 +13,12 @@
 // this has to be fixed in the future in order to avoid Qt dependencies
 // in the core functionality of FNM
 
+namespace fnm {
 
-class FnmCoreGradientColor
+class CoreGradientColor
 {
 public:
-    FnmCoreGradientColor();
+    CoreGradientColor();
 
 
     void addStep(double red, double green, double blue, double value);
@@ -39,4 +40,5 @@ private:
 
 };
 
+}
 #endif // GRADIENTCOLOR_H

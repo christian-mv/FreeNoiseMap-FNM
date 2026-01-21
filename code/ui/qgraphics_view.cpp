@@ -5,11 +5,13 @@
 #include <QGraphicsItem>
 #include <cmath>
 
-FnmQGraphicsView::FnmQGraphicsView(QWidget *parent):
-    QGraphicsView(parent),
+namespace fnm {
+
+QGraphicsView::QGraphicsView(QWidget *parent):
+    ::QGraphicsView(parent),
     totalScaleFactor(1)
 {
-    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+    setTransformationAnchor(::QGraphicsView::AnchorUnderMouse);
 //    setDragMode(ScrollHandDrag);
 
 //    viewport()->setAttribute(Qt::WA_AcceptTouchEvents);
@@ -19,7 +21,7 @@ FnmQGraphicsView::FnmQGraphicsView(QWidget *parent):
 
 }
 
-void FnmQGraphicsView::setCursor(const QCursor &newCursor)
+void QGraphicsView::setCursor(const QCursor &newCursor)
 {
 
 //    QList<QGraphicsItem *> sceneItems = items();
@@ -53,10 +55,10 @@ void FnmQGraphicsView::setCursor(const QCursor &newCursor)
 //    }
 
 
-    QGraphicsView::setCursor(newCursor);
+    ::QGraphicsView::setCursor(newCursor);
 }
 
-void FnmQGraphicsView::resetTotalScaleFactor()
+void QGraphicsView::resetTotalScaleFactor()
 {
     totalScaleFactor = 1;
 }
@@ -65,7 +67,7 @@ void FnmQGraphicsView::resetTotalScaleFactor()
 
 
 
-void FnmQGraphicsView::wheelEvent(QWheelEvent *e)
+void QGraphicsView::wheelEvent(QWheelEvent *e)
 {
 
     double zoomFactor = 1.25;
@@ -98,7 +100,7 @@ void FnmQGraphicsView::wheelEvent(QWheelEvent *e)
 
 // this method provides support for zooming in touch screens
 // reference: http://doc.qt.io/archives/qt-4.8/qt-touch-pinchzoom-example.html
-bool FnmQGraphicsView::viewportEvent(QEvent *event)
+bool QGraphicsView::viewportEvent(QEvent *event)
 {
     switch (event->type()) {
         case QEvent::TouchBegin:
@@ -133,43 +135,7 @@ bool FnmQGraphicsView::viewportEvent(QEvent *event)
     default:
         break;
     }
-    return QGraphicsView::viewportEvent(event);
+    return ::QGraphicsView::viewportEvent(event);
 }
 
-
-
-
-//void MyGraphicsView::mouseMoveEvent(QMouseEvent *event)
-//{
-//    if (m_pressed){
-//        QPoint diff = m_lastMousePos - event->pos();
-//        if (QScrollBar *hbar = horizontalScrollBar())
-//            hbar->setValue(hbar->value() + diff.x());
-//        if (QScrollBar *vbar = verticalScrollBar())
-//            vbar->setValue(vbar->value() + diff.y());
-//        m_lastMousePos = event->pos();
-//    }
-
-//    QGraphicsView::mouseMoveEvent(event);
-//}
-
-//void MyGraphicsView::mousePressEvent(QMouseEvent *event)
-//{
-//    if (Qt::LeftButton == event->button()) {
-//        m_pressed = true;
-//        m_lastMousePos = event->pos();
-//    }
-
-//    QGraphicsView::mousePressEvent(event);
-//}
-
-//void MyGraphicsView::mouseReleaseEvent(QMouseEvent *event)
-//{
-//    if (Qt::LeftButton == event->button()){
-//        m_pressed = false;
-//    }
-
-//    QGraphicsView::mouseReleaseEvent(event);
-//}
-
-
+}

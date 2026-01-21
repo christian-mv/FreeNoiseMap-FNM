@@ -4,26 +4,29 @@
 #include <QPainter>
 #include <QDebug>
 
+namespace fnm {
 
-FnmQgraphicsItemPolyLine::FnmQgraphicsItemPolyLine():
-    FnmQgraphicsItemAbstractPolyLine()
+QgraphicsItemPolyLine::QgraphicsItemPolyLine():
+    QgraphicsItemAbstractPolyLine()
 {
 
 }
 
-void FnmQgraphicsItemPolyLine::addSegment(FnmCore3DSegment *segment)
+void QgraphicsItemPolyLine::addSegment(fnm::Core3DSegment *segment)
 {
    // call protected superclass method
-    FnmQgraphicsItemAbstractPolyLine::addSegment(segment);
+    QgraphicsItemAbstractPolyLine::addSegment(segment);
 }
 
-QVector<FnmCore3DSegment *> *FnmQgraphicsItemPolyLine::getSegments()
+QVector<fnm::Core3DSegment *> *QgraphicsItemPolyLine::getSegments()
 {
-    return FnmQgraphicsItemAbstractPolyLine::getSegments();
+    return QgraphicsItemAbstractPolyLine::getSegments();
 }
 
 
-int FnmQgraphicsItemPolyLine::type() const
+int QgraphicsItemPolyLine::type() const
 {
-    return FNM_TypeId::PolyLineItemType;
+    return fnm::TypeId::PolyLineItemType;
+}
+
 }

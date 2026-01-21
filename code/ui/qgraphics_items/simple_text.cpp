@@ -1,13 +1,14 @@
 #include "simple_text.h"
 #include <QPainter>
 
+namespace fnm {
 
-FnmQGraphicsSimpleTextItem::FnmQGraphicsSimpleTextItem(QGraphicsItem *parent)
+QGraphicsSimpleTextItem::QGraphicsSimpleTextItem(QGraphicsItem *parent)
 {
     this->setParentItem(parent);
 }
 
-void FnmQGraphicsSimpleTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void QGraphicsSimpleTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 
    painter->setPen(Qt::black);
@@ -16,4 +17,6 @@ void FnmQGraphicsSimpleTextItem::paint(QPainter *painter, const QStyleOptionGrap
    painter->translate(boundingRect().topLeft().x(), -boundingRect().height());
 
    QGraphicsSimpleTextItem::paint(painter, option, widget);
+}
+
 }

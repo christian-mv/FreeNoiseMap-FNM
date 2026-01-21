@@ -3,22 +3,24 @@
 
 #include <QGraphicsPixmapItem>
 
-class FnmCorePoint;
+namespace fnm { class CorePoint; }
 
-class FnmQgraphicsItemAbstractPointSource : public QGraphicsPixmapItem
+namespace fnm {
+
+class QgraphicsItemAbstractPointSource : public QGraphicsPixmapItem
 {
 public:
-    FnmQgraphicsItemAbstractPointSource();
+    QgraphicsItemAbstractPointSource();
     QRectF boundingRect() const override;
     QPainterPath shape() const override;
     virtual int	type() const override = 0;
 
 private:
-    FnmCorePoint *fnmCorePoint;
+    fnm::CorePoint *fnmCorePoint;
 
 protected:
-    void setPoint(FnmCorePoint *fnmCorePoint);
-    FnmCorePoint * getPoint()const;
+    void setPoint(fnm::CorePoint *fnmCorePoint);
+    fnm::CorePoint * getPoint()const;
 
     void paint(QPainter *painter,const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
@@ -29,4 +31,5 @@ protected:
 
 };
 
+}
 #endif

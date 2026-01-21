@@ -4,13 +4,15 @@
 #include <QPainter>
 #include <QDebug>
 
-FnmQGraphicsItemBarrier::FnmQGraphicsItemBarrier():
-    FnmQgraphicsItemAbstractPolyLine()
+namespace fnm {
+
+QGraphicsItemBarrier::QGraphicsItemBarrier():
+    QgraphicsItemAbstractPolyLine()
 {
 
 }
 
-void FnmQGraphicsItemBarrier::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt, QWidget *w)
+void QGraphicsItemBarrier::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt, QWidget *w)
 {
     Q_UNUSED(opt)
     Q_UNUSED(w)
@@ -55,17 +57,17 @@ void FnmQGraphicsItemBarrier::paint(QPainter *painter, const QStyleOptionGraphic
 //    painter->drawPath(shape());
 }
 
-void FnmQGraphicsItemBarrier::addSegment(FnmCoreBarrierSegment *segment)
+void QGraphicsItemBarrier::addSegment(fnm::CoreBarrierSegment *segment)
 {
-    FnmQgraphicsItemAbstractPolyLine::addSegment(segment);
+    QgraphicsItemAbstractPolyLine::addSegment(segment);
 }
 
-QVector<FnmCoreBarrierSegment *> FnmQGraphicsItemBarrier::getSegments()
+QVector<fnm::CoreBarrierSegment *> QGraphicsItemBarrier::getSegments()
 {
-    QVector<FnmCore3DSegment*> *listSegments = FnmQgraphicsItemAbstractPolyLine::getSegments();
-    QVector<FnmCoreBarrierSegment *> results;
+    QVector<fnm::Core3DSegment*> *listSegments = QgraphicsItemAbstractPolyLine::getSegments();
+    QVector<fnm::CoreBarrierSegment *> results;
     for(auto segment: *listSegments){
-        results.append(static_cast<FnmCoreBarrierSegment *>(segment));
+        results.append(static_cast<fnm::CoreBarrierSegment *>(segment));
     }
 
     return results;
@@ -73,8 +75,9 @@ QVector<FnmCoreBarrierSegment *> FnmQGraphicsItemBarrier::getSegments()
 
 
 
-int FnmQGraphicsItemBarrier::type() const
+int QGraphicsItemBarrier::type() const
 {
-    return FNM_TypeId::AcousticBarrierItemType;
+    return fnm::TypeId::AcousticBarrierItemType;
 }
 
+}

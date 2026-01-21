@@ -1,12 +1,13 @@
 #ifndef FNM_CORE_POINT_H
 #define FNM_CORE_POINT_H
 
+namespace fnm {
 
-class FnmCorePoint
+class CorePoint
 {
 public:
 
-    explicit FnmCorePoint(double in_x=0.0, double in_y=0.0,
+    explicit CorePoint(double in_x=0.0, double in_y=0.0,
                                 double in_z=0.0):
         x(in_x), y(in_y), z(in_z){}
 
@@ -23,4 +24,5 @@ private:
 
 };
 
+}
 #endif

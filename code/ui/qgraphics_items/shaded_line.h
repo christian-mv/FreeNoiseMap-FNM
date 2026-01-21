@@ -5,12 +5,14 @@
 #include<QFont>
 
 
-class FnmQGraphicsSimpleTextItem;
+namespace fnm { class QGraphicsSimpleTextItem; }
 
-class FnmGraphicsItemShadedLine : public QGraphicsLineItem
+namespace fnm {
+
+class GraphicsItemShadedLine : public QGraphicsLineItem
 {
 public:
-    FnmGraphicsItemShadedLine();
+    GraphicsItemShadedLine();
     QRectF boundingRect() const override;
 
 
@@ -24,10 +26,10 @@ private:
 
     QLineF line1, line2;
 
-    FnmQGraphicsSimpleTextItem *distanceText;
-    FnmQGraphicsSimpleTextItem *horizontalText;
-    FnmQGraphicsSimpleTextItem *verticalText;
-    FnmQGraphicsSimpleTextItem *degreesText;
+    fnm::QGraphicsSimpleTextItem *distanceText;
+    fnm::QGraphicsSimpleTextItem *horizontalText;
+    fnm::QGraphicsSimpleTextItem *verticalText;
+    fnm::QGraphicsSimpleTextItem *degreesText;
 
     double theta() const;
     void updateShadedLines();
@@ -38,4 +40,5 @@ private:
 
 };
 
+}
 #endif // MYGRAPHICSSHADEDLINEITEM_H
