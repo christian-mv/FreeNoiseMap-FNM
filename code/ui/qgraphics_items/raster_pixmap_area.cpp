@@ -1,4 +1,4 @@
-#include "qgraphics_item_raster_pixmap_area.h"
+#include "raster_pixmap_area.h"
 #include "types_namespace.h"
 #include <QPainter>
 

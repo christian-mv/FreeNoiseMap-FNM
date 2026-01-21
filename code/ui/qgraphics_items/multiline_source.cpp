@@ -1,4 +1,4 @@
-#include "qgraphics_item_multiline_source.h"
+#include "multiline_source.h"
 #include "line_source_segment.h"
 #include "types_namespace.h"
 #include <QPainter>

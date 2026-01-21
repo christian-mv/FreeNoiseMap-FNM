@@ -1,4 +1,4 @@
-#include "qgraphics_item_abstract_polyline.h"
+#include "abstract_polyline.h"
 #include "types_namespace.h"
 #include "3D_segment.h"
 #include <QPainter>

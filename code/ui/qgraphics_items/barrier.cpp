@@ -1,4 +1,4 @@
-#include "qgraphics_item_barrier.h"
+#include "barrier.h"
 #include "barrier_segment.h"
 #include "types_namespace.h"
 #include <QPainter>

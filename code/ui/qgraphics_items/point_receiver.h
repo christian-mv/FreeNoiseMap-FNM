@@ -1,7 +1,7 @@
 #ifndef FNM_QGRAPHICS_ITEM_POINT_RECEIVER_H
 #define FNM_QGRAPHICS_ITEM_POINT_RECEIVER_H
 
-#include "qgraphics_item_abstract_point.h"
+#include "abstract_point.h"
 class FnmCorePointReceiver;
 
 

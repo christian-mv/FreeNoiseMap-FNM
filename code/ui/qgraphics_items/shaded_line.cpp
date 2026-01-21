@@ -7,8 +7,8 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QTransform>
-#include "qgraphics_item_shaded_line.h"
-#include "qgraphics_item_simple_text.h"
+#include "shaded_line.h"
+#include "simple_text.h"
 
 
 FnmGraphicsItemShadedLine::FnmGraphicsItemShadedLine()

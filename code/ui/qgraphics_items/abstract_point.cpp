@@ -1,4 +1,4 @@
-#include "qgraphics_item_abstract_point.h"
+#include "abstract_point.h"
 #include <QCursor>
 #include "point.h"
 #include <QRectF>

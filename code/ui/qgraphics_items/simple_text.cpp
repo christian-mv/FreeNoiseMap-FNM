@@ -1,4 +1,4 @@
-#include "qgraphics_item_simple_text.h"
+#include "simple_text.h"
 #include <QPainter>
 
 

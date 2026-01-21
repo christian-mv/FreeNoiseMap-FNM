@@ -1,6 +1,6 @@
-#include "qgraphics_item_point_source.h"
-#include "types_namespace.h"
 #include "point_source.h"
+#include "types_namespace.h"
+#include "core/point_source.h"
 
 
 FnmQgraphicsItemPointSource::FnmQgraphicsItemPointSource():

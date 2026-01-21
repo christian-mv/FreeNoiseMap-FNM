@@ -1,6 +1,6 @@
-#include "qgraphics_item_point_receiver.h"
-#include "types_namespace.h"
 #include "point_receiver.h"
+#include "types_namespace.h"
+#include "core/point_receiver.h"
 
 
 FnmQgraphicsItemPointReceiver::FnmQgraphicsItemPointReceiver():

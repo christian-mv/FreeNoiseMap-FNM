@@ -1,4 +1,4 @@
-#include "qgraphics_item_polyline.h"
+#include "polyline.h"
 
 #include "types_namespace.h"
 #include <QPainter>

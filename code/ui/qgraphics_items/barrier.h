@@ -2,7 +2,7 @@
 #define FNM_UI_QGRAPHICS_ITEM_BARRIER_H
 
 
-#include "qgraphics_item_abstract_polyline.h"
+#include "abstract_polyline.h"
 
 class FnmCoreBarrierSegment;
 
