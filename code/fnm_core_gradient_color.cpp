@@ -35,7 +35,7 @@ void FnmCoreGradientColor::addStep(double red, double green, double blue, double
 void FnmCoreGradientColor::sortStepsAscending()
 {
 //     https://stackoverflow.com/questions/23030267/custom-sorting-a-vector-of-tuples
-    sort(steps.begin(),steps.end(),
+    std::sort(steps.begin(),steps.end(),
          [](const std::tuple<double,double,double,double>& a,
          const std::tuple<double,double,double,double>& b) -> bool
     {

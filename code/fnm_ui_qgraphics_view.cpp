@@ -70,7 +70,7 @@ void FnmQGraphicsView::wheelEvent(QWheelEvent *e)
 
     double zoomFactor = 1.25;
 
-    if ( e->delta() == 0 )
+    if ( e->angleDelta().y() == 0 )
     {
       e->accept();
       return;
@@ -108,14 +108,14 @@ bool FnmQGraphicsView::viewportEvent(QEvent *event)
         {
             setDragMode(ScrollHandDrag);
             QTouchEvent *touchEvent = static_cast<QTouchEvent *>(event);
-            QList<QTouchEvent::TouchPoint> touchPoints = touchEvent->touchPoints();
+            QList<QEventPoint> touchPoints = touchEvent->points();
             if (touchPoints.count() == 2) {
                 // determine scale factor
-                const QTouchEvent::TouchPoint &touchPoint0 = touchPoints.first();
-                const QTouchEvent::TouchPoint &touchPoint1 = touchPoints.last();
+                const QEventPoint &touchPoint0 = touchPoints.first();
+                const QEventPoint &touchPoint1 = touchPoints.last();
                 qreal currentScaleFactor =
-                        QLineF(touchPoint0.pos(), touchPoint1.pos()).length()
-                        / QLineF(touchPoint0.startPos(), touchPoint1.startPos()).length();
+                        QLineF(touchPoint0.position(), touchPoint1.position()).length()
+                        / QLineF(touchPoint0.pressPosition(), touchPoint1.pressPosition()).length();
                 if (touchEvent->touchPointStates() & Qt::TouchPointReleased) {
                     // if one of the fingers is released, remember the current scale
                     // factor so that adding another finger later will continue zooming

@@ -19,7 +19,7 @@ class FnmQgraphicsItemPointSource;
 class FnmQGraphicsItemBarrier;
 class QProgressDialog;
 class FnmGraphicsItemShadedLine;
-class QActionGroup;
+#include <QActionGroup>
 
 namespace Ui {
 class MainWindow;

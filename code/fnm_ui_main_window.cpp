@@ -1,6 +1,7 @@
 #include <QDebug>
-#include <QDesktopWidget>
 #include <QMouseEvent>
+#include <QScreen>
+#include <QGuiApplication>
 #include <QGraphicsSceneMouseEvent>
 #include <QProgressDialog>
 #include <QMessageBox>
@@ -71,11 +72,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+#include <QTransform>
+
 // this method is necessary to compasate the reflection of Y axes
 QImage MainWindow::invertImageOnYAxes(const QImage &image)
 {
     QPoint center = image.rect().center();
-    QMatrix matrix;
+    QTransform matrix;
     matrix.translate(center.x(), center.y());
     matrix.scale(1,-1);
     return image.transformed(matrix);
@@ -131,7 +134,7 @@ void MainWindow::loadDefaultGrid()
 void MainWindow::resetPixmapArea(){
 
     qreal side = qMin(myGrid.getRect().width(), myGrid.getRect().height());
-    qreal side2 = qMax(qApp->desktop()->width(), qApp->desktop()->height());
+    qreal side2 = qMax(QGuiApplication::primaryScreen()->size().width(), QGuiApplication::primaryScreen()->size().height());
 
     image = new QImage(static_cast<int>( side2*myGrid.getRect().width()/side ),
                  static_cast<int>( side2*myGrid.getRect().height()/side ),
