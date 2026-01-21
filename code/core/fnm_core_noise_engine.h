@@ -9,7 +9,6 @@
 #include "fnm_core_point_source.h"
 #include "fnm_core_line_source_segment.h"
 #include "fnm_core_point_receiver.h"
-#include "fnm_ui_receivers_grid.h"
 #include "fnm_core_barrier_segment.h"
 
 

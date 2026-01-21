@@ -1,4 +1,5 @@
-#include "fnm_core_noise_engine.h"
+#include "core/fnm_core_noise_engine.h"
+#include "ui/fnm_ui_receivers_grid.h"
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
