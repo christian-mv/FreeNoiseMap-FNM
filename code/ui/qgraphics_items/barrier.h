@@ -8,10 +8,10 @@ namespace fnm { class CoreBarrierSegment; }
 
 namespace fnm {
 
-class QGraphicsItemBarrier : public QgraphicsItemAbstractPolyLine
+class Barrier : public AbstractPolyLine
 {
 public:
-    QGraphicsItemBarrier();
+    Barrier();
 
     void paint(QPainter *p, const QStyleOptionGraphicsItem *opt, QWidget *w) override;
     void addSegment(fnm::CoreBarrierSegment *segment);

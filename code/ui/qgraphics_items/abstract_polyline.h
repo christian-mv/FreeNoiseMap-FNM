@@ -6,10 +6,10 @@ namespace fnm { class Core3DSegment; }
 
 namespace fnm {
 // This is an abstract Class
-class QgraphicsItemAbstractPolyLine : public QGraphicsItem
+class AbstractPolyLine : public QGraphicsItem
 {
 public:
-    QgraphicsItemAbstractPolyLine();
+    AbstractPolyLine();
     QRectF boundingRect() const override;
     void paint(QPainter *p, const QStyleOptionGraphicsItem *opt, QWidget *w) override;
     QPainterPath shape() const override;

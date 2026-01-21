@@ -194,7 +194,7 @@ void MainWindow::updateShadedLinesItem(QPointF pos)
 void MainWindow::createShadedLinesItem(QPointF pos)
 {
     if(shaded_line == nullptr){
-        shaded_line = new fnm::GraphicsItemShadedLine;
+        shaded_line = new fnm::ShadedLine;
         p1_shaded_line = pos;
 
         // init line with 0 lenth (it is necessary to avoid flip)
@@ -263,8 +263,8 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
             return false;
         }
 
-        fnm::QgraphicsItemPointSource *currentPixmapItemPointSource;
-        fnm::GraphicsItemMultiLineSource *currentLineSource;
+        fnm::PointSource *currentPixmapItemPointSource;
+        fnm::MultiLineSource *currentLineSource;
         auto barriersSegments = barrierSegmentsToStdVector();
 //        MinimalAcousticBarrier* barrierSegment;
 
@@ -272,7 +272,7 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
             for(auto currentItem : scene.items()){
                 // noise from point sources
                 if(currentItem->type() == fnm::TypeId::PointSourceItemType){
-                    currentPixmapItemPointSource = (static_cast<fnm::QgraphicsItemPointSource *>(currentItem));
+                    currentPixmapItemPointSource = (static_cast<fnm::PointSource *>(currentItem));
 
                     fnm::NoiseEngine::P2P(currentPixmapItemPointSource->getPointSource(),
                                                              currentReceiver, barriersSegments);
@@ -281,7 +281,7 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
                 }
                 // noise from line sources
                 if(currentItem->type() == fnm::TypeId::MultiLineSourceItemType){
-                    currentLineSource = (static_cast<fnm::GraphicsItemMultiLineSource *>(currentItem));
+                    currentLineSource = (static_cast<fnm::MultiLineSource *>(currentItem));
                     // Here we iterate a multi line source to obtain a list of
                     // segmets, then each segment is split in point sources
                     for(fnm::LineSourceSegment *segment: currentLineSource->getSegments()){
@@ -298,12 +298,12 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
     return true;
 }
 
-QList<fnm::QGraphicsItemBarrier *> MainWindow::barrierList() const
+QList<fnm::Barrier *> MainWindow::barrierList() const
 {
-    QList<fnm::QGraphicsItemBarrier *> barriers;
+    QList<fnm::Barrier *> barriers;
     for(auto item: scene.items()){
         if(item->type() == fnm::TypeId::AcousticBarrierItemType){
-            barriers.append(static_cast<fnm::QGraphicsItemBarrier *>(item));
+            barriers.append(static_cast<fnm::Barrier *>(item));
         }
     }
     return barriers;
@@ -316,7 +316,7 @@ std::vector<fnm::CoreBarrierSegment *> MainWindow::barrierSegmentsToStdVector() 
 
     for(auto item: scene.items()){
         if(item->type() == fnm::TypeId::AcousticBarrierItemType){
-            temp = (static_cast<fnm::QGraphicsItemBarrier *>(item)->getSegments());
+            temp = (static_cast<fnm::Barrier *>(item)->getSegments());
             for(auto singleSegment: temp){
                 segments.push_back(singleSegment);
             }
@@ -380,7 +380,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                         myPixmap = myPixmap.scaled(18,18,Qt::KeepAspectRatio,Qt::SmoothTransformation);
             #endif
 
-            fnm::QgraphicsItemPointSource * myPixmapPointSourceItem = new fnm::QgraphicsItemPointSource();
+            fnm::PointSource * myPixmapPointSourceItem = new fnm::PointSource();
 
             myPixmapPointSourceItem->setPixmap(myPixmap);
             myPixmapPointSourceItem->setPointSource(myPointSource);
@@ -448,7 +448,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                         myPixmap = myPixmap.scaled(18,18,Qt::KeepAspectRatio,Qt::SmoothTransformation);
             #endif
 
-            fnm::QgraphicsItemPointReceiver * myPixmapReceiver = new fnm::QgraphicsItemPointReceiver();
+            fnm::PointReceiver * myPixmapReceiver = new fnm::PointReceiver();
 
             myPixmapReceiver->setPixmap(myPixmap);
             myPixmapReceiver->setPointReceiver(myReceiver);
@@ -472,7 +472,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                         createShadedLinesItem(sceneEvent->scenePos());
                         singleLine = new QLineF();
                         if(polyLine == nullptr){
-                            polyLine = new fnm::QgraphicsItemPolyLine();
+                            polyLine = new fnm::PolyLine();
                             scene.addItem(polyLine);
                             singleLine->setLine(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(),
                                                    sceneEvent->scenePos().x(), sceneEvent->scenePos().y());
@@ -530,7 +530,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                 createShadedLinesItem(sceneEvent->scenePos());
                 singleLine = new QLineF();
                 if(multiLineSource == nullptr){
-                    multiLineSource = new fnm::GraphicsItemMultiLineSource();
+                    multiLineSource = new fnm::MultiLineSource();
                     scene.addItem(multiLineSource);
                     singleLine->setLine(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(),
                                            sceneEvent->scenePos().x(), sceneEvent->scenePos().y());
@@ -584,7 +584,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                 createShadedLinesItem(sceneEvent->scenePos());
                 singleLine = new QLineF();
                 if(acousticBarrier == nullptr){
-                    acousticBarrier = new fnm::QGraphicsItemBarrier();
+                    acousticBarrier = new fnm::Barrier();
                     scene.addItem(acousticBarrier);
                     singleLine->setLine(sceneEvent->scenePos().x(), sceneEvent->scenePos().y(),
                                            sceneEvent->scenePos().x(), sceneEvent->scenePos().y());

@@ -6,10 +6,10 @@ namespace fnm { class CorePointSource; }
 
 namespace fnm {
 
-class QgraphicsItemPointSource : public QgraphicsItemAbstractPointSource
+class PointSource : public AbstractPointSource
 {
 public:
-    QgraphicsItemPointSource();
+    PointSource();
     void setPointSource(fnm::CorePointSource *source);
     fnm::CorePointSource * getPointSource()const;    
     virtual int	type() const override;

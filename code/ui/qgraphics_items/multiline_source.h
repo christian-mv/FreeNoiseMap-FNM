@@ -7,10 +7,10 @@ namespace fnm { class LineSourceSegment; }
 
 namespace fnm {
 
-class GraphicsItemMultiLineSource : public QgraphicsItemAbstractPolyLine
+class MultiLineSource : public AbstractPolyLine
 {
 public:
-    GraphicsItemMultiLineSource();
+    MultiLineSource();
 
     void paint(QPainter *p, const QStyleOptionGraphicsItem *opt, QWidget *w) override;
     void addSegment(fnm::LineSourceSegment *segment);

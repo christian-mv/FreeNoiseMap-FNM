@@ -9,10 +9,10 @@ namespace fnm { class SimpleTextItem; }
 
 namespace fnm {
 
-class GraphicsItemShadedLine : public QGraphicsLineItem
+class ShadedLine : public QGraphicsLineItem
 {
 public:
-    GraphicsItemShadedLine();
+    ShadedLine();
     QRectF boundingRect() const override;
 
 

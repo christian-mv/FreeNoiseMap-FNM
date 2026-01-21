@@ -11,7 +11,7 @@
 
 namespace fnm {
 
-QgraphicsItemAbstractPointSource::QgraphicsItemAbstractPointSource()
+AbstractPointSource::AbstractPointSource()
 {    
     setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
 //    setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -19,7 +19,7 @@ QgraphicsItemAbstractPointSource::QgraphicsItemAbstractPointSource()
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
 }
 
-void QgraphicsItemAbstractPointSource::setPoint(fnm::CorePoint *source)
+void AbstractPointSource::setPoint(fnm::CorePoint *source)
 {
     this->fnmCorePoint = source;
 
@@ -37,14 +37,14 @@ void QgraphicsItemAbstractPointSource::setPoint(fnm::CorePoint *source)
     this->setTransform(transform);
 }
 
-fnm::CorePoint *QgraphicsItemAbstractPointSource::getPoint() const
+fnm::CorePoint *AbstractPointSource::getPoint() const
 {
     return fnmCorePoint;
 }
 
 
 
-QRectF QgraphicsItemAbstractPointSource::boundingRect() const
+QRectF AbstractPointSource::boundingRect() const
 {
 
     // if the app is running in a mobile or tablet,
@@ -61,7 +61,7 @@ QRectF QgraphicsItemAbstractPointSource::boundingRect() const
 
 // reimplamenting shape to guarantee that the selection area is enlarged
 // this is applying for android and IOS devices.
-QPainterPath QgraphicsItemAbstractPointSource::shape() const
+QPainterPath AbstractPointSource::shape() const
 {
     QPainterPath path;
     path.addRect(this->boundingRect());
@@ -70,7 +70,7 @@ QPainterPath QgraphicsItemAbstractPointSource::shape() const
 
 
 
-void QgraphicsItemAbstractPointSource::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void AbstractPointSource::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     if(isSelected()){
         QPen pen(Qt::black);
@@ -87,7 +87,7 @@ void QgraphicsItemAbstractPointSource::paint(QPainter *painter, const QStyleOpti
     }
 }
 
-QVariant QgraphicsItemAbstractPointSource::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+QVariant AbstractPointSource::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
 
     if (change == ItemPositionChange &&  scene() ) {        
@@ -100,7 +100,7 @@ QVariant QgraphicsItemAbstractPointSource::itemChange(QGraphicsItem::GraphicsIte
     return QGraphicsItem::itemChange(change, value);
 }
 
-void QgraphicsItemAbstractPointSource::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+void AbstractPointSource::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     setCursor(Qt::PointingHandCursor);
     QGraphicsPixmapItem::hoverEnterEvent(event);

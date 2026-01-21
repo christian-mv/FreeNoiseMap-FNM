@@ -4,25 +4,25 @@
 
 namespace fnm {
 
-QgraphicsItemPointSource::QgraphicsItemPointSource():
-    QgraphicsItemAbstractPointSource()
+PointSource::PointSource():
+    AbstractPointSource()
 {    
 
 }
 
-void QgraphicsItemPointSource::setPointSource(fnm::CorePointSource *source)
+void PointSource::setPointSource(fnm::CorePointSource *source)
 {
-    QgraphicsItemAbstractPointSource::setPoint(source);
+    AbstractPointSource::setPoint(source);
 }
 
-fnm::CorePointSource *QgraphicsItemPointSource::getPointSource() const
+fnm::CorePointSource *PointSource::getPointSource() const
 {
-    auto source  = QgraphicsItemAbstractPointSource::getPoint();
+    auto source  = AbstractPointSource::getPoint();
     return static_cast<fnm::CorePointSource *>(source);
 }
 
 
-int QgraphicsItemPointSource::type() const
+int PointSource::type() const
 {
     return fnm::TypeId::PointSourceItemType; // represents a custom item
 }

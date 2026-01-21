@@ -7,10 +7,10 @@ namespace fnm { class CorePoint; }
 
 namespace fnm {
 
-class QgraphicsItemAbstractPointSource : public QGraphicsPixmapItem
+class AbstractPointSource : public QGraphicsPixmapItem
 {
 public:
-    QgraphicsItemAbstractPointSource();
+    AbstractPointSource();
     QRectF boundingRect() const override;
     QPainterPath shape() const override;
     virtual int	type() const override = 0;

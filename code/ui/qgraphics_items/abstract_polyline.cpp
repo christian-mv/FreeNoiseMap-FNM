@@ -7,7 +7,7 @@
 
 namespace fnm {
 
-QgraphicsItemAbstractPolyLine::QgraphicsItemAbstractPolyLine():
+AbstractPolyLine::AbstractPolyLine():
     xMin(0), xMax(0), yMin(0), yMax(0), bufferDistance(10.0),
     lineSegmentsList(new QVector<fnm::Core3DSegment*>)
 {
@@ -16,14 +16,14 @@ QgraphicsItemAbstractPolyLine::QgraphicsItemAbstractPolyLine():
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
 }
 
-QRectF QgraphicsItemAbstractPolyLine::boundingRect() const
+QRectF AbstractPolyLine::boundingRect() const
 {
 //    QRectF rect( xMin, yMin, qAbs(xMax-xMin), qAbs(yMax-yMin) );
 //    return rect.adjusted(-10,-10,10,10);
     return this->multilineBuffer.boundingRect();
 }
 
-void QgraphicsItemAbstractPolyLine::paint(QPainter *painter,
+void AbstractPolyLine::paint(QPainter *painter,
                                        const QStyleOptionGraphicsItem *opt,
                                        QWidget *w)
 {
@@ -71,7 +71,7 @@ void QgraphicsItemAbstractPolyLine::paint(QPainter *painter,
 
 }
 
-QPainterPath QgraphicsItemAbstractPolyLine::shape() const
+QPainterPath AbstractPolyLine::shape() const
 {
     /*
      * this implementation take into accout the buffer distance
@@ -97,7 +97,7 @@ QPainterPath QgraphicsItemAbstractPolyLine::shape() const
 
 
 
-void QgraphicsItemAbstractPolyLine::addSegment(fnm::Core3DSegment *segment)
+void AbstractPolyLine::addSegment(fnm::Core3DSegment *segment)
 {
     prepareGeometryChange();
     QPainterPath newSegmentBuffer = singleLineBuffer(QLineF(segment->get_x1(),
@@ -127,12 +127,12 @@ void QgraphicsItemAbstractPolyLine::addSegment(fnm::Core3DSegment *segment)
 }
 
 
-QVector<fnm::Core3DSegment*> *QgraphicsItemAbstractPolyLine::getSegments()
+QVector<fnm::Core3DSegment*> *AbstractPolyLine::getSegments()
 {
     return lineSegmentsList;
 }
 
-void QgraphicsItemAbstractPolyLine::setBufferDistance(const double &newValue)
+void AbstractPolyLine::setBufferDistance(const double &newValue)
 {
     bufferDistance = newValue;
 }
@@ -140,7 +140,7 @@ void QgraphicsItemAbstractPolyLine::setBufferDistance(const double &newValue)
 
 
 
-void QgraphicsItemAbstractPolyLine::updateBoundingRectangle(fnm::Core3DSegment *newSegment)
+void AbstractPolyLine::updateBoundingRectangle(fnm::Core3DSegment *newSegment)
 {
     double temp;
 
@@ -171,7 +171,7 @@ void QgraphicsItemAbstractPolyLine::updateBoundingRectangle(fnm::Core3DSegment *
 
 }
 
-QPainterPath QgraphicsItemAbstractPolyLine::singleLineBuffer(QLineF line, const double &distance)
+QPainterPath AbstractPolyLine::singleLineBuffer(QLineF line, const double &distance)
 {
     QPainterPath temp;
     temp.moveTo(line.p1());
@@ -184,12 +184,12 @@ QPainterPath QgraphicsItemAbstractPolyLine::singleLineBuffer(QLineF line, const 
     return newpath;
 }
 
-void QgraphicsItemAbstractPolyLine::updateMultilineBuffer(QPainterPath newLineBuffer)
+void AbstractPolyLine::updateMultilineBuffer(QPainterPath newLineBuffer)
 {
     multilineBuffer = multilineBuffer.united(newLineBuffer);
 }
 
-QVariant QgraphicsItemAbstractPolyLine::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+QVariant AbstractPolyLine::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
     if (change == ItemPositionChange &&  scene() ) {
         // value is the new position.

@@ -6,10 +6,10 @@
 
 namespace fnm {
 
-class QgraphicsItemPolyLine : public QgraphicsItemAbstractPolyLine
+class PolyLine : public AbstractPolyLine
 {
 public:
-    QgraphicsItemPolyLine();
+    PolyLine();
 
     void addSegment(fnm::Core3DSegment *segment);
     QVector<fnm::Core3DSegment*> * getSegments();

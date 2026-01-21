@@ -4,17 +4,17 @@
 
 namespace fnm {
 
-QgraphicsItemRasterPixmap::QgraphicsItemRasterPixmap()
+RasterPixmap::RasterPixmap()
 {
     setAcceptHoverEvents(true);
 }
 
-int QgraphicsItemRasterPixmap::type() const
+int RasterPixmap::type() const
 {
     return fnm::TypeId::RasterPixmapItemType; // represents a custom item
 }
 
-void QgraphicsItemRasterPixmap::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void RasterPixmap::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QGraphicsPixmapItem::paint(painter, option, widget);
 

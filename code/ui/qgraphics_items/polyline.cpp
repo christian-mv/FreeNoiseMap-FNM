@@ -6,25 +6,25 @@
 
 namespace fnm {
 
-QgraphicsItemPolyLine::QgraphicsItemPolyLine():
-    QgraphicsItemAbstractPolyLine()
+PolyLine::PolyLine():
+    AbstractPolyLine()
 {
 
 }
 
-void QgraphicsItemPolyLine::addSegment(fnm::Core3DSegment *segment)
+void PolyLine::addSegment(fnm::Core3DSegment *segment)
 {
    // call protected superclass method
-    QgraphicsItemAbstractPolyLine::addSegment(segment);
+    AbstractPolyLine::addSegment(segment);
 }
 
-QVector<fnm::Core3DSegment *> *QgraphicsItemPolyLine::getSegments()
+QVector<fnm::Core3DSegment *> *PolyLine::getSegments()
 {
-    return QgraphicsItemAbstractPolyLine::getSegments();
+    return AbstractPolyLine::getSegments();
 }
 
 
-int QgraphicsItemPolyLine::type() const
+int PolyLine::type() const
 {
     return fnm::TypeId::PolyLineItemType;
 }

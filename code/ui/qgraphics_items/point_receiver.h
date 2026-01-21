@@ -6,10 +6,10 @@ namespace fnm { class CorePointReceiver; }
 
 namespace fnm {
 
-class QgraphicsItemPointReceiver : public QgraphicsItemAbstractPointSource
+class PointReceiver : public AbstractPointSource
 {
 public:
-    QgraphicsItemPointReceiver();
+    PointReceiver();
     void setPointReceiver(fnm::CorePointReceiver *source);
     fnm::CorePointReceiver* getPointReceiver()const;
     virtual int	type() const override;

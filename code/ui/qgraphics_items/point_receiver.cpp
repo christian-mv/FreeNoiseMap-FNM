@@ -4,25 +4,25 @@
 
 namespace fnm {
 
-QgraphicsItemPointReceiver::QgraphicsItemPointReceiver():
-    QgraphicsItemAbstractPointSource()
+PointReceiver::PointReceiver():
+    AbstractPointSource()
 {    
 
 }
 
-void QgraphicsItemPointReceiver::setPointReceiver(fnm::CorePointReceiver *source)
+void PointReceiver::setPointReceiver(fnm::CorePointReceiver *source)
 {
-    QgraphicsItemAbstractPointSource::setPoint(source);
+    AbstractPointSource::setPoint(source);
 }
 
-fnm::CorePointReceiver *QgraphicsItemPointReceiver::getPointReceiver() const
+fnm::CorePointReceiver *PointReceiver::getPointReceiver() const
 {
-    auto source  = QgraphicsItemAbstractPointSource::getPoint();
+    auto source  = AbstractPointSource::getPoint();
     return static_cast<fnm::CorePointReceiver *>(source);
 }
 
 
-int QgraphicsItemPointReceiver::type() const
+int PointReceiver::type() const
 {
     return fnm::TypeId::PointReceiverItemType; // represents a custom item
 }

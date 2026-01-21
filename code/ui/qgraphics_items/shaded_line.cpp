@@ -12,7 +12,7 @@
 
 namespace fnm {
 
-GraphicsItemShadedLine::GraphicsItemShadedLine()
+ShadedLine::ShadedLine()
 {
     distanceText = new SimpleTextItem(this);
     horizontalText = new SimpleTextItem(this);
@@ -25,7 +25,7 @@ GraphicsItemShadedLine::GraphicsItemShadedLine()
 
 }
 
-QRectF GraphicsItemShadedLine::boundingRect() const
+QRectF ShadedLine::boundingRect() const
 {
 
     // expandimos un poco el rectangulo para garantizar que el
@@ -38,7 +38,7 @@ QRectF GraphicsItemShadedLine::boundingRect() const
 }
 
 
-void GraphicsItemShadedLine::paint(QPainter *painter,
+void ShadedLine::paint(QPainter *painter,
                                      const QStyleOptionGraphicsItem *option,
                                      QWidget *widget)
 {
@@ -189,13 +189,13 @@ void GraphicsItemShadedLine::paint(QPainter *painter,
 
 }
 
-double GraphicsItemShadedLine::theta() const
+double ShadedLine::theta() const
 {
     // return angle between this.line1 and this.line2
     return atan(line().dy()/line().dx())* 180 / 3.14159265;
 }
 
-void GraphicsItemShadedLine::updateShadedLines()
+void ShadedLine::updateShadedLines()
 {
     if(line().dx()>0 && line().dy()>0){
         line1.setLine(line().p2().x(), line().p1().y(), line().p2().x(), line().p2().y());
@@ -212,7 +212,7 @@ void GraphicsItemShadedLine::updateShadedLines()
     }
 }
 
-void GraphicsItemShadedLine::drawLines(QPainter *painter) const
+void ShadedLine::drawLines(QPainter *painter) const
 {
     painter->drawLine(line()); //diagonal
     painter->drawLine(line1);  // horizontal line
