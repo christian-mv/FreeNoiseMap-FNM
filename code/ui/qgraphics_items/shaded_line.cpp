@@ -14,10 +14,10 @@ namespace fnm {
 
 GraphicsItemShadedLine::GraphicsItemShadedLine()
 {
-    distanceText = new QGraphicsSimpleTextItem(this);
-    horizontalText = new QGraphicsSimpleTextItem(this);
-    verticalText = new QGraphicsSimpleTextItem(this);
-    degreesText = new QGraphicsSimpleTextItem(this);
+    distanceText = new SimpleTextItem(this);
+    horizontalText = new SimpleTextItem(this);
+    verticalText = new SimpleTextItem(this);
+    degreesText = new SimpleTextItem(this);
 
 //    distanceText->setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
 //    horizontalText->setFlag(QGraphicsItem::ItemIgnoresTransformations, true);

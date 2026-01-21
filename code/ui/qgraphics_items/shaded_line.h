@@ -5,7 +5,7 @@
 #include<QFont>
 
 
-namespace fnm { class QGraphicsSimpleTextItem; }
+namespace fnm { class SimpleTextItem; }
 
 namespace fnm {
 
@@ -26,10 +26,10 @@ private:
 
     QLineF line1, line2;
 
-    fnm::QGraphicsSimpleTextItem *distanceText;
-    fnm::QGraphicsSimpleTextItem *horizontalText;
-    fnm::QGraphicsSimpleTextItem *verticalText;
-    fnm::QGraphicsSimpleTextItem *degreesText;
+    fnm::SimpleTextItem *distanceText;
+    fnm::SimpleTextItem *horizontalText;
+    fnm::SimpleTextItem *verticalText;
+    fnm::SimpleTextItem *degreesText;
 
     double theta() const;
     void updateShadedLines();

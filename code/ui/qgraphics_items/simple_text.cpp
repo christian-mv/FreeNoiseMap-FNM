@@ -3,12 +3,12 @@
 
 namespace fnm {
 
-QGraphicsSimpleTextItem::QGraphicsSimpleTextItem(QGraphicsItem *parent)
+SimpleTextItem::SimpleTextItem(QGraphicsItem *parent)
 {
     this->setParentItem(parent);
 }
 
-void QGraphicsSimpleTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void SimpleTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 
    painter->setPen(Qt::black);

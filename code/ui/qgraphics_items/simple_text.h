@@ -5,11 +5,11 @@
 
 namespace fnm {
 
-class QGraphicsSimpleTextItem : public ::QGraphicsSimpleTextItem
+class SimpleTextItem : public ::QGraphicsSimpleTextItem
 {
 public:
 
-    QGraphicsSimpleTextItem(QGraphicsItem *parent = nullptr);
+    SimpleTextItem(QGraphicsItem *parent = nullptr);
 
 protected:
 
