@@ -5,7 +5,7 @@
 
 #include <QDebug>
 
-namespace fnm {
+namespace fnm_ui {
 
 AbstractPolyLine::AbstractPolyLine():
     xMin(0), xMax(0), yMin(0), yMax(0), bufferDistance(10.0),

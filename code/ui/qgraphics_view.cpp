@@ -5,7 +5,7 @@
 #include <QGraphicsItem>
 #include <cmath>
 
-namespace fnm {
+namespace fnm_ui {
 
 QGraphicsView::QGraphicsView(QWidget *parent):
     ::QGraphicsView(parent),

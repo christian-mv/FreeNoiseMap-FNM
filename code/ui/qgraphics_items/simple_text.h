@@ -3,7 +3,7 @@
 
 #include<QGraphicsSimpleTextItem>
 
-namespace fnm {
+namespace fnm_ui {
 
 class SimpleTextItem : public ::QGraphicsSimpleTextItem
 {

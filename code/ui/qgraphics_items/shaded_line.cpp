@@ -10,7 +10,7 @@
 #include "shaded_line.h"
 #include "simple_text.h"
 
-namespace fnm {
+namespace fnm_ui {
 
 ShadedLine::ShadedLine()
 {

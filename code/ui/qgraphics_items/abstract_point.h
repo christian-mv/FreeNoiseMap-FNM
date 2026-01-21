@@ -5,7 +5,7 @@
 
 namespace fnm { class CorePoint; }
 
-namespace fnm {
+namespace fnm_ui {
 
 class AbstractPointSource : public QGraphicsPixmapItem
 {

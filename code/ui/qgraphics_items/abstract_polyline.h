@@ -4,7 +4,7 @@
 #include <QGraphicsItem>
 namespace fnm { class Core3DSegment; }
 
-namespace fnm {
+namespace fnm_ui {
 // This is an abstract Class
 class AbstractPolyLine : public QGraphicsItem
 {

@@ -4,7 +4,7 @@
 #include "abstract_polyline.h"
 #include "3D_segment.h"
 
-namespace fnm {
+namespace fnm_ui {
 
 class PolyLine : public AbstractPolyLine
 {

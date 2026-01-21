@@ -9,7 +9,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QStyleOptionGraphicsItem>
 
-namespace fnm {
+namespace fnm_ui {
 
 AbstractPointSource::AbstractPointSource()
 {    

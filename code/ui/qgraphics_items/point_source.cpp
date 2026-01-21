@@ -2,7 +2,7 @@
 #include "types_namespace.h"
 #include "core/point_source.h"
 
-namespace fnm {
+namespace fnm_ui {
 
 PointSource::PointSource():
     AbstractPointSource()

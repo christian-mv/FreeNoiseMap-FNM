@@ -2,7 +2,7 @@
 #include "types_namespace.h"
 #include <QPainter>
 
-namespace fnm {
+namespace fnm_ui {
 
 RasterPixmap::RasterPixmap()
 {

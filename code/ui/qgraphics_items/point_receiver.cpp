@@ -2,7 +2,7 @@
 #include "types_namespace.h"
 #include "core/point_receiver.h"
 
-namespace fnm {
+namespace fnm_ui {
 
 PointReceiver::PointReceiver():
     AbstractPointSource()

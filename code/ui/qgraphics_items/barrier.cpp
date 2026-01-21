@@ -4,7 +4,7 @@
 #include <QPainter>
 #include <QDebug>
 
-namespace fnm {
+namespace fnm_ui {
 
 Barrier::Barrier():
     AbstractPolyLine()

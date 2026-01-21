@@ -4,7 +4,7 @@
 #include <QGraphicsView>
 #include <QMouseEvent>
 
-namespace fnm {
+namespace fnm_ui {
 
 class QGraphicsView : public ::QGraphicsView
 {

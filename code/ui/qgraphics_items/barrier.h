@@ -6,7 +6,7 @@
 
 namespace fnm { class CoreBarrierSegment; }
 
-namespace fnm {
+namespace fnm_ui {
 
 class Barrier : public AbstractPolyLine
 {

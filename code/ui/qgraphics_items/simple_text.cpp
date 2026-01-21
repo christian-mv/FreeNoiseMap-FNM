@@ -1,7 +1,7 @@
 #include "simple_text.h"
 #include <QPainter>
 
-namespace fnm {
+namespace fnm_ui {
 
 SimpleTextItem::SimpleTextItem(QGraphicsItem *parent)
 {

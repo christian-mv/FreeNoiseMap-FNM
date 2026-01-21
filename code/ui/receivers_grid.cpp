@@ -5,7 +5,7 @@
 #include <QtWidgets>
 using namespace std;
 
-namespace fnm {
+namespace fnm_ui {
 
 ReceiversGrid::ReceiversGrid()
 {

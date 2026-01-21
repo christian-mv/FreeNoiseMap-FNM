@@ -14,7 +14,7 @@ class  QProgressDialog;
 
 using namespace std;
 
-namespace fnm {
+namespace fnm_ui {
 
 class ReceiversGrid
 {

@@ -5,7 +5,7 @@
 
 namespace fnm { class LineSourceSegment; }
 
-namespace fnm {
+namespace fnm_ui {
 
 class MultiLineSource : public AbstractPolyLine
 {

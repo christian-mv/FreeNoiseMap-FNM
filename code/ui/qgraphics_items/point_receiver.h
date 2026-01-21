@@ -4,7 +4,7 @@
 #include "abstract_point.h"
 namespace fnm { class CorePointReceiver; }
 
-namespace fnm {
+namespace fnm_ui {
 
 class PointReceiver : public AbstractPointSource
 {

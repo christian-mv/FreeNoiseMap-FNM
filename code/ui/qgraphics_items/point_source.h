@@ -4,7 +4,7 @@
 #include "abstract_point.h"
 namespace fnm { class CorePointSource; }
 
-namespace fnm {
+namespace fnm_ui {
 
 class PointSource : public AbstractPointSource
 {

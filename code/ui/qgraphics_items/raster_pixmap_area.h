@@ -4,7 +4,7 @@
 
 class QPainter;
 
-namespace fnm {
+namespace fnm_ui {
 
 class RasterPixmap : public QGraphicsPixmapItem
 {
