@@ -115,12 +115,18 @@ void MainWindow::makeMenuMutualExclusive()
 
 void MainWindow::loadDefaultGrid()
 {
-    myGrid.setRect(QRectF(0, 0, 1000, 600));
+    fnm_core::Rect rect{0, 0, 1000, 600};
+    myGrid.setRect(rect);
     myGrid.setDeltaX(2);
     myGrid.setDeltaY(2);
     myGrid.setInterpolationFactor(1);
     receivers.setGrid(myGrid);
-    scene.setSceneRect(myGrid.getRect()); // neccesary for consistency when scrolling
+
+    QRectF sceneRect(myGrid.getRect().x,
+                     myGrid.getRect().y,
+                     myGrid.getRect().width,
+                     myGrid.getRect().height);
+    scene.setSceneRect(sceneRect); // neccesary for consistency when scrolling
 
     resetPixmapArea();
 
@@ -133,11 +139,11 @@ void MainWindow::loadDefaultGrid()
 
 void MainWindow::resetPixmapArea(){
 
-    qreal side = qMin(myGrid.getRect().width(), myGrid.getRect().height());
+    qreal side = qMin(myGrid.getRect().width, myGrid.getRect().height);
     qreal side2 = qMax(QGuiApplication::primaryScreen()->size().width(), QGuiApplication::primaryScreen()->size().height());
 
-    image = new QImage(static_cast<int>( side2*myGrid.getRect().width()/side ),
-                 static_cast<int>( side2*myGrid.getRect().height()/side ),
+    image = new QImage(static_cast<int>( side2*myGrid.getRect().width/side ),
+                 static_cast<int>( side2*myGrid.getRect().height/side ),
                  QImage::Format_ARGB32);
     image->fill(Qt::white);
 
@@ -738,10 +744,10 @@ void MainWindow::on_actiondrag_mode_triggered()
 void MainWindow::on_actionzoom_full_triggered()
 {
     qreal ofsset = 10;
-    QRectF rectF = QRectF(myGrid.getRect().x()-ofsset,
-                          myGrid.getRect().y()+ofsset,
-                          myGrid.getRect().width()+ofsset,
-                          myGrid.getRect().height()+ofsset);
+    QRectF rectF = QRectF(myGrid.getRect().x-ofsset,
+                          myGrid.getRect().y+ofsset,
+                          myGrid.getRect().width+ofsset,
+                          myGrid.getRect().height+ofsset);
 
     ui->graphicsView->fitInView(rectF,Qt::KeepAspectRatio);
     ui->graphicsView->resetTotalScaleFactor();

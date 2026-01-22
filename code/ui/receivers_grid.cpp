@@ -82,7 +82,8 @@ bool ReceiversGrid::paintGrid(QImage &image, const fnm_core::GridSettings &myGri
 
     QPainter painter(&image);
 
-    painter.translate(myGrid.getRect().bottomLeft());
+    // painter.translate(myGrid.getRect().bottomLeft());
+    painter.translate(myGrid.getRect().left(), myGrid.getRect().bottom());
 
     painter.translate(-myGrid.getRect().left() /*+ myGrid.getDeltaX()/2*/,
                       myGrid.getRect().top() /*- myGrid.getDeltaY()/2*/);
@@ -92,7 +93,12 @@ bool ReceiversGrid::paintGrid(QImage &image, const fnm_core::GridSettings &myGri
 
 
 //    // set logical coordinates according to gridSettings area
-    painter.setWindow(gridSettings.getRect().toRect());
+    // painter.setWindow(gridSettings.getRect().toRect());
+    QRect rect(gridSettings.getRect().x,
+               gridSettings.getRect().y,
+               gridSettings.getRect().width,
+               gridSettings.getRect().height);
+    painter.setWindow(rect);
 
 
     // set paint properties

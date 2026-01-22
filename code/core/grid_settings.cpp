@@ -1,9 +1,8 @@
 #include "grid_settings.h"
-#include <QDebug>
 
 namespace fnm_core {
 
-GridSettings::GridSettings(QRectF rect)
+GridSettings::GridSettings(Rect rect)
 {
     GridSettings(); // default parameters
     setRect(rect);
@@ -13,12 +12,12 @@ unsigned int GridSettings::countRows()
 {
 
 
-    return static_cast<unsigned int>( this->getRect().width() / getDeltaX() );
+    return static_cast<unsigned int>( this->getRect().width / getDeltaX() );
 }
 
 unsigned int GridSettings::countColumns()
 {
-    return static_cast<unsigned int>( this->getRect().height() / getDeltaY() );
+    return static_cast<unsigned int>( this->getRect().height / getDeltaY() );
 }
 
 GridSettings::GridSettings()
