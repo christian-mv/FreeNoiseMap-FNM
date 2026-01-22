@@ -43,7 +43,7 @@ namespace  NoiseEngine
     MatrixOfDoubles createMatrixOfDoubles(unsigned int m, unsigned int n);
     int intRandom(int min, int max);
 
-    void P2P(PointSource *pointSource, PointReceiver *receiver,
+    void P2P(const PointSource *pointSource, PointReceiver *receiver,
              const std::vector<BarrierSegment*> &barrierSegments);
 
 

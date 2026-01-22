@@ -46,7 +46,7 @@ double distanceBetweenPoints(double x1, double y1, double z1, double x2, double 
 
 
 
-void P2P(fnm_core::PointSource *pointSource,
+void P2P(const fnm_core::PointSource *pointSource,
          fnm_core::PointReceiver *receiver,
          const std::vector<fnm_core::BarrierSegment*> &barrierSegments)
 {

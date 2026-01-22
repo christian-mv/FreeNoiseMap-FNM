@@ -44,12 +44,7 @@ bool ProjectController::runCalculation(const std::vector<PointSource*>& pointSou
             
             // 1. Calculate noise from Point Sources
             for(const auto* source : pointSources) {
-                // P2P expects non-const pointers currently, though it probably shouldn't modify them.
-                // Casting constness away for legacy compatibility if needed, but P2P signature is:
-                // void P2P(PointSource *pointSource, PointReceiver *receiver, const std::vector<BarrierSegment*> &barrierSegments)
-                // Ideally P2P should take const PointSource*. Checking noise_engine.h...
-                // It takes PointSource*.
-                NoiseEngine::P2P(const_cast<PointSource*>(source), &currentReceiver, barriers);
+                NoiseEngine::P2P(source, &currentReceiver, barriers);
             }
 
             // 2. Calculate noise from Line Sources
