@@ -8,6 +8,16 @@
 #include "grid_settings.h"
 #include "receivers_grid.h"
 #include "qgraphics_items/raster_pixmap_area_item.h"
+#include <QActionGroup>
+
+// Widgets
+class QAction;
+class QWidget;
+class QHBoxLayout;
+class QMenuBar;
+class QStatusBar;
+class QToolBar;
+namespace fnm_ui { class FnmView; }
 
 namespace fnm_core {
 class PointSource;
@@ -25,11 +35,6 @@ class RasterPixmapItem;
 
 class QLineF;
 class QProgressDialog;
-#include <QActionGroup>
-
-namespace Ui {
-class MainWindow;
-}
 
 class MainWindow : public QMainWindow
 {
@@ -59,7 +64,28 @@ private slots:
     void on_actionAdd_Receiver_triggered();
 
 private:
-    Ui::MainWindow *ui;
+    void setupUI();
+
+    // UI Elements
+    QWidget *centralwidget;
+    QHBoxLayout *horizontalLayout;
+    fnm_ui::FnmView *graphicsView;
+    QMenuBar *menubar;
+    QStatusBar *statusbar;
+    QToolBar *toolBar;
+
+    // Actions
+    QAction *actionAdd_point_source;
+    QAction *actioneditMode;
+    QAction *actiongrid;
+    QAction *actioncalculateGrid;
+    QAction *actiondrag_mode;
+    QAction *actionzoom_full;
+    QAction *action_add_line_source;
+    QAction *actionAcoustic_Barrier;
+    QAction *actionadd_polyline;
+    QAction *actionAdd_Receiver;
+
     QGraphicsScene scene;
     QImage *image;
     fnm_ui::RasterPixmapItem pixmapItem;

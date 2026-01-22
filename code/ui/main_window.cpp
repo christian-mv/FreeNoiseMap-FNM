@@ -6,12 +6,18 @@
 #include <QProgressDialog>
 #include <QMessageBox>
 #include <QScrollBar>
+#include <QMenuBar>
+#include <QToolBar>
+#include <QStatusBar>
+#include <QHBoxLayout>
+#include <QWidget>
+#include <QAction>
 #include "main_window.h"
 #include "types_namespace.h"
 #include "point_source.h"
 #include "point_receiver.h"
-#include "ui_mainwindow.h"
 #include "noise_engine.h"
+#include "fnm_view.h"
 #include "qgraphics_items/point_source_item.h"
 #include "qgraphics_items/point_receiver_item.h"
 #include "qgraphics_items/shaded_line_item.h"
@@ -24,7 +30,7 @@
 
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent), ui(new Ui::MainWindow),
+    QMainWindow(parent),
     menuActionsGroup(new QActionGroup(this)),
     singleLine(nullptr), 
     polyLine(nullptr), 
@@ -32,9 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
     acousticBarrier(nullptr)
 
 {
-
-    ui->setupUi(this);
-    setCentralWidget(ui->graphicsView);
+    setupUI();
+    setCentralWidget(graphicsView);
     setWindowIcon(QIcon(":/images/icons/app_icon.png"));
     setWindowTitle(QString(MY_APP_NAME)+" - version "+QString(VERSION_OF_APP));
 
@@ -44,14 +49,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     loadDefaultGrid();
 
-    ui->graphicsView->setScene(&scene);
-    ui->graphicsView->setMouseTracking(true); // enabling mouse track on a scene when not pressing mouse
+    graphicsView->setScene(&scene);
+    graphicsView->setMouseTracking(true); // enabling mouse track on a scene when not pressing mouse
     qApp->installEventFilter(this);
 
 
 
-    ui->graphicsView->centerOn(QPointF(0,0));
-    ui->graphicsView->scale(1,-1); // invert Y axes
+    graphicsView->centerOn(QPointF(0,0));
+    graphicsView->scale(1,-1); // invert Y axes
 
 
 
@@ -59,17 +64,139 @@ MainWindow::MainWindow(QWidget *parent) :
 
 #if defined(Q_OS_ANDROID) || defined(Q_OS_IOS)
             QSize iconsSize(80,80);
-            ui->toolBar->setIconSize(iconsSize);
+            toolBar->setIconSize(iconsSize);
 #endif
 
 
-    ui->graphicsView->show();
+    graphicsView->show();
 
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+}
+
+void MainWindow::setupUI()
+{
+    if (this->objectName().isEmpty())
+        this->setObjectName(QString::fromUtf8("MainWindow"));
+    this->resize(800, 600);
+
+    // Central Widget and Layout
+    centralwidget = new QWidget(this);
+    centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
+    horizontalLayout = new QHBoxLayout(centralwidget);
+    horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+
+    // Graphics View
+    graphicsView = new fnm_ui::FnmView(centralwidget);
+    graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
+    graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    graphicsView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
+    horizontalLayout->addWidget(graphicsView);
+
+    this->setCentralWidget(centralwidget);
+
+    // Menu Bar
+    menubar = new QMenuBar(this);
+    menubar->setObjectName(QString::fromUtf8("menubar"));
+    menubar->setGeometry(QRect(0, 0, 800, 19));
+    this->setMenuBar(menubar);
+
+    // Status Bar
+    statusbar = new QStatusBar(this);
+    statusbar->setObjectName(QString::fromUtf8("statusbar"));
+    statusbar->setLayoutDirection(Qt::LeftToRight);
+    this->setStatusBar(statusbar);
+
+    // Tool Bar
+    toolBar = new QToolBar(this);
+    toolBar->setObjectName(QString::fromUtf8("toolBar"));
+    toolBar->setWindowTitle(QString::fromUtf8("toolBar_2"));
+    toolBar->setIconSize(QSize(36, 36));
+    toolBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    this->addToolBar(Qt::TopToolBarArea, toolBar);
+
+    // Actions
+    actioncalculateGrid = new QAction(this);
+    actioncalculateGrid->setObjectName(QString::fromUtf8("actioncalculateGrid"));
+    actioncalculateGrid->setIcon(QIcon(":/images/icons/calculate_grid.png"));
+    actioncalculateGrid->setText(QString::fromUtf8("calculateGrid"));
+    actioncalculateGrid->setToolTip(QString::fromUtf8("Calculate Grid"));
+    actioncalculateGrid->setShortcut(QString::fromUtf8("Ctrl+R"));
+
+    actioneditMode = new QAction(this);
+    actioneditMode->setObjectName(QString::fromUtf8("actioneditMode"));
+    actioneditMode->setIcon(QIcon(":/images/icons/edit_mode_cursor"));
+    actioneditMode->setText(QString::fromUtf8("editMode"));
+    actioneditMode->setToolTip(QString::fromUtf8("edit mode"));
+    actioneditMode->setShortcut(QString::fromUtf8("Esc"));
+
+    actiondrag_mode = new QAction(this);
+    actiondrag_mode->setObjectName(QString::fromUtf8("actiondrag_mode"));
+    actiondrag_mode->setIcon(QIcon(":/images/icons/drag_mode.png"));
+    actiondrag_mode->setText(QString::fromUtf8("Drag mode"));
+
+    actionAdd_point_source = new QAction(this);
+    actionAdd_point_source->setObjectName(QString::fromUtf8("actionAdd_point_source"));
+    actionAdd_point_source->setIcon(QIcon(":/images/icons/point_source.png"));
+    actionAdd_point_source->setText(QString::fromUtf8("Add point source"));
+
+    actionAdd_Receiver = new QAction(this);
+    actionAdd_Receiver->setObjectName(QString::fromUtf8("actionAdd_Receiver"));
+    actionAdd_Receiver->setIcon(QIcon(":/images/icons/receiver.png"));
+    actionAdd_Receiver->setText(QString::fromUtf8("Add Receiver"));
+
+    action_add_line_source = new QAction(this);
+    action_add_line_source->setObjectName(QString::fromUtf8("action_add_line_source"));
+    action_add_line_source->setIcon(QIcon(":/images/icons/line_source.png"));
+    action_add_line_source->setText(QString::fromUtf8("Add line source"));
+
+    actionadd_polyline = new QAction(this);
+    actionadd_polyline->setObjectName(QString::fromUtf8("actionadd_polyline"));
+    actionadd_polyline->setIcon(QIcon(":/images/icons/polyline.png"));
+    actionadd_polyline->setText(QString::fromUtf8("Add polyline"));
+
+    actionAcoustic_Barrier = new QAction(this);
+    actionAcoustic_Barrier->setObjectName(QString::fromUtf8("actionAcoustic_Barrier"));
+    actionAcoustic_Barrier->setIcon(QIcon(":/images/icons/acoustic_barrier.png"));
+    actionAcoustic_Barrier->setText(QString::fromUtf8("Acoustic Barrier"));
+
+    actiongrid = new QAction(this);
+    actiongrid->setObjectName(QString::fromUtf8("actiongrid"));
+    actiongrid->setIcon(QIcon(":/images/icons/grid.png"));
+    actiongrid->setText(QString::fromUtf8("grid"));
+
+    actionzoom_full = new QAction(this);
+    actionzoom_full->setObjectName(QString::fromUtf8("actionzoom_full"));
+    actionzoom_full->setIcon(QIcon(":/images/icons/extend.png"));
+    actionzoom_full->setText(QString::fromUtf8("zoom full"));
+    actionzoom_full->setToolTip(QString::fromUtf8("Zoom full extente"));
+
+    // Add actions to toolbar
+    toolBar->addAction(actioncalculateGrid);
+    toolBar->addAction(actioneditMode);
+    toolBar->addAction(actiondrag_mode);
+    toolBar->addAction(actionAdd_point_source);
+    toolBar->addAction(actionAdd_Receiver);
+    toolBar->addAction(action_add_line_source);
+    toolBar->addAction(actionadd_polyline);
+    toolBar->addAction(actionAcoustic_Barrier);
+    toolBar->addAction(actiongrid);
+    toolBar->addAction(actionzoom_full);
+
+    // Connect signals
+    connect(actionAdd_point_source, &QAction::triggered, this, &MainWindow::on_actionAdd_point_source_triggered);
+    connect(actioneditMode, &QAction::triggered, this, &MainWindow::on_actioneditMode_triggered);
+    connect(actiongrid, &QAction::triggered, this, &MainWindow::on_actiongrid_triggered);
+    connect(actioncalculateGrid, &QAction::triggered, this, &MainWindow::on_actioncalculateGrid_triggered);
+    connect(actiondrag_mode, &QAction::triggered, this, &MainWindow::on_actiondrag_mode_triggered);
+    connect(actionzoom_full, &QAction::triggered, this, &MainWindow::on_actionzoom_full_triggered);
+    connect(action_add_line_source, &QAction::triggered, this, &MainWindow::on_action_add_line_source_triggered);
+    connect(actionAcoustic_Barrier, &QAction::triggered, this, &MainWindow::on_actionAcoustic_Barrier_triggered);
+    connect(actionadd_polyline, &QAction::triggered, this, &MainWindow::on_actionadd_polyline_triggered);
+    connect(actionAdd_Receiver, &QAction::triggered, this, &MainWindow::on_actionAdd_Receiver_triggered);
 }
 
 #include <QTransform>
@@ -106,7 +233,7 @@ void MainWindow::loadCursors()
 
 void MainWindow::makeMenuMutualExclusive()
 {
-    auto actionsList = ui->toolBar->actions();
+    auto actionsList = toolBar->actions();
     for(auto action: actionsList){
         action->setCheckable(true);
         menuActionsGroup->addAction(action);
@@ -156,7 +283,7 @@ void MainWindow::resetPixmapArea(){
 
 void MainWindow::movingItemsOnTheScene(const QGraphicsSceneMouseEvent *sceneMouseEvent)
 {
-    if (ui->graphicsView->cursor()==myCursors["arrowMode"] ){
+    if (graphicsView->cursor()==myCursors["arrowMode"] ){
 
 
         QGraphicsItem *moving_item= scene.mouseGrabberItem();
@@ -344,20 +471,20 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
                                     .arg(sceneEvent->scenePos().x())
                                     .arg(sceneEvent->scenePos().y());
 
-            statusBar()->showMessage(str);
+            statusbar->showMessage(str);
 
             updateShadedLinesItem(sceneEvent->scenePos());
             movingItemsOnTheScene(sceneEvent);
 
-            auto itemUnderCursor = scene.itemAt(sceneEvent->scenePos(), ui->graphicsView->transform());
+            auto itemUnderCursor = scene.itemAt(sceneEvent->scenePos(), graphicsView->transform());
             if(itemUnderCursor != &pixmapItem
                     && itemUnderCursor != nullptr ){
-                if(ui->graphicsView->cursor()==myCursors["arrowMode"]){
+                if(graphicsView->cursor()==myCursors["arrowMode"]){
                     itemUnderCursor->setAcceptHoverEvents(true);
                 }
                 else{
                     itemUnderCursor->setAcceptHoverEvents(false);
-                    itemUnderCursor->setCursor(ui->graphicsView->cursor());
+                    itemUnderCursor->setCursor(graphicsView->cursor());
                 }
             }
           }
@@ -365,7 +492,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
         // add point source
         else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
                  && sceneEvent->button() == Qt::LeftButton
-                 && ui->graphicsView->cursor()==myCursors["pointSource"])
+                 && graphicsView->cursor()==myCursors["pointSource"])
           {
 
             fnm_core::PointSource *myPointSource = new fnm_core::PointSource(
@@ -399,9 +526,9 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
         // draggin polyline tipe elements
         else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
                  && sceneEvent->button() == Qt::LeftButton
-                 && ui->graphicsView->cursor()==myCursors["arrowMode"]){
+                 && graphicsView->cursor()==myCursors["arrowMode"]){
 
-            QGraphicsItem *pressed_item = scene.itemAt(sceneEvent->scenePos(),ui->graphicsView->transform());
+            QGraphicsItem *pressed_item = scene.itemAt(sceneEvent->scenePos(),graphicsView->transform());
             /*
              * Note : scene.mouseGrabberItem() doesn't
              * work well on GraphicsSceneMousePress event but it works well on
@@ -433,7 +560,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
         // add receiver
         else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
                  && sceneEvent->button() == Qt::LeftButton
-                 && ui->graphicsView->cursor()==myCursors["receiver"])
+                 && graphicsView->cursor()==myCursors["receiver"])
           {
             qDebug()<<"HERE";
             fnm_core::PointReceiver *myReceiver = new fnm_core::PointReceiver(
@@ -469,7 +596,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
         // add polyLine
                 else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
                          && sceneEvent->button() == Qt::LeftButton
-                         && ui->graphicsView->cursor()==myCursors["polyLineCursor"])
+                         && graphicsView->cursor()==myCursors["polyLineCursor"])
                 {
 
                     // there aren't any declared vertice in the line
@@ -527,7 +654,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
         // add line source
         else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
                  && sceneEvent->button() == Qt::LeftButton
-                 && ui->graphicsView->cursor()==myCursors["lineSourceMode"])
+                 && graphicsView->cursor()==myCursors["lineSourceMode"])
         {
 
             // there aren't any declared vertice in the line
@@ -583,7 +710,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
         // add acoustic barrier
         else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
                  && sceneEvent->button() == Qt::LeftButton
-                 && ui->graphicsView->cursor()==myCursors["barrierCursor"]){
+                 && graphicsView->cursor()==myCursors["barrierCursor"]){
             // there aren't any declared vertice in the line
             if(singleLine == nullptr){
                 createShadedLinesItem(sceneEvent->scenePos());
@@ -635,9 +762,9 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
         // release polyLine-type opbjects
         else if (sceneEvent->type() == QEvent::GraphicsSceneMousePress
                  && sceneEvent->button() == Qt::RightButton
-                 && (ui->graphicsView->cursor()==myCursors["lineSourceMode"]
-                     || ui->graphicsView->cursor()==myCursors["barrierCursor"]
-                     || ui->graphicsView->cursor()==myCursors["polyLineCursor"])
+                 && (graphicsView->cursor()==myCursors["lineSourceMode"]
+                     || graphicsView->cursor()==myCursors["barrierCursor"]
+                     || graphicsView->cursor()==myCursors["polyLineCursor"])
 
                  )
         {
@@ -649,12 +776,12 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
         // dropping items
         else if (sceneEvent->type() == QEvent::GraphicsSceneMouseRelease
                  && sceneEvent->button() == Qt::LeftButton
-                 && ui->graphicsView->cursor()==myCursors["arrowMode"]){
+                 && graphicsView->cursor()==myCursors["arrowMode"]){
             droppingItemsOnTheScene(sceneEvent);
             deleteShadedLinesItem();
         }
         else if (sceneEvent->type() == QEvent::TouchUpdate
-                 && ui->graphicsView->cursor()==myCursors["arrowMode"]){
+                 && graphicsView->cursor()==myCursors["arrowMode"]){
             // next conditional guarantees that the user dropp any object that
             // currently is dragging before proccessing TouchUpdate event
             deleteShadedLinesItem();
@@ -671,7 +798,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 void MainWindow::on_actionAdd_point_source_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
-    ui->graphicsView->setCursor(myCursors["pointSource"]);
+    graphicsView->setCursor(myCursors["pointSource"]);
     releaseLineItemEdition();
 
 }
@@ -680,7 +807,7 @@ void MainWindow::on_actionAdd_point_source_triggered()
 void MainWindow::on_actioneditMode_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
-    ui->graphicsView->setCursor(myCursors["arrowMode"]);   
+    graphicsView->setCursor(myCursors["arrowMode"]);   
     releaseLineItemEdition();
 
 }
@@ -688,14 +815,14 @@ void MainWindow::on_actioneditMode_triggered()
 void MainWindow::on_actiongrid_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
-    ui->graphicsView->setCursor(myCursors["gridMode"]);
+    graphicsView->setCursor(myCursors["gridMode"]);
     releaseLineItemEdition();
 }
 
 void MainWindow::on_actioncalculateGrid_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
-    ui->graphicsView->setCursor(myCursors["arrowMode"]);
+    graphicsView->setCursor(myCursors["arrowMode"]);
     resetPixmapArea();
     receivers.resetNoiseReceiver();
     releaseLineItemEdition();
@@ -735,7 +862,7 @@ void MainWindow::on_actioncalculateGrid_triggered()
 
 void MainWindow::on_actiondrag_mode_triggered()
 {
-    ui->graphicsView->setCursor(myCursors["dragMode"]);
+    graphicsView->setCursor(myCursors["dragMode"]);
     releaseLineItemEdition();
 
 }
@@ -748,35 +875,35 @@ void MainWindow::on_actionzoom_full_triggered()
                           myGrid.getRect().width+ofsset,
                           myGrid.getRect().height+ofsset);
 
-    ui->graphicsView->fitInView(rectF,Qt::KeepAspectRatio);
-    ui->graphicsView->resetTotalScaleFactor();
+    graphicsView->fitInView(rectF,Qt::KeepAspectRatio);
+    graphicsView->resetTotalScaleFactor();
 }
 
 void MainWindow::on_action_add_line_source_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
-    ui->graphicsView->setCursor(myCursors["lineSourceMode"]);
+    graphicsView->setCursor(myCursors["lineSourceMode"]);
     releaseLineItemEdition();
 }
 
 void MainWindow::on_actionAcoustic_Barrier_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
-    ui->graphicsView->setCursor(myCursors["barrierCursor"]);
+    graphicsView->setCursor(myCursors["barrierCursor"]);
     releaseLineItemEdition();
 }
 
 void MainWindow::on_actionadd_polyline_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
-    ui->graphicsView->setCursor(myCursors["polyLineCursor"]);
+    graphicsView->setCursor(myCursors["polyLineCursor"]);
     releaseLineItemEdition();
 }
 
 void MainWindow::on_actionAdd_Receiver_triggered()
 {
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
-    ui->graphicsView->setCursor(myCursors["receiver"]);
+    graphicsView->setCursor(myCursors["receiver"]);
     releaseLineItemEdition();
 
 }
