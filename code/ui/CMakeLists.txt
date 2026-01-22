@@ -45,7 +45,7 @@ add_executable(FreeNoiseMap
     ${PROJECT_RESOURCES}
 )
 
-target_link_libraries(FreeNoiseMap PRIVATE Qt6::Widgets core)
+target_link_libraries(FreeNoiseMap PRIVATE Qt6::Widgets core Eigen3)
 
 target_include_directories(FreeNoiseMap PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/..

@@ -3,6 +3,7 @@
 #include <cmath>
 #include <tuple>
 #include <algorithm>
+#include <Eigen/Core>
 using namespace std;
 
 namespace fnm_core {
@@ -40,7 +41,7 @@ int intRandom(int min, int max)
 
 double distanceBetweenPoints(double x1, double y1, double z1, double x2, double y2, double z2)
 {
-    return sqrt( pow((x2-x1), 2) + pow((y2-y1), 2) + pow((z2-z1), 2));
+    return (Eigen::Vector3d(x2, y2, z2) - Eigen::Vector3d(x1, y1, z1)).norm();
 }
 
 

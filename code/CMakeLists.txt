@@ -7,5 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Find Qt6
 find_package(Qt6 COMPONENTS Widgets REQUIRED)
 
+# Eigen
+add_library(Eigen3 INTERFACE)
+target_include_directories(Eigen3 INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/third_party/eigen)
+
 add_subdirectory(core)
 add_subdirectory(ui)

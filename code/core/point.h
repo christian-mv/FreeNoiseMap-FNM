@@ -1,6 +1,8 @@
 #ifndef FNM_CORE_POINT_H
 #define FNM_CORE_POINT_H
 
+#include <Eigen/Core>
+
 namespace fnm_core {
 
 class Point
@@ -17,9 +19,13 @@ public:
     double get_x() const;
     double get_y() const;
     double get_z() const;
+    
+    const Eigen::Vector3d& getVector() const { return vec; }
+    void setVector(const Eigen::Vector3d& v) { vec = v; }
+
 private:
     // current data
-    double x, y, z; // current coordinates in meters units
+    Eigen::Vector3d vec;
 
 };
 
