@@ -1,8 +1,6 @@
 #ifndef FNM_CORE_NOISE_ENGINE_H
 #define FNM_CORE_NOISE_ENGINE_H
 
-#define MATRIX_OF_DOUBLES std::vector< std::vector<double> >
-
 #include <vector>
 #include <random>
 #include <tuple>
@@ -13,6 +11,9 @@
 
 
 namespace fnm_core {
+
+using MatrixOfDoubles = std::vector<std::vector<double>>;
+
 namespace  NoiseEngine
 {    
     const double pi = 3.14159265359;
@@ -39,7 +40,7 @@ namespace  NoiseEngine
 
 
 
-    MATRIX_OF_DOUBLES createMatrixOfDoubles(unsigned int m, unsigned int n);
+    MatrixOfDoubles createMatrixOfDoubles(unsigned int m, unsigned int n);
     int intRandom(int min, int max);
 
     void P2P(PointSource *pointSource, PointReceiver *receiver,

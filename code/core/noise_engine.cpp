@@ -8,8 +8,8 @@ using namespace std;
 namespace fnm_core {
 namespace NoiseEngine
 {
-MATRIX_OF_DOUBLES createMatrixOfDoubles(unsigned int m, unsigned int n){
-    MATRIX_OF_DOUBLES myMatriz;
+MatrixOfDoubles createMatrixOfDoubles(unsigned int m, unsigned int n){
+    MatrixOfDoubles myMatriz;
 
     //m * n is the size of the matrix
 
