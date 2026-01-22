@@ -243,34 +243,40 @@ void MainWindow::makeMenuMutualExclusive()
 void MainWindow::loadDefaultGrid()
 {
     fnm_core::Rect rect{0, 0, 1000, 600};
-    myGrid.setRect(rect);
-    myGrid.setDeltaX(2);
-    myGrid.setDeltaY(2);
-    myGrid.setInterpolationFactor(1);
-    receivers.setGrid(myGrid);
+    fnm_core::GridSettings settings;
+    settings.setRect(rect);
+    settings.setDeltaX(2);
+    settings.setDeltaY(2);
+    settings.setInterpolationFactor(1);
+    
+    noiseGridModel.setSettings(settings);
+    receivers.setNoiseGrid(&noiseGridModel);
 
-    QRectF sceneRect(myGrid.getRect().x,
-                     myGrid.getRect().y,
-                     myGrid.getRect().width,
-                     myGrid.getRect().height);
+    const auto& currentSettings = noiseGridModel.getSettings();
+
+    QRectF sceneRect(currentSettings.getRect().x,
+                     currentSettings.getRect().y,
+                     currentSettings.getRect().width,
+                     currentSettings.getRect().height);
     scene.setSceneRect(sceneRect); // neccesary for consistency when scrolling
 
     resetPixmapArea();
 
     scene.setBackgroundBrush(Qt::darkGray);
     scene.addItem(&pixmapItem);
-    pixmapItem.setPos(myGrid.get_x(), myGrid.get_y());
+    pixmapItem.setPos(currentSettings.get_x(), currentSettings.get_y());
 
 
 }
 
 void MainWindow::resetPixmapArea(){
 
-    qreal side = qMin(myGrid.getRect().width, myGrid.getRect().height);
+    const auto& gridSettings = noiseGridModel.getSettings();
+    qreal side = qMin(gridSettings.getRect().width, gridSettings.getRect().height);
     qreal side2 = qMax(QGuiApplication::primaryScreen()->size().width(), QGuiApplication::primaryScreen()->size().height());
 
-    image = new QImage(static_cast<int>( side2*myGrid.getRect().width/side ),
-                 static_cast<int>( side2*myGrid.getRect().height/side ),
+    image = new QImage(static_cast<int>( side2*gridSettings.getRect().width/side ),
+                 static_cast<int>( side2*gridSettings.getRect().height/side ),
                  QImage::Format_ARGB32);
     image->fill(Qt::white);
 
@@ -391,7 +397,8 @@ void MainWindow::releaseLineItemEdition()
 
 bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
 {    
-    for(unsigned long i = 0; i<receivers.matrix.size(); i++){
+    auto& matrix = noiseGridModel.getMatrix();
+    for(unsigned long i = 0; i<matrix.size(); i++){
         if(progress.wasCanceled()){
             return false;
         }
@@ -401,7 +408,7 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
         auto barriersSegments = barrierSegmentsToStdVector();
 //        MinimalAcousticBarrier* barrierSegment;
 
-        for(auto &currentReceiver : receivers.matrix.at(i)){           
+        for(auto &currentReceiver : matrix.at(i)){           
             for(auto currentItem : scene.items()){
                 // noise from point sources
                 if(currentItem->type() == fnm_core::TypeId::PointSourceItemType){
@@ -824,7 +831,7 @@ void MainWindow::on_actioncalculateGrid_triggered()
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
     graphicsView->setCursor(myCursors["arrowMode"]);
     resetPixmapArea();
-    receivers.resetNoiseReceiver();
+    noiseGridModel.resetReceivers();
     releaseLineItemEdition();
 
 
@@ -840,7 +847,7 @@ void MainWindow::on_actioncalculateGrid_triggered()
     progress.setWindowTitle(this->windowTitle());
     progress.setLabelText(QObject::tr("Calculating..."));
     progress.setMinimum(0);
-    progress.setMaximum(static_cast<int>( receivers.matrix.size()) );
+    progress.setMaximum(static_cast<int>( noiseGridModel.getMatrix().size()) );
     progress.show();
 
     if(!calculateNoiseFromSources(progress)){
@@ -849,9 +856,9 @@ void MainWindow::on_actioncalculateGrid_triggered()
 
     progress.setLabelText(QObject::tr("Painting Grid..."));
 
-    receivers.interpolateGrid(); // calculate interpolated receivers
-    receivers.paintGrid(*image, myGrid, progress);
-    receivers.clearInterpolatedReceivers(); // clean memory
+    noiseGridModel.interpolate(); // calculate interpolated receivers
+    receivers.paintGrid(*image, progress);
+    noiseGridModel.clearInterpolated(); // clean memory
 
     pixmapItem.setPixmap(QPixmap::fromImage( invertImageOnYAxes(*image) ));
 
@@ -870,10 +877,11 @@ void MainWindow::on_actiondrag_mode_triggered()
 void MainWindow::on_actionzoom_full_triggered()
 {
     qreal ofsset = 10;
-    QRectF rectF = QRectF(myGrid.getRect().x-ofsset,
-                          myGrid.getRect().y+ofsset,
-                          myGrid.getRect().width+ofsset,
-                          myGrid.getRect().height+ofsset);
+    const auto& rect = noiseGridModel.getSettings().getRect();
+    QRectF rectF = QRectF(rect.x-ofsset,
+                          rect.y+ofsset,
+                          rect.width+ofsset,
+                          rect.height+ofsset);
 
     graphicsView->fitInView(rectF,Qt::KeepAspectRatio);
     graphicsView->resetTotalScaleFactor();

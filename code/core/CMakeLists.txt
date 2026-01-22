@@ -11,6 +11,8 @@ add_library(core STATIC
     line_source_segment.h
     noise_engine.cpp
     noise_engine.h
+    noise_grid.cpp
+    noise_grid.h
     point.cpp
     point.h
     point_receiver.cpp

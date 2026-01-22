@@ -9,6 +9,7 @@
 #include "receivers_grid.h"
 #include "qgraphics_items/raster_pixmap_area_item.h"
 #include <QActionGroup>
+#include "noise_grid.h" // Include NoiseGrid
 
 // Widgets
 class QAction;
@@ -89,7 +90,7 @@ private:
     QGraphicsScene scene;
     QImage *image;
     fnm_ui::RasterPixmapItem pixmapItem;
-    fnm_core::GridSettings myGrid;
+    fnm_core::NoiseGrid noiseGridModel;
     fnm_ui::ReceiversGrid receivers;
     QHash<QString, QCursor> myCursors;
     QActionGroup *menuActionsGroup; // used to make the grapic menu mutually exclusive
