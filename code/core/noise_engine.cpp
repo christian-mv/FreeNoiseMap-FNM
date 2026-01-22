@@ -48,7 +48,7 @@ double distanceBetweenPoints(double x1, double y1, double z1, double x2, double 
 
 void P2P(const fnm_core::PointSource &pointSource,
          fnm_core::PointReceiver &receiver,
-         const std::vector<fnm_core::BarrierSegment*> &barrierSegments)
+         const std::vector<const fnm_core::BarrierSegment*> &barrierSegments)
 {
     double distance = distanceBetweenPoints(pointSource.get_x(),
                                             pointSource.get_y(),
@@ -139,7 +139,7 @@ double attenuation_divergence(const double &distance)
 
 double attenuation_barrier(const fnm_core::PointSource* const pointSource,
                            const fnm_core::PointReceiver* const receiver,
-                           const std::vector<fnm_core::BarrierSegment*> &barrierSegments,
+                           const std::vector<const fnm_core::BarrierSegment*> &barrierSegments,
                            const double &frequency)
 {
 
@@ -236,7 +236,7 @@ bool areTheseParallelLines(double p0x, double p0y, double p1x, double p1y,
 
 std::vector<Eigen::Vector3d> calculateDiffractionPathPoints(const double &x0, const double &y0, const double &z0,
                                                                            const double &x1, const double &y1, const double &z1,
-                                                                           const std::vector<fnm_core::BarrierSegment*> &barrierSegments)
+                                                                           const std::vector<const fnm_core::BarrierSegment*> &barrierSegments)
 {
     std::vector<Eigen::Vector3d> pathPoints;
     // Reserve memory: start + end + barriers (approx)

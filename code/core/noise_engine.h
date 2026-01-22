@@ -30,7 +30,7 @@ namespace  NoiseEngine
 
     std::vector<Eigen::Vector3d> calculateDiffractionPathPoints(const double &x0, const double &y0, const double &z0,
                                                                                const double &x1, const double &y1, const double &z1,
-                                                                               const std::vector<BarrierSegment*> &barrierSegments);
+                                                                               const std::vector<const BarrierSegment*> &barrierSegments);
 
 
 
@@ -44,14 +44,14 @@ namespace  NoiseEngine
     int intRandom(int min, int max);
 
     void P2P(const PointSource &pointSource, PointReceiver &receiver,
-             const std::vector<BarrierSegment*> &barrierSegments);
+             const std::vector<const BarrierSegment*> &barrierSegments);
 
 
     double attenuation_divergence(const double & distance);
 
     double attenuation_barrier(const PointSource* const pointSource,
                                const PointReceiver* const receiver,
-                               const std::vector<BarrierSegment*> &barrierSegments,
+                               const std::vector<const BarrierSegment*> &barrierSegments,
                                const double &frequency);
 
 
