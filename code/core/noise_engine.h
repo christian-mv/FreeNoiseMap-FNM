@@ -1,10 +1,9 @@
 #ifndef FNM_CORE_NOISE_ENGINE_H
 #define FNM_CORE_NOISE_ENGINE_H
 
-#define MATRIX_OF_DOUBLES std::vector< std::vector<double> >
-
 #include <vector>
 #include <random>
+#include <tuple>
 #include "point_source.h"
 #include "line_source_segment.h"
 #include "point_receiver.h"
@@ -12,6 +11,9 @@
 
 
 namespace fnm_core {
+
+using MatrixOfDoubles = std::vector<std::vector<double>>;
+
 namespace  NoiseEngine
 {    
     const double pi = 3.14159265359;
@@ -26,30 +28,30 @@ namespace  NoiseEngine
     };
 
 
-    std::vector< std::tuple<double, double, double> > calculateDiffractionPathPoints(const double &x0, const double &y0, const double &z0,
+    std::vector<Eigen::Vector3d> calculateDiffractionPathPoints(const double &x0, const double &y0, const double &z0,
                                                                                const double &x1, const double &y1, const double &z1,
-                                                                               const std::vector<BarrierSegment*> &barrierSegments);
+                                                                               const std::vector<const BarrierSegment*> &barrierSegments);
 
 
 
 
-    IsoBarrierPathdistances Iso9613BarrierDistances(const std::vector<std::tuple<double, double, double>> &pathPoints);
+    IsoBarrierPathdistances Iso9613BarrierDistances(const std::vector<Eigen::Vector3d> &pathPoints);
 
 
 
 
-    MATRIX_OF_DOUBLES createMatrixOfDoubles(unsigned int m, unsigned int n);
+    MatrixOfDoubles createMatrixOfDoubles(unsigned int m, unsigned int n);
     int intRandom(int min, int max);
 
-    void P2P(PointSource *pointSource, PointReceiver *receiver,
-             const std::vector<BarrierSegment*> &barrierSegments);
+    void P2P(const PointSource &pointSource, PointReceiver &receiver,
+             const std::vector<const BarrierSegment*> &barrierSegments);
 
 
     double attenuation_divergence(const double & distance);
 
     double attenuation_barrier(const PointSource* const pointSource,
                                const PointReceiver* const receiver,
-                               const std::vector<BarrierSegment*> &barrierSegments,
+                               const std::vector<const BarrierSegment*> &barrierSegments,
                                const double &frequency);
 
 
@@ -61,7 +63,7 @@ namespace  NoiseEngine
     // first value: is a boolean indicating wheter or not the lines intercet
     // second value: x coordinate of the intercetion point
     // third value: y coordinate of the intercetion point
-    std::tuple<bool, double, double> intercectionBetween2DLineSegments(double p0x, double p0y,
+    std::tuple<bool, double, double> intersectionBetween2DLineSegments(double p0x, double p0y,
                                                      double p1x, double p1y,
                                                      double p2x, double p2y,
                                                      double p3x, double p3y);

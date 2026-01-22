@@ -18,7 +18,7 @@ void PolyLineItem::addSegment(fnm_core::Segment *segment)
     AbstractPolyLineItem::addSegment(segment);
 }
 
-QVector<fnm_core::Segment *> *PolyLineItem::getSegments()
+std::vector<fnm_core::Segment *> PolyLineItem::getSegments()
 {
     return AbstractPolyLineItem::getSegments();
 }

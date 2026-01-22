@@ -1,4 +1,4 @@
-set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOUIC OFF)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOMOC ON)
 
@@ -35,10 +35,6 @@ set(PROJECT_HEADERS
     receivers_grid.h
 )
 
-set(PROJECT_FORMS
-    mainwindow.ui
-)
-
 set(PROJECT_RESOURCES
     resources.qrc
 )
@@ -46,11 +42,10 @@ set(PROJECT_RESOURCES
 add_executable(FreeNoiseMap
     ${PROJECT_SOURCES}
     ${PROJECT_HEADERS}
-    ${PROJECT_FORMS}
     ${PROJECT_RESOURCES}
 )
 
-target_link_libraries(FreeNoiseMap PRIVATE Qt6::Widgets core)
+target_link_libraries(FreeNoiseMap PRIVATE Qt6::Widgets core Eigen3)
 
 target_include_directories(FreeNoiseMap PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/..

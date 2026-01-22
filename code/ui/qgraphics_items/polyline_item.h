@@ -12,7 +12,7 @@ public:
     PolyLineItem();
 
     void addSegment(fnm_core::Segment *segment);
-    QVector<fnm_core::Segment*> * getSegments();
+    std::vector<fnm_core::Segment*> getSegments();
     int	type() const override;    
 
 };

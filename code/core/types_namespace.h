@@ -2,6 +2,19 @@
 #define FNM_CORE_TYPES_NAMESPACE_H
 
 namespace fnm_core {
+
+struct Rect {
+    double x;
+    double y;
+    double width;
+    double height;
+
+    double left() const { return x; }
+    double right() const { return x + width; }
+    double top() const { return y; }
+    double bottom() const { return y + height; }
+};
+
 namespace TypeId{
     enum {
         RasterPixmapItemType =  65536,

@@ -17,7 +17,7 @@ void BarrierItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt, 
     Q_UNUSED(opt)
     Q_UNUSED(w)
 
-    if(lineSegmentsList->length()<1){
+    if(lineSegmentsList.empty()){
         return;
     }
 
@@ -62,12 +62,12 @@ void BarrierItem::addSegment(fnm_core::BarrierSegment *segment)
     AbstractPolyLineItem::addSegment(segment);
 }
 
-QVector<fnm_core::BarrierSegment *> BarrierItem::getSegments()
+std::vector<fnm_core::BarrierSegment *> BarrierItem::getSegments()
 {
-    QVector<fnm_core::Segment*> *listSegments = AbstractPolyLineItem::getSegments();
-    QVector<fnm_core::BarrierSegment *> results;
-    for(auto segment: *listSegments){
-        results.append(static_cast<fnm_core::BarrierSegment *>(segment));
+    std::vector<fnm_core::Segment*> listSegments = AbstractPolyLineItem::getSegments();
+    std::vector<fnm_core::BarrierSegment *> results;
+    for(auto segment: listSegments){
+        results.push_back(static_cast<fnm_core::BarrierSegment *>(segment));
     }
 
     return results;

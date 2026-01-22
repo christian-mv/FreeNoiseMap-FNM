@@ -17,7 +17,7 @@ void MultiLineSourceItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
     Q_UNUSED(opt)
     Q_UNUSED(w)
 
-    if(lineSegmentsList->length()<1){
+    if(lineSegmentsList.empty()){
         return;
     }
 
@@ -32,13 +32,13 @@ void MultiLineSourceItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
     QPointF point1;
     QPointF point2;
 
-    for(int i=0; i<lineSegmentsList->length(); i++){
+    for(const auto &segment : lineSegmentsList){
 
-        point1.setX( lineSegmentsList->at(i)->get_x1() );
-        point1.setY( lineSegmentsList->at(i)->get_y1() );
+        point1.setX( segment->get_x1() );
+        point1.setY( segment->get_y1() );
 
-        point2.setX( lineSegmentsList->at(i)->get_x2() );
-        point2.setY( lineSegmentsList->at(i)->get_y2() );
+        point2.setX( segment->get_x2() );
+        point2.setY( segment->get_y2() );
 
         // it is neccesary to substract pos() to compesate
         // when the line source has been moved
@@ -62,12 +62,12 @@ void MultiLineSourceItem::addSegment(fnm_core::LineSourceSegment *segment)
     AbstractPolyLineItem::addSegment(segment);
 }
 
-QVector<fnm_core::LineSourceSegment *> MultiLineSourceItem::getSegments()
+std::vector<fnm_core::LineSourceSegment *> MultiLineSourceItem::getSegments()
 {
-    QVector<fnm_core::Segment*> *listSegments = AbstractPolyLineItem::getSegments();
-    QVector<fnm_core::LineSourceSegment *> results;
-    for(auto segment: *listSegments){
-        results.append(static_cast<fnm_core::LineSourceSegment *>(segment));
+    std::vector<fnm_core::Segment*> listSegments = AbstractPolyLineItem::getSegments();
+    std::vector<fnm_core::LineSourceSegment *> results;
+    for(auto segment: listSegments){
+        results.push_back(static_cast<fnm_core::LineSourceSegment *>(segment));
     }
 
     return results;

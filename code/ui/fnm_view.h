@@ -6,7 +6,7 @@
 
 namespace fnm_ui {
 
-class FnmView : public ::QGraphicsView
+class FnmView : public QGraphicsView
 {
 
 public:

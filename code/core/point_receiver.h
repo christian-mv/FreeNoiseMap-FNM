@@ -10,14 +10,12 @@ class PointReceiver: public Point
 public:
     explicit PointReceiver(double in_x=0.0, double in_y=0.0,
                                    double in_z=0.0, double in_Leq=-88.0,
-                                   bool interpolated = false):
-        Point(in_x, in_y, in_z),
-        Leq(in_Leq), interpolated(interpolated){}
+                                   bool interpolated = false);
 
-    void set_Leq(const double &Leq){this->Leq = Leq;}
+    void set_Leq(const double &Leq);
 
-    double get_Leq() const {return Leq;}
-    bool isInterpolated(){return interpolated;}
+    double get_Leq() const;
+    bool isInterpolated() const;
 
 private:
     double Leq; // in dB(A) units

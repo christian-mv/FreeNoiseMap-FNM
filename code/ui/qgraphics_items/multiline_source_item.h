@@ -2,6 +2,7 @@
 #define FNM_UI_QGRAPHICS_ITEM_MULTILINE_SOURCE_H
 
 #include "abstract_polyline_item.h"
+#include <vector>
 
 namespace fnm_core { class LineSourceSegment; }
 
@@ -14,7 +15,7 @@ public:
 
     void paint(QPainter *p, const QStyleOptionGraphicsItem *opt, QWidget *w) override;
     void addSegment(fnm_core::LineSourceSegment *segment);
-    QVector<fnm_core::LineSourceSegment*> getSegments();
+    std::vector<fnm_core::LineSourceSegment*> getSegments();
     int	type() const override;
 
 };

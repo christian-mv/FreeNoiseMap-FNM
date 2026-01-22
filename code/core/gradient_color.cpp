@@ -1,5 +1,6 @@
 #include "gradient_color.h"
-#include <QDebug>
+#include <stdexcept>
+#include <algorithm>
 
 namespace fnm_core {
 
@@ -45,9 +46,9 @@ void GradientColor::sortStepsAscending()
 }
 
 
-COLOR_RGB GradientColor::colorAt(const double &Leq)
+ColorRGB GradientColor::colorAt(const double &Leq)
 {
-    COLOR_RGB colorResult;
+    ColorRGB colorResult;
 
 
     double ratio; // between 0 and 1
@@ -93,14 +94,14 @@ COLOR_RGB GradientColor::colorAt(const double &Leq)
     return colorResult;
 }
 
-QVector<std::tuple<double, double, double, double>> GradientColor::getSteps() const
+std::vector<std::tuple<double, double, double, double>> GradientColor::getSteps() const
 {
     return this->steps;
 }
 
 
 
-COLOR_RGB GradientColor::interpolateColor(const double &r1, /* https://www.alanzucconi.com/2016/01/06/colour-interpolation/*/
+ColorRGB GradientColor::interpolateColor(const double &r1, /* https://www.alanzucconi.com/2016/01/06/colour-interpolation/*/
                                           const double &g1,
                                           const double &b1,
                                           const double &r2,
@@ -108,7 +109,7 @@ COLOR_RGB GradientColor::interpolateColor(const double &r1, /* https://www.alanz
                                           const double &b2,
                                           const double & ratio)
 {
-    COLOR_RGB color {
+    ColorRGB color {
         r1 + (r2 - r1) * ratio,
         g1 + (g2 - g1) * ratio,
         b1 + (b2 - b1) * ratio
