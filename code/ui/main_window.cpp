@@ -274,14 +274,14 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
         auto barriersSegments = barrierSegmentsToStdVector();
 //        MinimalAcousticBarrier* barrierSegment;
 
-        for(auto currentReceiver : receivers.matrix.at(i)){           
+        for(auto &currentReceiver : receivers.matrix.at(i)){           
             for(auto currentItem : scene.items()){
                 // noise from point sources
                 if(currentItem->type() == fnm_core::TypeId::PointSourceItemType){
                     currentPixmapItemPointSource = (static_cast<fnm_ui::PointSourceItem *>(currentItem));
 
                     fnm_core::NoiseEngine::P2P(currentPixmapItemPointSource->getPointSource(),
-                                                             currentReceiver, barriersSegments);
+                                                             &currentReceiver, barriersSegments);
 
 
                 }
@@ -292,7 +292,7 @@ bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
                     // segmets, then each segment is split in point sources
                     for(fnm_core::LineSourceSegment *segment: currentLineSource->getSegments()){
                         for(fnm_core::PointSource subPointSource: fnm_core::NoiseEngine::fromLineToPointSources(segment,22.0)){
-                            fnm_core::NoiseEngine::P2P(&subPointSource, currentReceiver, barriersSegments);
+                            fnm_core::NoiseEngine::P2P(&subPointSource, &currentReceiver, barriersSegments);
                         }
                     }
                 }
@@ -318,11 +318,10 @@ QList<fnm_ui::BarrierItem *> MainWindow::barrierList() const
 std::vector<fnm_core::BarrierSegment *> MainWindow::barrierSegmentsToStdVector() const
 {
     std::vector<fnm_core::BarrierSegment *> segments;
-    QVector<fnm_core::BarrierSegment*> temp;
 
     for(auto item: scene.items()){
         if(item->type() == fnm_core::TypeId::AcousticBarrierItemType){
-            temp = (static_cast<fnm_ui::BarrierItem *>(item)->getSegments());
+            auto temp = (static_cast<fnm_ui::BarrierItem *>(item)->getSegments());
             for(auto singleSegment: temp){
                 segments.push_back(singleSegment);
             }

@@ -3,6 +3,7 @@
 
 
 #include "abstract_polyline_item.h"
+#include <vector>
 
 namespace fnm_core { class BarrierSegment; }
 
@@ -15,7 +16,7 @@ public:
 
     void paint(QPainter *p, const QStyleOptionGraphicsItem *opt, QWidget *w) override;
     void addSegment(fnm_core::BarrierSegment *segment);
-    QVector<fnm_core::BarrierSegment*> getSegments();
+    std::vector<fnm_core::BarrierSegment*> getSegments();
     int	type() const override;
 
 };

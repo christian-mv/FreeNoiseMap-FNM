@@ -2,6 +2,8 @@
 #define FNM_UI_QGRAPHICS_ITEM_ABSTRACT_POLYLINE_H
 
 #include <QGraphicsItem>
+#include <vector>
+#include <memory>
 namespace fnm_core { class Segment; }
 
 namespace fnm_ui {
@@ -10,6 +12,7 @@ class AbstractPolyLineItem : public QGraphicsItem
 {
 public:
     AbstractPolyLineItem();
+    virtual ~AbstractPolyLineItem();
     QRectF boundingRect() const override;
     void paint(QPainter *p, const QStyleOptionGraphicsItem *opt, QWidget *w) override;
     QPainterPath shape() const override;
@@ -30,8 +33,8 @@ private:
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
     void addSegment(fnm_core::Segment *segment);
-    QVector<fnm_core::Segment*> * getSegments();
-    QVector<fnm_core::Segment*> *lineSegmentsList;
+    std::vector<fnm_core::Segment*> getSegments() const;
+    std::vector<std::unique_ptr<fnm_core::Segment>> lineSegmentsList;
 };
 }
 #endif // FNMABSTRACTPOLYLINEGRAPHICSITEM_H

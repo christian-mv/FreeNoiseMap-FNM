@@ -25,7 +25,7 @@ public:
     void setGradient(const fnm_core::GradientColor gradientColor);
     bool paintGrid(QImage &image, const fnm_core::GridSettings &myGrid,  QProgressDialog &progress);
     void setNoiseColor(const double Leq, QColor * colorDecibel);
-    std::vector< std::vector<fnm_core::PointReceiver *> > matrix;
+    std::vector< std::vector<fnm_core::PointReceiver> > matrix;
     fnm_core::GridSettings getGridSettings()const {return this->gridSettings;}
     void resetNoiseReceiver();
 //    string gridStatistics(); // this doesn't work on android NDK
@@ -35,7 +35,7 @@ public:
 private:
     fnm_core::GridSettings gridSettings;
     void setMatrixOfReceivers(unsigned int n, unsigned int m);
-    QRectF receiverRect(fnm_core::PointReceiver * receiver);
+    QRectF receiverRect(const fnm_core::PointReceiver &receiver);
     QRectF receiverRect(const double x, const double y);
     fnm_core::GradientColor gradientColor;
 

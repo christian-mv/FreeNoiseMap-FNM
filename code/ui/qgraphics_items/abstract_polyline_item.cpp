@@ -8,12 +8,15 @@
 namespace fnm_ui {
 
 AbstractPolyLineItem::AbstractPolyLineItem():
-    xMin(0), xMax(0), yMin(0), yMax(0), bufferDistance(10.0),
-    lineSegmentsList(new QVector<fnm_core::Segment*>)
+    xMin(0), xMax(0), yMin(0), yMax(0), bufferDistance(10.0)
 {
     setFlag(QGraphicsItem::ItemIsMovable, false);
     setFlag(QGraphicsItem::ItemIsSelectable, true);
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
+}
+
+AbstractPolyLineItem::~AbstractPolyLineItem()
+{
 }
 
 QRectF AbstractPolyLineItem::boundingRect() const
@@ -30,7 +33,7 @@ void AbstractPolyLineItem::paint(QPainter *painter,
     Q_UNUSED(opt)
     Q_UNUSED(w)
 
-    if(lineSegmentsList->length()<1){
+    if(lineSegmentsList.empty()){
         return;
     }
 
@@ -45,13 +48,13 @@ void AbstractPolyLineItem::paint(QPainter *painter,
     QPointF point1;
     QPointF point2;
 
-    for(int i=0; i<lineSegmentsList->length(); i++){
+    for(const auto &segment : lineSegmentsList){
 
-        point1.setX( lineSegmentsList->at(i)->get_x1() );
-        point1.setY( lineSegmentsList->at(i)->get_y1() );
+        point1.setX( segment->get_x1() );
+        point1.setY( segment->get_y1() );
 
-        point2.setX( lineSegmentsList->at(i)->get_x2() );
-        point2.setY( lineSegmentsList->at(i)->get_y2() );
+        point2.setX( segment->get_x2() );
+        point2.setY( segment->get_y2() );
 
         // it is neccesary to substract pos() to compesate
         // when the line source has been moved
@@ -106,7 +109,7 @@ void AbstractPolyLineItem::addSegment(fnm_core::Segment *segment)
                                                          segment->get_y2()), bufferDistance);
 
     // init some values when the first line is inserted
-    if(lineSegmentsList->size()<1){
+    if(lineSegmentsList.empty()){
         multilineBuffer = newSegmentBuffer;
         xMin = qMin(segment->get_x1(), segment->get_x2());
         yMin = qMin(segment->get_y1(), segment->get_y2());
@@ -116,20 +119,24 @@ void AbstractPolyLineItem::addSegment(fnm_core::Segment *segment)
     }
 
     // update multilineBufferZone
-    if(lineSegmentsList->size()>=1) {
+    if(!lineSegmentsList.empty()) {
         updateMultilineBuffer(newSegmentBuffer);
     }
 
-    lineSegmentsList->append(segment);
+    lineSegmentsList.push_back(std::unique_ptr<fnm_core::Segment>(segment));
 
     updateBoundingRectangle(segment);
 
 }
 
 
-QVector<fnm_core::Segment*> *AbstractPolyLineItem::getSegments()
+std::vector<fnm_core::Segment*> AbstractPolyLineItem::getSegments() const
 {
-    return lineSegmentsList;
+    std::vector<fnm_core::Segment*> results;
+    for(const auto &s : lineSegmentsList) {
+        results.push_back(s.get());
+    }
+    return results;
 }
 
 void AbstractPolyLineItem::setBufferDistance(const double &newValue)
@@ -197,7 +204,7 @@ QVariant AbstractPolyLineItem::itemChange(QGraphicsItem::GraphicsItemChange chan
         double dx = newPos.x() - pos().x();
         double dy = newPos.y()  - pos().y();
 
-        for(auto segment: *lineSegmentsList){
+        for(const auto &segment : lineSegmentsList){
             segment->moveBy(dx, dy, 0);
         }
 

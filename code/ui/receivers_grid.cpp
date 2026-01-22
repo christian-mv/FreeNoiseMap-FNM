@@ -46,9 +46,10 @@ void ReceiversGrid::setGrid(const fnm_core::GridSettings &gridSettings)
     for(unsigned int i = 0; i < nRows; i++){
         for(unsigned int j = 0; j < nColumns; j++){
 //            qDebug()<<i<<" , "<<j;
-            matrix.at(j).at(i) = new fnm_core::PointReceiver(gridSettings.getLeft()
+            matrix.at(j).at(i) = fnm_core::PointReceiver(gridSettings.getLeft()
                                                     + i*gridSettings.getDeltaX(),
                                                     gridSettings.getTop()+j*gridSettings.getDeltaY(),
+                                                    0, -88.0,
                                                     false); //matrix.[i][j];
 //            qDebug()<<matrix.at(j).at(i)->get_x()<<" , " <<matrix.at(j).at(i)->get_y();
         }
@@ -109,10 +110,6 @@ bool ReceiversGrid::paintGrid(QImage &image, const fnm_core::GridSettings &myGri
 
     // calculate single rectangles
     QColor decibelColor;
-    QBrush brush;
-    fnm_core::PointReceiver interpolatedReceiver;
-    fnm_core::PointReceiver *r;
-
 
     for(unsigned int i = 0; i<matrix.size(); i++){
 
@@ -123,9 +120,9 @@ bool ReceiversGrid::paintGrid(QImage &image, const fnm_core::GridSettings &myGri
 
         for(unsigned int j = 0; j<matrix.at(i).size(); j++){
 
-            r = matrix.at(i).at(j);
+            const auto &r = matrix.at(i).at(j);
 
-            setNoiseColor(r->get_Leq(), &decibelColor);            
+            setNoiseColor(r.get_Leq(), &decibelColor);            
             painter.setBrush(QBrush(decibelColor));
             painter.drawRect(receiverRect(r));
         }
@@ -186,9 +183,9 @@ void ReceiversGrid::setNoiseColor(const double Leq, QColor * colorDecibel)
 
 void ReceiversGrid::resetNoiseReceiver()
 {
-    for(auto row: matrix){
-        for(auto receiver: row){
-            receiver->set_Leq(-88);
+    for(auto &row: matrix){
+        for(auto &receiver: row){
+            receiver.set_Leq(-88);
         }
     }
 }
@@ -224,11 +221,6 @@ void ReceiversGrid::interpolateGrid()
     unsigned int factor = getGridSettings().getInterpolatorFactor();
     if(factor<=1){return;}
 
-    fnm_core::PointReceiver interpolatedReceiver;
-    fnm_core::PointReceiver *r;
-    vector<fnm_core::PointReceiver *> temprow;
-    vector<vector<fnm_core::PointReceiver *>> tempMatrix; // esto es una matriz intermedia de receptores
-
     double dx = getGridSettings().getDeltaX()/factor;
     double dy = getGridSettings().getDeltaY()/factor;
     double Leqx_temp; // here store interpolated Leq on x axes.
@@ -238,22 +230,22 @@ void ReceiversGrid::interpolateGrid()
     for(unsigned int i = 0; i<matrix.size(); i++){
         for(unsigned int j = 0; j<matrix.at(i).size(); j=j+factor){
 
-            r = matrix.at(i).at(j);
+            const auto &r = matrix.at(i).at(j);
             if(j<matrix.at(i).size()-1){
                 for(unsigned int k=1; k<factor; k++){
 
-                    fnm_core::NoiseEngine::interpolationValueAt(r->get_x(),
-                                                      r->get_Leq(),
-                                                      r->get_x()+k*dx,
+                    fnm_core::NoiseEngine::interpolationValueAt(r.get_x(),
+                                                      r.get_Leq(),
+                                                      r.get_x()+k*dx,
                                                       Leqx_temp,
-                                                      matrix.at(i).at(j+1)->get_x(),
-                                                      matrix.at(i).at(j+1)->get_Leq());
+                                                      matrix.at(i).at(j+1).get_x(),
+                                                      matrix.at(i).at(j+1).get_Leq());
 
 
                     matrix.at(i).insert(matrix.at(i).begin()+j+1,
-                                                   new fnm_core::PointReceiver(r->get_x()+k*dx,
-                                                                      r->get_y(),
-                                                                      r->get_z(),
+                                                   fnm_core::PointReceiver(r.get_x()+k*dx,
+                                                                      r.get_y(),
+                                                                      r.get_z(),
                                                                       Leqx_temp,true));
                 } // for k
             }// if
@@ -265,81 +257,88 @@ void ReceiversGrid::interpolateGrid()
 
     // interpolated rectangles on y axes
 
-    std::vector<fnm_core::PointReceiver *> centinel = matrix.back();
+    // centinel is a copy of the last row
+    std::vector<fnm_core::PointReceiver> centinel = matrix.back();
 
     for(unsigned int i = 0; ; i=i+factor){
 
-        if(matrix.at(i) == centinel) // beak when the last row is reached
+        // compare row content (simplified check)
+        bool isLast = true;
+        if(matrix.at(i).size() != centinel.size()) isLast = false;
+        else {
+            for(size_t idx=0; idx<matrix.at(i).size(); ++idx) {
+                if(matrix.at(i).at(idx).get_x() != centinel.at(idx).get_x() ||
+                   matrix.at(i).at(idx).get_y() != centinel.at(idx).get_y()) {
+                    isLast = false;
+                    break;
+                }
+            }
+        }
+
+        if(isLast) // break when the last row is reached
         {
             break;
         }
+
+        vector<vector<fnm_core::PointReceiver>> tempMatrix; // esto es una matriz intermedia de receptores
         for(unsigned int k=1; k<factor; k++){
+            vector<fnm_core::PointReceiver> temprow;
             for(unsigned int j = 0; j<matrix.at(i).size(); j++){
 
-                r = matrix.at(i).at(j);
+                const auto &r = matrix.at(i).at(j);
 
-                fnm_core::NoiseEngine::interpolationValueAt(r->get_y(),
-                                                  r->get_Leq(),
-                                                  r->get_y()+k*dy,
+                fnm_core::NoiseEngine::interpolationValueAt(r.get_y(),
+                                                  r.get_Leq(),
+                                                  r.get_y()+k*dy,
                                                   Leqy_temp,
-                                                  matrix.at(i+1).at(j)->get_y(),
-                                                  matrix.at(i+1).at(j)->get_Leq());
+                                                  matrix.at(i+1).at(j).get_y(),
+                                                  matrix.at(i+1).at(j).get_Leq());
 
 
-                temprow.push_back(new fnm_core::PointReceiver(r->get_x(),
-                                                     r->get_y()+k*dy,
-                                                     r->get_z(),
+                temprow.push_back(fnm_core::PointReceiver(r.get_x(),
+                                                     r.get_y()+k*dy,
+                                                     r.get_z(),
                                                      Leqy_temp,true));
 
-            } // for: k
+            } // for: j
 
             tempMatrix.push_back(temprow);
-            temprow.clear();
 
-        }//
-        matrix.insert(matrix.begin()+i,tempMatrix.begin(), tempMatrix.end());
-        tempMatrix.clear();
-    } //
+        }// for: k
+        matrix.insert(matrix.begin()+i+1,tempMatrix.begin(), tempMatrix.end());
+        i += (factor - 1); // skip the newly inserted rows
+    } // for: i
 }
 
 void ReceiversGrid::clearInterpolatedReceivers()
 {
     // delete full interpolated rows
-    unsigned int i = 0;
-    std::vector<fnm_core::PointReceiver *> row = matrix.at(i);
-    while(row != matrix.back()){
-        // delete rows of full interpolated receivers
-        if(row.at(0)->isInterpolated()){
-            matrix.erase(matrix.begin() + i);
-            row = matrix.at(i);
-            continue;
+    for (auto it = matrix.begin(); it != matrix.end(); ) {
+        if (!it->empty() && it->at(0).isInterpolated()) {
+            it = matrix.erase(it);
+        } else {
+            ++it;
         }
-        ++i;
-        row = matrix.at(i);
     }
 
     // delete interpolated receivers located in between of no-interpolated receivers
     for(unsigned int i=0; i<matrix.size(); i++){
-        unsigned int j = 0;
-        auto tempReceiver = matrix.at(i).at(j);
-        while(tempReceiver != matrix.at(i).back()){
-            if(tempReceiver->isInterpolated()){
-                matrix.at(i).erase(matrix.at(i).begin() + j);
-                tempReceiver = matrix.at(i).at(j);
-                continue;
+        for (auto it = matrix.at(i).begin(); it != matrix.at(i).end(); ) {
+            if (it->isInterpolated()) {
+                it = matrix.at(i).erase(it);
+            } else {
+                ++it;
             }
-            j++;
-            tempReceiver = matrix.at(i).at(j);
         }
     }
 
 }
 
 
-QRectF  ReceiversGrid::receiverRect(fnm_core::PointReceiver * receiver)
+QRectF  ReceiversGrid::receiverRect(const fnm_core::PointReceiver &receiver)
 {
 
-    return receiverRect(receiver->get_x(), receiver->get_y());
+    return receiverRect(receiver.get_x(), receiver.get_y());
 }
 
 
