@@ -15,7 +15,7 @@ public:
     void set_Leq(const double &Leq);
 
     double get_Leq() const;
-    bool isInterpolated();
+    bool isInterpolated() const;
 
 private:
     double Leq; // in dB(A) units

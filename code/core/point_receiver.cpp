@@ -18,7 +18,7 @@ double PointReceiver::get_Leq() const
     return Leq;
 }
 
-bool PointReceiver::isInterpolated()
+bool PointReceiver::isInterpolated() const
 {
     return interpolated;
 }

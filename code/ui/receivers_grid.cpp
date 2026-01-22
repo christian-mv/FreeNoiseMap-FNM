@@ -223,115 +223,98 @@ void ReceiversGrid::interpolateGrid()
 
     double dx = getGridSettings().getDeltaX()/factor;
     double dy = getGridSettings().getDeltaY()/factor;
-    double Leqx_temp; // here store interpolated Leq on x axes.
-    double Leqy_temp; // here store interpolated Leq on y axes.
+    double Leqx_temp; 
+    double Leqy_temp; 
 
-    //  interpolated rectangles on x axes
-    for(unsigned int i = 0; i<matrix.size(); i++){
-        for(unsigned int j = 0; j<matrix.at(i).size(); j=j+factor){
+    // 1. Interpolate X axis for each row
+    std::vector<std::vector<fnm_core::PointReceiver>> matrixXInterpolated;
+    matrixXInterpolated.reserve(matrix.size());
 
-            const auto &r = matrix.at(i).at(j);
-            if(j<matrix.at(i).size()-1){
+    for(const auto &row : matrix) {
+        std::vector<fnm_core::PointReceiver> newRow;
+        newRow.reserve(row.size() * factor);
+
+        for(size_t j = 0; j < row.size(); ++j) {
+            const auto &r = row[j];
+            newRow.push_back(r);
+
+            if(j < row.size() - 1) {
+                const auto &nextR = row[j+1];
                 for(unsigned int k=1; k<factor; k++){
-
                     fnm_core::NoiseEngine::interpolationValueAt(r.get_x(),
                                                       r.get_Leq(),
                                                       r.get_x()+k*dx,
                                                       Leqx_temp,
-                                                      matrix.at(i).at(j+1).get_x(),
-                                                      matrix.at(i).at(j+1).get_Leq());
-
-
-                    matrix.at(i).insert(matrix.at(i).begin()+j+1,
-                                                   fnm_core::PointReceiver(r.get_x()+k*dx,
-                                                                      r.get_y(),
-                                                                      r.get_z(),
-                                                                      Leqx_temp,true));
-                } // for k
-            }// if
-        } // for j
-    } // for i
-
-
-
-
-    // interpolated rectangles on y axes
-
-    // centinel is a copy of the last row
-    std::vector<fnm_core::PointReceiver> centinel = matrix.back();
-
-    for(unsigned int i = 0; ; i=i+factor){
-
-        // compare row content (simplified check)
-        bool isLast = true;
-        if(matrix.at(i).size() != centinel.size()) isLast = false;
-        else {
-            for(size_t idx=0; idx<matrix.at(i).size(); ++idx) {
-                if(matrix.at(i).at(idx).get_x() != centinel.at(idx).get_x() ||
-                   matrix.at(i).at(idx).get_y() != centinel.at(idx).get_y()) {
-                    isLast = false;
-                    break;
+                                                      nextR.get_x(),
+                                                      nextR.get_Leq());
+                    
+                    newRow.emplace_back(r.get_x()+k*dx, r.get_y(), r.get_z(), Leqx_temp, true);
                 }
             }
         }
+        matrixXInterpolated.push_back(std::move(newRow));
+    }
 
-        if(isLast) // break when the last row is reached
-        {
-            break;
+    // 2. Interpolate Y axis (insert rows)
+    std::vector<std::vector<fnm_core::PointReceiver>> finalMatrix;
+    finalMatrix.reserve(matrixXInterpolated.size() * factor); 
+
+    for(size_t i = 0; i < matrixXInterpolated.size(); ++i) {
+        finalMatrix.push_back(matrixXInterpolated[i]); 
+
+        if(i < matrixXInterpolated.size() - 1) {
+            const auto &currentRow = matrixXInterpolated[i];
+            const auto &nextRow = matrixXInterpolated[i+1];
+            
+            for(unsigned int k=1; k<factor; k++) {
+                std::vector<fnm_core::PointReceiver> interpolatedRow;
+                interpolatedRow.reserve(currentRow.size());
+
+                for(size_t j=0; j<currentRow.size(); ++j) {
+                    const auto &r = currentRow[j];
+                    const auto &nextR = nextRow[j]; 
+
+                    fnm_core::NoiseEngine::interpolationValueAt(r.get_y(),
+                                                      r.get_Leq(),
+                                                      r.get_y()+k*dy,
+                                                      Leqy_temp,
+                                                      nextR.get_y(),
+                                                      nextR.get_Leq());
+                    
+                    interpolatedRow.emplace_back(r.get_x(), r.get_y()+k*dy, r.get_z(), Leqy_temp, true);
+                }
+                finalMatrix.push_back(std::move(interpolatedRow));
+            }
         }
+    }
 
-        vector<vector<fnm_core::PointReceiver>> tempMatrix; // esto es una matriz intermedia de receptores
-        for(unsigned int k=1; k<factor; k++){
-            vector<fnm_core::PointReceiver> temprow;
-            for(unsigned int j = 0; j<matrix.at(i).size(); j++){
-
-                const auto &r = matrix.at(i).at(j);
-
-                fnm_core::NoiseEngine::interpolationValueAt(r.get_y(),
-                                                  r.get_Leq(),
-                                                  r.get_y()+k*dy,
-                                                  Leqy_temp,
-                                                  matrix.at(i+1).at(j).get_y(),
-                                                  matrix.at(i+1).at(j).get_Leq());
-
-
-                temprow.push_back(fnm_core::PointReceiver(r.get_x(),
-                                                     r.get_y()+k*dy,
-                                                     r.get_z(),
-                                                     Leqy_temp,true));
-
-            } // for: j
-
-            tempMatrix.push_back(temprow);
-
-        }// for: k
-        matrix.insert(matrix.begin()+i+1,tempMatrix.begin(), tempMatrix.end());
-        i += (factor - 1); // skip the newly inserted rows
-    } // for: i
+    matrix = std::move(finalMatrix);
 }
 
 void ReceiversGrid::clearInterpolatedReceivers()
 {
-    // delete full interpolated rows
-    for (auto it = matrix.begin(); it != matrix.end(); ) {
-        if (!it->empty() && it->at(0).isInterpolated()) {
-            it = matrix.erase(it);
-        } else {
-            ++it;
-        }
-    }
+    std::vector<std::vector<fnm_core::PointReceiver>> newMatrix;
+    newMatrix.reserve(matrix.size());
 
-    // delete interpolated receivers located in between of no-interpolated receivers
-    for(unsigned int i=0; i<matrix.size(); i++){
-        for (auto it = matrix.at(i).begin(); it != matrix.at(i).end(); ) {
-            if (it->isInterpolated()) {
-                it = matrix.at(i).erase(it);
-            } else {
-                ++it;
+    for(const auto& row : matrix) {
+        if(row.empty()) continue; 
+        
+        if(row.front().isInterpolated()) {
+            continue;
+        }
+
+        std::vector<fnm_core::PointReceiver> newRow;
+        newRow.reserve(row.size());
+        for(const auto& r : row) {
+            if(!r.isInterpolated()) {
+                newRow.push_back(r);
             }
         }
+        if(!newRow.empty()) {
+            newMatrix.push_back(std::move(newRow));
+        }
     }
-
+    matrix = std::move(newMatrix);
 }
 
 
