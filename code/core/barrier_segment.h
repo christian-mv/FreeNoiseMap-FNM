@@ -11,9 +11,9 @@ namespace fnm_core {
 class BarrierSegment : public Segment
 {
 public:
-    explicit BarrierSegment(): Segment(), height(10){}
-    double get_height() const {return height;}
-    void set_height(double value){this->height = value;}
+    explicit BarrierSegment();
+    double get_height() const;
+    void set_height(double value);
 
 private:
     double height; // in meters
