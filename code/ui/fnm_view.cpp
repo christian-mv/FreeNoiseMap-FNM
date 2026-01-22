@@ -8,10 +8,10 @@
 namespace fnm_ui {
 
 FnmView::FnmView(QWidget *parent):
-    ::QGraphicsView(parent),
+    QGraphicsView(parent),
     totalScaleFactor(1)
 {
-    setTransformationAnchor(::QGraphicsView::AnchorUnderMouse);
+    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 //    setDragMode(ScrollHandDrag);
 
 //    viewport()->setAttribute(Qt::WA_AcceptTouchEvents);
@@ -55,7 +55,7 @@ void FnmView::setCursor(const QCursor &newCursor)
 //    }
 
 
-    ::QGraphicsView::setCursor(newCursor);
+    QGraphicsView::setCursor(newCursor);
 }
 
 void FnmView::resetTotalScaleFactor()
@@ -135,7 +135,7 @@ bool FnmView::viewportEvent(QEvent *event)
     default:
         break;
     }
-    return ::QGraphicsView::viewportEvent(event);
+    return QGraphicsView::viewportEvent(event);
 }
 
 }

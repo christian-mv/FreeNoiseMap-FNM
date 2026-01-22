@@ -5,7 +5,7 @@
 
 namespace fnm_ui {
 
-class SimpleTextItem : public ::QGraphicsSimpleTextItem
+class SimpleTextItem : public QGraphicsSimpleTextItem
 {
 public:
 
