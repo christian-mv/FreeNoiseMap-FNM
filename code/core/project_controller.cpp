@@ -44,7 +44,7 @@ bool ProjectController::runCalculation(const std::vector<PointSource*>& pointSou
             
             // 1. Calculate noise from Point Sources
             for(const auto* source : pointSources) {
-                NoiseEngine::P2P(source, &currentReceiver, barriers);
+                NoiseEngine::P2P(*source, currentReceiver, barriers);
             }
 
             // 2. Calculate noise from Line Sources
@@ -54,7 +54,7 @@ bool ProjectController::runCalculation(const std::vector<PointSource*>& pointSou
                 std::vector<PointSource> subSources = NoiseEngine::fromLineToPointSources(lineSegment, 22.0);
                 
                 for(auto& subSource : subSources) {
-                    NoiseEngine::P2P(&subSource, &currentReceiver, barriers);
+                    NoiseEngine::P2P(subSource, currentReceiver, barriers);
                 }
             }
         }

@@ -46,33 +46,33 @@ double distanceBetweenPoints(double x1, double y1, double z1, double x2, double 
 
 
 
-void P2P(const fnm_core::PointSource *pointSource,
-         fnm_core::PointReceiver *receiver,
+void P2P(const fnm_core::PointSource &pointSource,
+         fnm_core::PointReceiver &receiver,
          const std::vector<fnm_core::BarrierSegment*> &barrierSegments)
 {
-    double distance = distanceBetweenPoints(pointSource->get_x(),
-                                            pointSource->get_y(),
-                                            pointSource->get_z(),
-                                            receiver->get_x(),
-                                            receiver->get_y(),
-                                            receiver->get_z());
+    double distance = distanceBetweenPoints(pointSource.get_x(),
+                                            pointSource.get_y(),
+                                            pointSource.get_z(),
+                                            receiver.get_x(),
+                                            receiver.get_y(),
+                                            receiver.get_z());
 
     double A_div = attenuation_divergence(distance);
 
     double A_bar = 0;
 
     if(!barrierSegments.empty()){
-        A_bar = attenuation_barrier(pointSource,receiver,barrierSegments, 500.0);
+        A_bar = attenuation_barrier(&pointSource, &receiver, barrierSegments, 500.0);
     }
 
 
-    double Leq_result = pointSource->get_Lw() - A_div - A_bar;
-    Leq_result = sumdB(receiver->get_Leq(), Leq_result);
+    double Leq_result = pointSource.get_Lw() - A_div - A_bar;
+    Leq_result = sumdB(receiver.get_Leq(), Leq_result);
 
-    receiver->set_Leq(Leq_result);
-    //        qDebug()<<"(X,Y,Leq): ("<<receiver->get_x()<<
-    //                  ","<<receiver->get_y()<<
-    //                  ","<<receiver->get_Leq()<<")";
+    receiver.set_Leq(Leq_result);
+    //        qDebug()<<"(X,Y,Leq): ("<<receiver.get_x()<<
+    //                  ","<<receiver.get_y()<<
+    //                  ","<<receiver.get_Leq()<<")";
 }
 
 double sumdB(const double &Leq1, const double &Leq2)
