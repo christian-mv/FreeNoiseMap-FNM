@@ -1,2 +1,4 @@
 code/.qtcreator/
 code/build/
+build_debug/
+run_debug.sh

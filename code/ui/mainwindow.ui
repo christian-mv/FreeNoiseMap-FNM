@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="fnm_ui::QGraphicsView" name="graphicsView">
+     <widget class="fnm_ui::FnmView" name="graphicsView">
       <property name="verticalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
@@ -180,9 +180,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>fnm_ui::QGraphicsView</class>
+   <class>fnm_ui::FnmView</class>
    <extends>QGraphicsView</extends>
-   <header>qgraphics_view.h</header>
+   <header>fnm_view.h</header>
   </customwidget>
  </customwidgets>
  <resources>
