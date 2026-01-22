@@ -25,7 +25,7 @@ public:
     // Returns true if completed, false if cancelled (via callback returning false)
     bool runCalculation(const std::vector<PointSource*>& pointSources,
                         const std::vector<LineSourceSegment*>& lineSources,
-                        const std::vector<BarrierSegment*>& barriers,
+                        const std::vector<const BarrierSegment*>& barriers,
                         std::function<bool(double percentage)> progressCallback);
 
 private:

@@ -446,9 +446,9 @@ QList<fnm_ui::BarrierItem *> MainWindow::barrierList() const
     return barriers;
 }
 
-std::vector<fnm_core::BarrierSegment *> MainWindow::barrierSegmentsToStdVector() const
+std::vector<const fnm_core::BarrierSegment *> MainWindow::barrierSegmentsToStdVector() const
 {
-    std::vector<fnm_core::BarrierSegment *> segments;
+    std::vector<const fnm_core::BarrierSegment *> segments;
 
     for(auto item: scene.items()){
         if(item->type() == fnm_core::TypeId::AcousticBarrierItemType){

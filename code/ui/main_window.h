@@ -100,7 +100,7 @@ private:
     void loadDefaultGrid();
     bool calculateNoiseFromSources(QProgressDialog &progress);
     QList<fnm_ui::BarrierItem *> barrierList() const; // returns all barriers from the scene
-    std::vector<fnm_core::BarrierSegment*> barrierSegmentsToStdVector() const;
+    std::vector<const fnm_core::BarrierSegment*> barrierSegmentsToStdVector() const;
     void resetPixmapArea();
     void movingItemsOnTheScene(const QGraphicsSceneMouseEvent *sceneMouseEvent);
     void updateShadedLinesItem(QPointF pos);

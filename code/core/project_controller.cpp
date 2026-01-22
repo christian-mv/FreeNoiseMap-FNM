@@ -24,7 +24,7 @@ const GridSettings& ProjectController::getSettings() const {
 
 bool ProjectController::runCalculation(const std::vector<PointSource*>& pointSources,
                                        const std::vector<LineSourceSegment*>& lineSources,
-                                       const std::vector<BarrierSegment*>& barriers,
+                                       const std::vector<const BarrierSegment*>& barriers,
                                        std::function<bool(double percentage)> progressCallback) {
     
     auto& matrix = noiseGrid.getMatrix();
