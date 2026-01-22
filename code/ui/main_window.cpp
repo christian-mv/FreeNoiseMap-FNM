@@ -249,10 +249,10 @@ void MainWindow::loadDefaultGrid()
     settings.setDeltaY(2);
     settings.setInterpolationFactor(1);
     
-    noiseGridModel.setSettings(settings);
-    receivers.setNoiseGrid(&noiseGridModel);
+    projectController.setGridSettings(settings);
+    receivers.setNoiseGrid(&projectController.getNoiseGrid());
 
-    const auto& currentSettings = noiseGridModel.getSettings();
+    const auto& currentSettings = projectController.getSettings();
 
     QRectF sceneRect(currentSettings.getRect().x,
                      currentSettings.getRect().y,
@@ -271,7 +271,7 @@ void MainWindow::loadDefaultGrid()
 
 void MainWindow::resetPixmapArea(){
 
-    const auto& gridSettings = noiseGridModel.getSettings();
+    const auto& gridSettings = projectController.getSettings();
     qreal side = qMin(gridSettings.getRect().width, gridSettings.getRect().height);
     qreal side2 = qMax(QGuiApplication::primaryScreen()->size().width(), QGuiApplication::primaryScreen()->size().height());
 
@@ -396,46 +396,43 @@ void MainWindow::releaseLineItemEdition()
 
 
 bool MainWindow::calculateNoiseFromSources(QProgressDialog &progress)
-{    
-    auto& matrix = noiseGridModel.getMatrix();
-    for(unsigned long i = 0; i<matrix.size(); i++){
-        if(progress.wasCanceled()){
-            return false;
+{
+    std::vector<fnm_core::PointSource*> pointSources;
+    std::vector<fnm_core::LineSourceSegment*> lineSources;
+    
+    // 1. Gather Sources from Scene Items
+    for(auto currentItem : scene.items()){
+        if(currentItem->type() == fnm_core::TypeId::PointSourceItemType){
+            auto* pointItem = static_cast<fnm_ui::PointSourceItem *>(currentItem);
+            pointSources.push_back(pointItem->getPointSource());
         }
-
-        fnm_ui::PointSourceItem *currentPixmapItemPointSource;
-        fnm_ui::MultiLineSourceItem *currentLineSource;
-        auto barriersSegments = barrierSegmentsToStdVector();
-//        MinimalAcousticBarrier* barrierSegment;
-
-        for(auto &currentReceiver : matrix.at(i)){           
-            for(auto currentItem : scene.items()){
-                // noise from point sources
-                if(currentItem->type() == fnm_core::TypeId::PointSourceItemType){
-                    currentPixmapItemPointSource = (static_cast<fnm_ui::PointSourceItem *>(currentItem));
-
-                    fnm_core::NoiseEngine::P2P(currentPixmapItemPointSource->getPointSource(),
-                                                             &currentReceiver, barriersSegments);
-
-
-                }
-                // noise from line sources
-                if(currentItem->type() == fnm_core::TypeId::MultiLineSourceItemType){
-                    currentLineSource = (static_cast<fnm_ui::MultiLineSourceItem *>(currentItem));
-                    // Here we iterate a multi line source to obtain a list of
-                    // segmets, then each segment is split in point sources
-                    for(fnm_core::LineSourceSegment *segment: currentLineSource->getSegments()){
-                        for(fnm_core::PointSource subPointSource: fnm_core::NoiseEngine::fromLineToPointSources(segment,22.0)){
-                            fnm_core::NoiseEngine::P2P(&subPointSource, &currentReceiver, barriersSegments);
-                        }
-                    }
-                }
+        else if(currentItem->type() == fnm_core::TypeId::MultiLineSourceItemType){
+            auto* lineItem = static_cast<fnm_ui::MultiLineSourceItem *>(currentItem);
+            for(auto* segment : lineItem->getSegments()){
+                lineSources.push_back(segment);
             }
         }
-        progress.setValue(static_cast<int>(i));
-        qApp->processEvents();
     }
-    return true;
+
+    // 2. Gather Barriers
+    auto barriers = barrierSegmentsToStdVector();
+
+    // 3. Define Progress Callback
+    auto progressCallback = [&](double percentage) -> bool {
+        if(progress.wasCanceled()) return false;
+        progress.setValue(static_cast<int>(percentage)); // Assuming grid rows correspond roughly to percentage in old code, mapping 0-100 is safer if progress range is 0-100
+        qApp->processEvents();
+        return true;
+    };
+    
+    // Note: The original code set progress range to matrix size (rows). 
+    // Ideally we should set it to 0-100 here or adapt the callback.
+    // The original code: progress.setValue(static_cast<int>(i)); where i is row index.
+    // Let's adjust the progress dialog range to 0-100 for consistency with the controller's percentage.
+    progress.setRange(0, 100);
+
+    // 4. Run Calculation
+    return projectController.runCalculation(pointSources, lineSources, barriers, progressCallback);
 }
 
 QList<fnm_ui::BarrierItem *> MainWindow::barrierList() const
@@ -831,7 +828,7 @@ void MainWindow::on_actioncalculateGrid_triggered()
     on_actiondrag_mode_triggered(); // for a weird reason, this is necessary
     graphicsView->setCursor(myCursors["arrowMode"]);
     resetPixmapArea();
-    noiseGridModel.resetReceivers();
+    projectController.getNoiseGrid().resetReceivers();
     releaseLineItemEdition();
 
 
@@ -847,7 +844,7 @@ void MainWindow::on_actioncalculateGrid_triggered()
     progress.setWindowTitle(this->windowTitle());
     progress.setLabelText(QObject::tr("Calculating..."));
     progress.setMinimum(0);
-    progress.setMaximum(static_cast<int>( noiseGridModel.getMatrix().size()) );
+    // progress.setMaximum(static_cast<int>( noiseGridModel.getMatrix().size()) );
     progress.show();
 
     if(!calculateNoiseFromSources(progress)){
@@ -856,9 +853,9 @@ void MainWindow::on_actioncalculateGrid_triggered()
 
     progress.setLabelText(QObject::tr("Painting Grid..."));
 
-    noiseGridModel.interpolate(); // calculate interpolated receivers
+    projectController.getNoiseGrid().interpolate(); // calculate interpolated receivers
     receivers.paintGrid(*image, progress);
-    noiseGridModel.clearInterpolated(); // clean memory
+    projectController.getNoiseGrid().clearInterpolated(); // clean memory
 
     pixmapItem.setPixmap(QPixmap::fromImage( invertImageOnYAxes(*image) ));
 
@@ -877,7 +874,7 @@ void MainWindow::on_actiondrag_mode_triggered()
 void MainWindow::on_actionzoom_full_triggered()
 {
     qreal ofsset = 10;
-    const auto& rect = noiseGridModel.getSettings().getRect();
+    const auto& rect = projectController.getSettings().getRect();
     QRectF rectF = QRectF(rect.x-ofsset,
                           rect.y+ofsset,
                           rect.width+ofsset,

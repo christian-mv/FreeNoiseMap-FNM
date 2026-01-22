@@ -13,6 +13,8 @@ add_library(core STATIC
     noise_engine.h
     noise_grid.cpp
     noise_grid.h
+    project_controller.cpp
+    project_controller.h
     point.cpp
     point.h
     point_receiver.cpp
