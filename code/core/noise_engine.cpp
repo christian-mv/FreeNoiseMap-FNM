@@ -1,7 +1,8 @@
 #include "noise_engine.h"
 #include <chrono>
 #include <cmath>
-#include <QtDebug>
+#include <tuple>
+#include <algorithm>
 using namespace std;
 
 namespace fnm_core {

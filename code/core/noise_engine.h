@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <random>
+#include <tuple>
 #include "point_source.h"
 #include "line_source_segment.h"
 #include "point_receiver.h"
