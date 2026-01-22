@@ -1,5 +1,6 @@
 #include "gradient_color.h"
-#include <QDebug>
+#include <stdexcept>
+#include <algorithm>
 
 namespace fnm_core {
 
@@ -93,7 +94,7 @@ COLOR_RGB GradientColor::colorAt(const double &Leq)
     return colorResult;
 }
 
-QVector<std::tuple<double, double, double, double>> GradientColor::getSteps() const
+std::vector<std::tuple<double, double, double, double>> GradientColor::getSteps() const
 {
     return this->steps;
 }
