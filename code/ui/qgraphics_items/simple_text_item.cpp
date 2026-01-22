@@ -16,7 +16,7 @@ void SimpleTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *op
    painter->scale(1,-1);
    painter->translate(boundingRect().topLeft().x(), -boundingRect().height());
 
-   ::QGraphicsSimpleTextItem::paint(painter, option, widget);
+   QGraphicsSimpleTextItem::paint(painter, option, widget);
 }
 
 }
