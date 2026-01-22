@@ -28,14 +28,14 @@ namespace  NoiseEngine
     };
 
 
-    std::vector< std::tuple<double, double, double> > calculateDiffractionPathPoints(const double &x0, const double &y0, const double &z0,
+    std::vector<Eigen::Vector3d> calculateDiffractionPathPoints(const double &x0, const double &y0, const double &z0,
                                                                                const double &x1, const double &y1, const double &z1,
                                                                                const std::vector<BarrierSegment*> &barrierSegments);
 
 
 
 
-    IsoBarrierPathdistances Iso9613BarrierDistances(const std::vector<std::tuple<double, double, double>> &pathPoints);
+    IsoBarrierPathdistances Iso9613BarrierDistances(const std::vector<Eigen::Vector3d> &pathPoints);
 
 
 
@@ -63,7 +63,7 @@ namespace  NoiseEngine
     // first value: is a boolean indicating wheter or not the lines intercet
     // second value: x coordinate of the intercetion point
     // third value: y coordinate of the intercetion point
-    std::tuple<bool, double, double> intercectionBetween2DLineSegments(double p0x, double p0y,
+    std::tuple<bool, double, double> intersectionBetween2DLineSegments(double p0x, double p0y,
                                                      double p1x, double p1y,
                                                      double p2x, double p2y,
                                                      double p3x, double p3y);

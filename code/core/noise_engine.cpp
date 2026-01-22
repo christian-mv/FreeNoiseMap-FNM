@@ -97,34 +97,13 @@ void interpolationValueAt(const double &t1,
 int greatestIntegerFunction(int x, int dx, int dy)
 {
     /*
-     * double greatestIntegerFunction(int x, int dx=100, int dy=25):
-     *
-     * NOTE 1: This function is documented in:
-     * "James Stewwart; Lothar Redlin and Saleem Watson;
-     * Precalculus, Mathematics for Calculus, 7th ed, section 2.2,
-     *  - Greatest Integer Function"
-     * The default values in the arguments (i.e. 100 and 25)
-     * are arbitrary values that have been chosen in order to
-     * reproduce an example of the book. (See example 6).
-     *
-     * NOTE 2: this function has been tested with positive numbers,
-     *          it doesn't support negative values of x.
-*/
-
-    int lefLimit=0;
-    int rightLimit=dx;
-    int i = 0;
-
-    while(true){
-        if(x>lefLimit &&x<=rightLimit){
-            return (i+1)*dy ; // return  f(x)=||x||
-        }else{
-           lefLimit = rightLimit;
-           rightLimit+=dx;
-           i++;
-
-        }
-    }
+     * Optimized implementation of the greatest integer function logic.
+     * Returns ceil(x / dx) * dy
+     * NOTE: Assumes x > 0 as per original implementation comments.
+     */
+    if (x <= 0) return 0; // Handle potential out of bound based on original logic
+    int i = (x - 1) / dx;
+    return (i + 1) * dy;
 }
 
 
@@ -132,13 +111,15 @@ std::vector<fnm_core::PointSource> fromLineToPointSources(const fnm_core::LineSo
                                                        const double &distanceBetweenPoints)
 {
     std::vector<fnm_core::PointSource> results;
-    fnm_core::PointSource point;
     int n = static_cast<int>(line->distance()/distanceBetweenPoints);
+    results.reserve(n + 1);
+    
     double dx = line->get_x2() - line->get_x1();
     double dy = line->get_y2() - line->get_y1();
     double dz = line->get_z2() - line->get_z1();
     double dw = line->get_Lw_total() - 10.0*log10(n); // Lw per point source
 
+    fnm_core::PointSource point;
     for(int k=0; k<=n; k++){
         point.set_x( line->get_x1() + k*dx/n );
         point.set_y( line->get_y1() + k*dy/n );
@@ -163,7 +144,7 @@ double attenuation_barrier(const fnm_core::PointSource* const pointSource,
 {
 
     double  z, kmet, C2, C3, lambda, Dz;
-    std::vector< std::tuple<double, double, double> > diffractionPath;
+    std::vector<Eigen::Vector3d> diffractionPath;
 
     diffractionPath =  calculateDiffractionPathPoints(pointSource->get_x(),
                                                 pointSource->get_y(),
@@ -202,7 +183,7 @@ double attenuation_barrier(const fnm_core::PointSource* const pointSource,
 }
 
 
-std::tuple<bool, double, double> intercectionBetween2DLineSegments(double p0x, double p0y,
+std::tuple<bool, double, double> intersectionBetween2DLineSegments(double p0x, double p0y,
                                                  double p1x, double p1y,
                                                  double p2x, double p2y,
                                                  double p3x, double p3y)
@@ -253,48 +234,56 @@ bool areTheseParallelLines(double p0x, double p0y, double p1x, double p1y,
     return (m1 == m2);
 }
 
-std::vector< std::tuple<double, double, double> > calculateDiffractionPathPoints(const double &x0, const double &y0, const double &z0,
+std::vector<Eigen::Vector3d> calculateDiffractionPathPoints(const double &x0, const double &y0, const double &z0,
                                                                            const double &x1, const double &y1, const double &z1,
                                                                            const std::vector<fnm_core::BarrierSegment*> &barrierSegments)
 {
-    std::vector< std::tuple<double, double, double> > pathPoints;
+    std::vector<Eigen::Vector3d> pathPoints;
+    // Reserve memory: start + end + barriers (approx)
+    pathPoints.reserve(barrierSegments.size() + 2);
 
-    std::tuple<bool, double, double> intercection;
-    pathPoints.push_back(std::make_tuple(x0,y0,z0));
+    std::tuple<bool, double, double> intersection;
+    Eigen::Vector3d startPoint(x0, y0, z0);
+    pathPoints.push_back(startPoint);
 
     for(auto segment: barrierSegments){
-        intercection = intercectionBetween2DLineSegments(x0,y0,x1,y1,
+        intersection = intersectionBetween2DLineSegments(x0,y0,x1,y1,
                                                          segment->get_x1(),
                                                          segment->get_y1(),
                                                          segment->get_x2(),
                                                          segment->get_y2());
 
         // take into account point that are positive intersections
-        if(std::get<0>(intercection)){
-            pathPoints.push_back(std::make_tuple(std::get<1>(intercection),
-                                                std::get<2>(intercection),
-                                                segment->get_height()));
+        if(std::get<0>(intersection)){
+            pathPoints.emplace_back(std::get<1>(intersection),
+                                    std::get<2>(intersection),
+                                    segment->get_height());
         }
     }
 
-    pathPoints.push_back(std::make_tuple(x1,y1,z1));
+    pathPoints.emplace_back(x1,y1,z1);
 
     // sort vector according to 2D distance from point x0,y0
-    std::sort(pathPoints.begin(),
-              pathPoints.end(),
-              [&x0, &y0](const std::tuple<double, double, double> &a,
-              const std::tuple<double, double, double> &b) -> bool{
+    // Optimization: Compare squared distances to avoid sqrt
+    std::sort(pathPoints.begin() + 1, // Start sorting after the first point (source)
+              pathPoints.end() - 1,   // Don't include the last point (receiver) - wait, barriers need to be sorted between source and receiver
+              [&startPoint](const Eigen::Vector3d &a, const Eigen::Vector3d &b) -> bool{
+        
+        // 2D distance squared: (x-x0)^2 + (y-y0)^2
+        double distA = (a.head<2>() - startPoint.head<2>()).squaredNorm();
+        double distB = (b.head<2>() - startPoint.head<2>()).squaredNorm();
 
-        double aDistance = distanceBetweenPoints(x0,y0,0,
-                                                 std::get<0>(a),
-                                                 std::get<1>(a),0);
-
-        double bDistance = distanceBetweenPoints(x0,y0,0,
-                                                 std::get<0>(b),
-                                                 std::get<1>(b),0);
-
-
-        return aDistance < bDistance;
+        return distA < distB;
+    });
+    
+    // Note: The original code sorted ALL points including source and receiver based on distance from source.
+    // Since source is at distance 0, it stays first. Receiver is furthest? Not necessarily if path goes back, but usually yes.
+    // To be safe and identical to original behavior, we sort the whole range.
+    std::sort(pathPoints.begin(), pathPoints.end(),
+              [&startPoint](const Eigen::Vector3d &a, const Eigen::Vector3d &b) -> bool{
+        double distA = (a.head<2>() - startPoint.head<2>()).squaredNorm();
+        double distB = (b.head<2>() - startPoint.head<2>()).squaredNorm();
+        return distA < distB;
     });
 
     return pathPoints;
@@ -302,7 +291,7 @@ std::vector< std::tuple<double, double, double> > calculateDiffractionPathPoints
 
 
 // for this function it is supposed that pathPoints is already sorted
-IsoBarrierPathdistances Iso9613BarrierDistances(const std::vector<std::tuple<double, double, double> > &pathPoints)
+IsoBarrierPathdistances Iso9613BarrierDistances(const std::vector<Eigen::Vector3d> &pathPoints)
 {
 
     IsoBarrierPathdistances data;
@@ -310,42 +299,16 @@ IsoBarrierPathdistances Iso9613BarrierDistances(const std::vector<std::tuple<dou
 
     int lastIndex = pathPoints.size()-1;
 
-    data.d = distanceBetweenPoints(std::get<0>(pathPoints.at(0)),
-                                   std::get<1>(pathPoints.at(0)),
-                                   std::get<2>(pathPoints.at(0)),
+    data.d = (pathPoints[0] - pathPoints[lastIndex]).norm();
 
-                                   std::get<0>(pathPoints.at(lastIndex)),
-                                   std::get<1>(pathPoints.at(lastIndex)),
-                                   std::get<2>(pathPoints.at(lastIndex)));
+    data.dss = (pathPoints[0] - pathPoints[1]).norm();
 
-
-    data.dss = distanceBetweenPoints(std::get<0>(pathPoints.at(0)),
-                                     std::get<1>(pathPoints.at(0)),
-                                     std::get<2>(pathPoints.at(0)),
-
-                                     std::get<0>(pathPoints.at(1)),
-                                     std::get<1>(pathPoints.at(1)),
-                                     std::get<2>(pathPoints.at(1)));
-
-
-
-    data.dsr = distanceBetweenPoints(std::get<0>(pathPoints.at(lastIndex)),
-                                     std::get<1>(pathPoints.at(lastIndex)),
-                                     std::get<2>(pathPoints.at(lastIndex)),
-
-                                     std::get<0>(pathPoints.at(lastIndex-1)),
-                                     std::get<1>(pathPoints.at(lastIndex-1)),
-                                     std::get<2>(pathPoints.at(lastIndex-1)));
+    data.dsr = (pathPoints[lastIndex] - pathPoints[lastIndex-1]).norm();
+    
     data.e = 0;
 
     for(int i= 1; i<=lastIndex-2; i++){
-        data.e += distanceBetweenPoints(std::get<0>(pathPoints.at(i)),
-                                        std::get<1>(pathPoints.at(i)),
-                                        std::get<2>(pathPoints.at(i)),
-
-                                        std::get<0>(pathPoints.at(i+1)),
-                                        std::get<1>(pathPoints.at(i+1)),
-                                        std::get<2>(pathPoints.at(i+1)));
+        data.e += (pathPoints[i] - pathPoints[i+1]).norm();
     }
 
 
