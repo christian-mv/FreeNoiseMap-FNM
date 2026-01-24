@@ -19,6 +19,7 @@ Try out FNM directly in your browser (limited functionality):
 *   **Visualization**:
     *   Receiver grids with configurable resolution.
     *   Noise contour maps (Heatmaps).
+    *   Result interpolation for smooth visualization.
 *   **Cross-Platform**: Runs natively on Linux, Windows, macOS, Android, and iOS.
 
 ## 🖥️ Supported Platforms
@@ -80,8 +81,31 @@ FNM is developed in **C++20** using the **Qt 6** framework.
 
 ## 📸 Gallery
 
-### User Interface (Linux)
-![Linux](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_Linux.png)
+### Desktop & Mobile GUI
+| Linux | Android | Windows |
+| :---: | :---: | :---: |
+| <img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_Linux.png" width="250"> | <img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_android.png" width="250"> | <img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_windows.png" width="250"> |
+
+| macOS | iOS |
+| :---: | :---: |
+| <img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_MacOS.png" width="250"> | <img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_IOS.png" width="250"> |
+
+### Web Assembly
+| Chrome | Firefox |
+| :---: | :---: |
+| <img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_Google_Chrome.png" width="350"> | <img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_FireFox.png" width="350"> |
+
+### Visualization Features
+**Noise Contours & Gradient Scales**
+<br>
+<img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/contourAreas.png" width="500">
+<br>
+<img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/raster_test.png" width="500">
+
+**Interpolation Levels**
+| No Interpolation | Factor 2 | Factor 3 | Factor 4 |
+| :---: | :---: | :---: | :---: |
+| <img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation1.png" width="180"> | <img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation2.png" width="180"> | <img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation3.png" width="180"> | <img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation4.png" width="180"> |
 
 ---
 
