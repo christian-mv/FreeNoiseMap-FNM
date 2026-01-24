@@ -73,9 +73,15 @@ mkdir -p "$BUILD_DIR"
 
 echo "⚙️  Configuring project (Release)..."
 # Note: We use qt-cmake which automatically handles the toolchain file
+
+GENERATOR=""
+if which ninja >/dev/null 2>&1; then
+    GENERATOR="-GNinja"
+fi
+
 "$QT_CMAKE" -S "$SOURCE_DIR" -B "$BUILD_DIR" \
     -DCMAKE_BUILD_TYPE=Release \
-    -GNinja 2>/dev/null || "$QT_CMAKE" -S "$SOURCE_DIR" -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE=Release
+    $GENERATOR
 
 # Check if configuration failed
 if [ $? -ne 0 ]; then
@@ -110,6 +116,39 @@ if [ $? -eq 0 ]; then
     
     HTML_FILE="$BUILD_DIR/ui/FreeNoiseMap.html"
     if [ -f "$HTML_FILE" ]; then
+        echo "🔧 Patching HTML splash screen..."
+        
+        # Ensure icon is in the same directory as HTML
+        cp "$SOURCE_DIR/ui/icons/app_icon.png" "$BUILD_DIR/ui/" 2>/dev/null || true
+        
+        # Read the custom splash screen content
+        SPLASH_CONTENT=$(cat "$SOURCE_DIR/ui/splash_screen.html")
+        
+        # Use python to safely replace the multi-line block, as sed is tricky with newlines
+        # We replace the entire <figure ... id="qtspinner"> ... </figure> block
+        python3 -c "
+import sys
+import re
+
+html_path = '$HTML_FILE'
+splash_path = '$SOURCE_DIR/ui/splash_screen.html'
+
+with open(html_path, 'r') as f:
+    content = f.read()
+
+with open(splash_path, 'r') as f:
+    new_splash = f.read()
+
+# Regex to find the qtspinner figure block
+# It looks for <figure ... id=\"qtspinner\"> ... </figure>
+# We use re.DOTALL to match across newlines
+pattern = r'<figure[^>]*id=\"qtspinner\"[^>]*>.*?</figure>'
+
+new_content = re.sub(pattern, new_splash, content, flags=re.DOTALL)
+
+with open(html_path, 'w') as f:
+    f.write(new_content)
+"
         echo "🌐 Starting application with emrun..."
         emrun "$HTML_FILE"
     else

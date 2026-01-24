@@ -8,7 +8,11 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow window;
 
-    window.showMaximized();       
+#ifdef Q_OS_WASM
+    window.showFullScreen();
+#else
+    window.showMaximized();
+#endif
 
     return a.exec();
 }
