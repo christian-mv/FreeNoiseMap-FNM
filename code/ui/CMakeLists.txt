@@ -39,13 +39,17 @@ set(PROJECT_RESOURCES
     resources.qrc
 )
 
-add_executable(FreeNoiseMap
+qt_add_executable(FreeNoiseMap
     ${PROJECT_SOURCES}
     ${PROJECT_HEADERS}
     ${PROJECT_RESOURCES}
 )
 
 target_link_libraries(FreeNoiseMap PRIVATE Qt6::Widgets core Eigen3)
+
+if(EMSCRIPTEN)
+    target_link_options(FreeNoiseMap PRIVATE "--bind")
+endif()
 
 target_include_directories(FreeNoiseMap PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/..

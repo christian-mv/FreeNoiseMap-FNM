@@ -14,7 +14,10 @@ target_include_directories(Eigen3 INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/third_pa
 # Compiler Optimizations for Release
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-        add_compile_options(-O3 -march=native -DNDEBUG -DEIGEN_NO_DEBUG)
+        add_compile_options(-O3 -DNDEBUG -DEIGEN_NO_DEBUG)
+        if(NOT EMSCRIPTEN)
+            add_compile_options(-march=native)
+        endif()
     elseif(MSVC)
         add_compile_options(/O2 /Ob2 /Oi /Ot /Oy /GL)
         add_compile_definitions(NDEBUG EIGEN_NO_DEBUG)

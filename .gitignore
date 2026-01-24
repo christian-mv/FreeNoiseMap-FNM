@@ -4,5 +4,6 @@ build_debug/
 run_debug.sh
 RECOMMENDATIONS.md
 build_release/
+build_wasm_release/
 GEMINI.md
 run_release.sh
