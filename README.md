@@ -1,5 +1,9 @@
 # Free Noise Map (FNM)
 
+<p align="center">
+  <img src="code/ui/icons/app_icon.png" width="150">
+</p>
+
 **Free Noise Map (FNM)** is a multi-platform, free, and open-source environmental noise modelling software. It targets major desktop and mobile operating systems, as well as the web, providing an accessible tool for acoustic simulation.
 
 ## 🚀 Live Demo
@@ -15,7 +19,6 @@ Try out FNM directly in your browser (limited functionality):
 *   **Visualization**:
     *   Receiver grids with configurable resolution.
     *   Noise contour maps (Heatmaps).
-    *   Result interpolation for smooth visualization.
 *   **Cross-Platform**: Runs natively on Linux, Windows, macOS, Android, and iOS.
 
 ## 🖥️ Supported Platforms
@@ -77,29 +80,8 @@ FNM is developed in **C++20** using the **Qt 6** framework.
 
 ## 📸 Gallery
 
-### Desktop & Mobile GUI
-| Linux | Android | Windows |
-| :---: | :---: | :---: |
-| ![Linux](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_Linux.png) | ![Android](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_android.png) | ![Windows](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_windows.png) |
-
-| macOS | iOS |
-| :---: | :---: |
-| ![macOS](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_MacOS.png) | ![iOS](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_IOS.png) |
-
-### Web Assembly
-| Chrome | Firefox |
-| :---: | :---: |
-| ![Chrome](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_Google_Chrome.png) | ![Firefox](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_FireFox.png) |
-
-### Visualization Features
-**Noise Contours & Gradient Scales**
-![Contours](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/contourAreas.png)
-![Raster](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/raster_test.png)
-
-**Interpolation Levels**
-| No Interpolation | Factor 2 | Factor 3 | Factor 4 |
-| :---: | :---: | :---: | :---: |
-| ![1](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation1.png) | ![2](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation2.png) | ![3](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation3.png) | ![4](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/interpolation4.png) |
+### User Interface (Linux)
+![Linux](https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_Linux.png)
 
 ---
 
