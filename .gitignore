@@ -7,3 +7,5 @@ build_release/
 build_wasm_release/
 GEMINI.md
 run_release.sh
+build_wasm_release.sh
+build_single_threaded_and_deploy_on_github.sh

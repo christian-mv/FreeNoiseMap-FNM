@@ -49,6 +49,11 @@ target_link_libraries(FreeNoiseMap PRIVATE Qt6::Widgets core Eigen3)
 
 if(EMSCRIPTEN)
     target_link_options(FreeNoiseMap PRIVATE "--bind")
+    set_target_properties(FreeNoiseMap PROPERTIES
+        QT_WASM_HTML_TEMPLATE "${CMAKE_CURRENT_SOURCE_DIR}/wasm_shell.html"
+    )
+    # Copy app icon to build directory for the WASM splash screen
+    file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/icons/app_icon.png" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 endif()
 
 target_include_directories(FreeNoiseMap PRIVATE

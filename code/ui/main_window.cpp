@@ -43,6 +43,10 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowIcon(QIcon(":/images/icons/app_icon.png"));
     setWindowTitle(QString(MY_APP_NAME)+" - version "+QString(VERSION_OF_APP));
 
+#ifdef Q_OS_WASM
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+#endif
+
     loadCursors();
     makeMenuMutualExclusive();
 

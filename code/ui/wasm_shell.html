@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, user-scalable=0"/>
+    <title>FreeNoiseMap</title>
+    <style>
+      /* Make the html body cover the entire (visual) viewport with no scroll bars. */
+      html, body { 
+        padding: 0; 
+        margin: 0; 
+        overflow: hidden; 
+        height: 100%; 
+        background-color: #2c3e50; 
+        color: white; 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+      #screen { width: 100%; height: 100%; }
+      #qtspinner { 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: center; 
+        height: 100%; 
+        margin: 0;
+      }
+      #qtstatus { 
+        margin-top: 20px; 
+        font-weight: 300;
+        opacity: 0.8;
+      }
+      .logo {
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        border-radius: 20%;
+      }
+    </style>
+  </head>
+  <body onload="init()">
+    <figure id="qtspinner">
+        <img src="app_icon.png" width="180" height="180" class="logo">
+        <h1 style="margin-top: 30px; font-weight: 400; letter-spacing: 1px;">FreeNoiseMap</h1>
+        <div id="qtstatus">Initializing...</div>
+        <noscript>JavaScript is disabled. Please enable JavaScript to use this application.</noscript>
+    </figure>
+    <div id="screen"></div>
+
+    <script type="text/javascript">
+        async function init()
+        {
+            const spinner = document.querySelector('#qtspinner');
+            const screen = document.querySelector('#screen');
+            const status = document.querySelector('#qtstatus');
+
+            const showUi = (ui) => {
+                [spinner, screen].forEach(element => element.style.display = 'none');
+                if (ui === spinner) {
+                    ui.style.display = 'flex';
+                } else {
+                    ui.style.display = 'block';
+                }
+            }
+
+            try {
+                showUi(spinner);
+                status.innerHTML = 'Loading WebAssembly...';
+
+                const instance = await qtLoad({
+                    qt: {
+                        onLoaded: () => showUi(screen),
+                        onExit: exitData =>
+                        {
+                            status.innerHTML = 'Application exit';
+                            status.innerHTML +=
+                                exitData.code !== undefined ? ` with code ${exitData.code}` : '';
+                            showUi(spinner);
+                        },
+                        entryFunction: window.FreeNoiseMap_entry,
+                        containerElements: [screen],
+                    }
+                });
+            } catch (e) {
+                console.error(e);
+                status.innerHTML = 'Error loading application';
+            }
+        }
+    </script>
+    <script src="FreeNoiseMap.js"></script>
+    <script type="text/javascript" src="qtloader.js"></script>
+  </body>
+</html>

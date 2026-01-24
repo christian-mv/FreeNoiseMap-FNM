@@ -1,0 +1,69 @@
+<figure id="qtspinner" style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        margin: 0;
+        font-family: 'Roboto', 'Segoe UI', sans-serif;
+        background-color: #121212;
+        color: rgba(255, 255, 255, 0.87);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+    ">
+        <style>
+            .spinner {
+                border: 4px solid rgba(255, 255, 255, 0.1);
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                border-left-color: #bb86fc; /* Material Design Primary Variant color */
+                animation: spin 1s linear infinite;
+                margin: 20px auto;
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
+        <div style="
+            background-color: #1e1e1e; /* Material Surface Color */
+            padding: 48px;
+            border-radius: 4px; /* Material standard border radius */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            text-align: center;
+            min-width: 300px;
+        ">
+            <img src="app_icon.png" width="96" height="96" style="
+                margin-bottom: 24px;
+                filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+            ">
+            <h1 style="
+                margin: 0; 
+                font-weight: 500; 
+                font-size: 24px; 
+                letter-spacing: 0.15px;
+                color: #ffffff;
+            ">FreeNoiseMap</h1>
+            
+            <p style="
+                margin: 8px 0 24px 0; 
+                font-size: 14px; 
+                letter-spacing: 0.25px; 
+                color: rgba(255, 255, 255, 0.6);
+            ">Environmental Noise Modelling</p>
+            
+            <div class="spinner"></div>
+            
+            <div id="qtstatus" style="
+                font-size: 14px; 
+                color: #bb86fc;
+                min-height: 20px;
+                font-weight: 500;
+            ">Initializing...</div>
+        </div>
+        <noscript>JavaScript is disabled. Please enable JavaScript to use this application.</noscript>
+    </figure>
