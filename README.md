@@ -90,17 +90,10 @@ FNM is developed in **C++20** using the **Qt 6** framework.
 | :---: | :---: |
 | <img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_MacOS.png" width="250"> | <img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_IOS.png" width="250"> |
 
-### Web Assembly
-| Chrome | Firefox |
-| :---: | :---: |
-| <img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_Google_Chrome.png" width="350"> | <img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_FireFox.png" width="350"> |
+### Web
+<img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/gui_on_Google_Chrome.png" width="350">
 
 ### Visualization Features
-**Noise Contours & Gradient Scales**
-<br>
-<img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/contourAreas.png" width="500">
-<br>
-<img src="https://raw.githubusercontent.com/christian-mv/Free-Noise-Map/master/screenshoots/raster_test.png" width="500">
 
 **Interpolation Levels**
 | No Interpolation | Factor 2 | Factor 3 | Factor 4 |
