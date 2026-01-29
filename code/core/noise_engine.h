@@ -3,96 +3,59 @@
 
 #include <vector>
 #include <random>
-#include <tuple>
+#include <Eigen/Core>
 #include "point_source.h"
 #include "line_source_segment.h"
 #include "point_receiver.h"
 #include "barrier_segment.h"
 
-
 namespace fnm_core {
 
 using MatrixOfDoubles = std::vector<std::vector<double>>;
 
-namespace  NoiseEngine
-{    
-    const double pi = 3.14159265359;
-    const double euler = 2.71828182845;
-    const double c = 343.2; // sound speed (correct later acording to ISO 9613-1 eq A5)
+namespace NoiseEngine {
+    
+    // Physical Constants
+    constexpr double SoundSpeed = 343.2;
 
-    struct IsoBarrierPathdistances{
-        double d;
-        double dss;
-        double dsr;
-        double e;
-    };
-
-
-    std::vector<Eigen::Vector3d> calculateDiffractionPathPoints(const double &x0, const double &y0, const double &z0,
-                                                                               const double &x1, const double &y1, const double &z1,
-                                                                               const std::vector<const BarrierSegment*> &barrierSegments);
-
-
-
-
-    IsoBarrierPathdistances Iso9613BarrierDistances(const std::vector<Eigen::Vector3d> &pathPoints);
-
-
-
-
-    MatrixOfDoubles createMatrixOfDoubles(unsigned int m, unsigned int n);
-    int intRandom(int min, int max);
-
+    /**
+     * @brief Main Point-to-Point calculation.
+     * Computes divergence and barrier attenuation, adding the result energetically to the receiver.
+     */
     void P2P(const PointSource &pointSource, PointReceiver &receiver,
              const std::vector<const BarrierSegment*> &barrierSegments);
 
+    /**
+     * @brief Discretizes a line source into point sources.
+     */
+    std::vector<PointSource> fromLineToPointSources(const LineSourceSegment *line,
+                                                    const double &maxDistanceBetweenPoints);
 
-    double attenuation_divergence(const double & distance);
-
+    /**
+     * @brief Calculates total barrier attenuation using a Smooth Continuous Model.
+     * Combines top and lateral diffraction energetically.
+     */
     double attenuation_barrier(const PointSource* const pointSource,
                                const PointReceiver* const receiver,
                                const std::vector<const BarrierSegment*> &barrierSegments,
                                const double &frequency);
 
+    /**
+     * @brief Standard geometric divergence (A_div).
+     */
+    double attenuation_divergence(const double &distance);
 
-    double distanceBetweenPoints(double x1, double y1, double z1,
-                                 double x2, double y2, double z2);
-
-
-    // this functio returns a tuple with 3 values:
-    // first value: is a boolean indicating wheter or not the lines intercet
-    // second value: x coordinate of the intercetion point
-    // third value: y coordinate of the intercetion point
-    std::tuple<bool, double, double> intersectionBetween2DLineSegments(double p0x, double p0y,
-                                                     double p1x, double p1y,
-                                                     double p2x, double p2y,
-                                                     double p3x, double p3y);
-
-    bool areTheseParallelLines(double p0x, double p0y,
-                               double p1x, double p1y,
-                               double p2x, double p2y,
-                               double p3x, double p3y);
-
-
-
+    // Utilities
     double sumdB(const double &Leq1, const double &Leq2);
-
-    int greatestIntegerFunction(int x, int dx=100, int dy=25);
-
-    void interpolationValueAt(
-                            const double &t1,
-                            const double &y1,
-                            const double &t2,
-                                  double &y2,
-                            const double &t3,
-                            const double &y3);
-
-    std::vector<PointSource> fromLineToPointSources(const LineSourceSegment *line,
-                                                           const double &delta);
-
-
-
-};
+    double distanceBetweenPoints(double x1, double y1, double z1, double x2, double y2, double z2);
+    
+    // Legacy/Helper utilities preserved for compatibility
+    MatrixOfDoubles createMatrixOfDoubles(unsigned int m, unsigned int n);
+    int intRandom(int min, int max);
+    void interpolationValueAt(const double &t1, const double &y1,
+                              const double &t2, double &y2,
+                              const double &t3, const double &y3);
+}
 }
 
-#endif // DYNAMIC_MATRIX_H
+#endif // FNM_CORE_NOISE_ENGINE_H

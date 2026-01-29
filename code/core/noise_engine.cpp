@@ -1,323 +1,278 @@
 #include "noise_engine.h"
 #include <chrono>
 #include <cmath>
-#include <tuple>
 #include <algorithm>
-#include <Eigen/Core>
-using namespace std;
+#include <set>
+#include <queue>
+#include <random>
+#include <map>
 
 namespace fnm_core {
-namespace NoiseEngine
-{
-MatrixOfDoubles createMatrixOfDoubles(unsigned int m, unsigned int n){
-    MatrixOfDoubles myMatriz;
+namespace NoiseEngine {
 
-    //m * n is the size of the matrix
+// =========================================================
+// GEOMETRY HELPERS
+// =========================================================
 
-    //Grow rows by m
-    myMatriz.resize(m);
-    for(unsigned int i = 0 ; i < m ; ++i)
-    {
-        //Grow Columns by n
-        myMatriz[i].resize(n);
+static bool isSamePoint2D(const Eigen::Vector2d& p1, const Eigen::Vector2d& p2, double eps = 1e-2) {
+    return (p1 - p2).squaredNorm() < eps * eps;
+}
+
+// Strict intersection (excludes endpoints)
+static bool segmentsIntersectStrict(const Eigen::Vector2d& A, const Eigen::Vector2d& B,
+                                    const Eigen::Vector2d& C, const Eigen::Vector2d& D) {
+    auto cross = [](const Eigen::Vector2d& u, const Eigen::Vector2d& v) {
+        return u.x() * v.y() - u.y() * v.x();
+    };
+    double d1 = cross(B - A, C - A);
+    double d2 = cross(B - A, D - A);
+    double d3 = cross(D - C, A - C);
+    double d4 = cross(D - C, B - C);
+    return (((d1 > 1e-9 && d2 < -1e-9) || (d1 < -1e-9 && d2 > 1e-9)) &&
+            ((d3 > 1e-9 && d4 < -1e-9) || (d3 < -1e-9 && d4 > 1e-9)));
+}
+
+/**
+ * @brief Checks if the path from P1 to P2 is blocked by any barrier in the given set.
+ * Used to verify if a diffraction edge is actually illuminated.
+ */
+static bool isPathBlocked(const Eigen::Vector2d& P1, const Eigen::Vector2d& P2,
+                          const std::vector<const BarrierSegment*>& barriers,
+                          const BarrierSegment* ignoreSeg = nullptr) {
+    for (const auto* seg : barriers) {
+        if (seg == ignoreSeg) continue;
+        if (segmentsIntersectStrict(P1, P2, Eigen::Vector2d(seg->get_x1(), seg->get_y1()), 
+                                            Eigen::Vector2d(seg->get_x2(), seg->get_y2()))) {
+            return true;
+        }
     }
-    //Now you have matrix m*n with default values
-    return myMatriz;
+    return false;
 }
 
-// this function generate a integer random
-int intRandom(int min, int max)
-{
-    static std::mt19937 generator = []() {
-        std::mt19937 gen;
-        auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-        gen.seed(static_cast<unsigned int>(seed));
-        return gen;
-    }();
-    std::uniform_int_distribution<int> distribution(min, max);
-    return distribution(generator);
+static Eigen::Vector3d findDiffractionPoint(const Eigen::Vector3d& S, const Eigen::Vector3d& R,
+                                            const Eigen::Vector3d& E1, const Eigen::Vector3d& E2) {
+    auto pathLen = [&](double t) {
+        Eigen::Vector3d P = E1 + t * (E2 - E1);
+        return (S - P).norm() + (P - R).norm();
+    };
+
+    double l = 0.0, r = 1.0;
+    for(int i = 0; i < 32; ++i) {
+        double m1 = l + (r - l) / 3.0;
+        double m2 = r - (r - l) / 3.0;
+        if(pathLen(m1) < pathLen(m2)) r = m2;
+        else l = m1;
+    }
+    return E1 + ((l + r) / 2.0) * (E2 - E1);
 }
 
+static double calculateContinuousDz(const Eigen::Vector3d& S, const Eigen::Vector3d& R, 
+                                    const Eigen::Vector3d& P, double lambda) {
+    double d_ss = (S - P).norm();
+    double d_sr = (P - R).norm();
+    double d_dir = (S - R).norm();
+    double delta = (d_ss + d_sr) - d_dir;
 
-double distanceBetweenPoints(double x1, double y1, double z1, double x2, double y2, double z2)
-{
-    return (Eigen::Vector3d(x2, y2, z2) - Eigen::Vector3d(x1, y1, z1)).norm();
+    if (delta <= 1e-9) return 0.0;
+
+    double k_met = 1.0;
+    if (delta > 1e-5) {
+        double val = (d_ss * d_sr * d_dir) / (2.0 * delta);
+        if (val > 0) k_met = std::exp(-(1.0/2000.0) * std::sqrt(val));
+    }
+
+    double C2 = 20.0;
+    double arg = 1.0 + (C2 / lambda) * delta * k_met;
+    return 10.0 * std::log10(std::max(1.0, arg));
 }
 
+// =========================================================
+// MAIN ENGINE IMPLEMENTATION
+// =========================================================
 
+void P2P(const PointSource &pointSource, PointReceiver &receiver,
+         const std::vector<const BarrierSegment*> &barrierSegments) {
+    
+    double dist = distanceBetweenPoints(pointSource.get_x(), pointSource.get_y(), pointSource.get_z(),
+                                        receiver.get_x(), receiver.get_y(), receiver.get_z());
 
-void P2P(const fnm_core::PointSource &pointSource,
-         fnm_core::PointReceiver &receiver,
-         const std::vector<const fnm_core::BarrierSegment*> &barrierSegments)
-{
-    double distance = distanceBetweenPoints(pointSource.get_x(),
-                                            pointSource.get_y(),
-                                            pointSource.get_z(),
-                                            receiver.get_x(),
-                                            receiver.get_y(),
-                                            receiver.get_z());
-
-    double A_div = attenuation_divergence(distance);
-
+    double A_div = attenuation_divergence(dist);
     double A_bar = 0;
 
-    if(!barrierSegments.empty()){
+    if (!barrierSegments.empty()) {
         A_bar = attenuation_barrier(&pointSource, &receiver, barrierSegments, 500.0);
     }
 
-
-    double Leq_result = pointSource.get_Lw() - A_div - A_bar;
-    Leq_result = sumdB(receiver.get_Leq(), Leq_result);
-
-    receiver.set_Leq(Leq_result);
-    //        qDebug()<<"(X,Y,Leq): ("<<receiver.get_x()<<
-    //                  ","<<receiver.get_y()<<
-    //                  ","<<receiver.get_Leq()<<")";
+    double level = pointSource.get_Lw() - A_div - A_bar;
+    receiver.set_Leq(sumdB(receiver.get_Leq(), level));
 }
 
-double sumdB(const double &Leq1, const double &Leq2)
-{
-    return 10.0*log10( pow(10.0,(0.1*Leq1)) + pow(10.0,(0.1*Leq2)) );
-}
-
-
-// this function modifies y2 according to: https://ncalculators.com/geometry/linear-interpolation-calculator.htm
-void interpolationValueAt(const double &t1,
-                          const double &y1,
-                          const double &t2,
-                          double &y2,
-                          const double &t3,
-                          const double &y3)
-{
-    y2 = ((t2 - t1)*(y3 - y1) / (t3 - t1)) + y1;
-}
-
-
-
-int greatestIntegerFunction(int x, int dx, int dy)
-{
-    /*
-     * Optimized implementation of the greatest integer function logic.
-     * Returns ceil(x / dx) * dy
-     * NOTE: Assumes x > 0 as per original implementation comments.
-     */
-    if (x <= 0) return 0; // Handle potential out of bound based on original logic
-    int i = (x - 1) / dx;
-    return (i + 1) * dy;
-}
-
-
-std::vector<fnm_core::PointSource> fromLineToPointSources(const fnm_core::LineSourceSegment *line,
-                                                       const double &distanceBetweenPoints)
-{
-    std::vector<fnm_core::PointSource> results;
-    int n = static_cast<int>(line->distance()/distanceBetweenPoints);
-    results.reserve(n + 1);
+double attenuation_barrier(const PointSource* const pointSource,
+                           const PointReceiver* const receiver,
+                           const std::vector<const BarrierSegment*> &barrierSegments,
+                           const double &frequency) {
     
-    double dx = line->get_x2() - line->get_x1();
-    double dy = line->get_y2() - line->get_y1();
-    double dz = line->get_z2() - line->get_z1();
-    double dw = line->get_Lw_total() - 10.0*log10(n); // Lw per point source
+    Eigen::Vector3d S(pointSource->get_x(), pointSource->get_y(), pointSource->get_z());
+    Eigen::Vector3d R(receiver->get_x(), receiver->get_y(), receiver->get_z());
+    Eigen::Vector2d S2(S.x(), S.y()), R2(R.x(), R.y());
+    double lambda = SoundSpeed / frequency;
 
-    fnm_core::PointSource point;
-    for(int k=0; k<=n; k++){
-        point.set_x( line->get_x1() + k*dx/n );
-        point.set_y( line->get_y1() + k*dy/n );
-        point.set_z( line->get_z1() + k*dz/n );
-        point.set_Lw(dw);
-        results.push_back(point);
+    // 1. Identify DIRECTLY obstructing segments
+    std::vector<const BarrierSegment*> obstructing;
+    for (auto* seg : barrierSegments) {
+        if (segmentsIntersectStrict(S2, R2, Eigen::Vector2d(seg->get_x1(), seg->get_y1()), 
+                                            Eigen::Vector2d(seg->get_x2(), seg->get_y2()))) {
+            obstructing.push_back(seg);
+        }
+    }
+
+    if (obstructing.empty()) return 0.0; // Illuminated Zone
+
+    // 2. Top Diffraction (Dominant Path)
+    // We calculate the attenuation for all obstructing barriers and pick the MAX.
+    // This implicitly handles "barrier behind barrier" for top diffraction:
+    // the most effective one sets the attenuation floor.
+    double maxDzTop = 0.0;
+    for (auto* seg : obstructing) {
+        Eigen::Vector3d B1(seg->get_x1(), seg->get_y1(), seg->get_z1() + seg->get_height());
+        Eigen::Vector3d B2(seg->get_x2(), seg->get_y2(), seg->get_z2() + seg->get_height());
+        Eigen::Vector3d P = findDiffractionPoint(S, R, B1, B2);
+        
+        double dz = calculateContinuousDz(S, R, P, lambda);
+        if (dz > maxDzTop) maxDzTop = dz;
+    }
+
+    // 3. Lateral Diffraction
+    // Group obstructing segments into chains to find lateral edges
+    std::set<const BarrierSegment*> processed;
+    double transmissionLateralSum = 0.0;
+
+    for (auto* startSeg : obstructing) {
+        if (processed.count(startSeg)) continue;
+
+        // Flood-fill to find connected chain
+        std::set<const BarrierSegment*> chain;
+        std::queue<const BarrierSegment*> q;
+        q.push(startSeg); chain.insert(startSeg); processed.insert(startSeg);
+
+        while (!q.empty()) {
+            auto* curr = q.front(); q.pop();
+            Eigen::Vector2d c1(curr->get_x1(), curr->get_y1()), c2(curr->get_x2(), curr->get_y2());
+
+            for (auto* other : barrierSegments) {
+                if (chain.count(other)) continue;
+                Eigen::Vector2d o1(other->get_x1(), other->get_y1()), o2(other->get_x2(), other->get_y2());
+                if (isSamePoint2D(c1, o1) || isSamePoint2D(c1, o2) || 
+                    isSamePoint2D(c2, o1) || isSamePoint2D(c2, o2)) {
+                    chain.insert(other);
+                    processed.insert(other);
+                    q.push(other);
+                }
+            }
+        }
+
+        // Identify Endpoints
+        struct Node { Eigen::Vector2d p; double z; double h; int degree = 0; };
+        std::vector<Node> nodes;
+        auto addNode = [&](const Eigen::Vector3d& pos, double h) {
+            Eigen::Vector2d pos2(pos.x(), pos.y());
+            for (auto& n : nodes) if (isSamePoint2D(n.p, pos2)) { n.degree++; return; }
+            nodes.push_back({pos2, pos.z(), h, 1});
+        };
+
+        for (auto* seg : chain) {
+            addNode(Eigen::Vector3d(seg->get_x1(), seg->get_y1(), seg->get_z1()), seg->get_height());
+            addNode(Eigen::Vector3d(seg->get_x2(), seg->get_y2(), seg->get_z2()), seg->get_height());
+        }
+
+        // Calculate Lateral Attenuation
+        for (const auto& n : nodes) {
+            if (n.degree == 1) { // Lateral Edge
+                
+                // CRITICAL FIX: Check Upstream Occlusion
+                // Is the path from Source to this Edge blocked by ANOTHER barrier?
+                if (isPathBlocked(S2, n.p, barrierSegments)) {
+                    continue; // This edge is in shadow, ignore it
+                }
+                
+                // Also check downstream: Edge to Receiver blocked?
+                if (isPathBlocked(n.p, R2, barrierSegments)) {
+                    continue; // Receiver can't "see" this edge directly
+                }
+
+                Eigen::Vector3d Base(n.p.x(), n.p.y(), n.z);
+                Eigen::Vector3d Top = Base + Eigen::Vector3d(0, 0, n.h);
+                
+                Eigen::Vector3d P = findDiffractionPoint(S, R, Base, Top);
+                double dzLat = calculateContinuousDz(S, R, P, lambda);
+                
+                transmissionLateralSum += std::pow(10.0, -dzLat / 10.0);
+            }
+        }
+    }
+
+    // 4. Combine
+    double transmissionTop = std::pow(10.0, -maxDzTop / 10.0);
+    double totalTransmission = transmissionTop + transmissionLateralSum;
+
+    if (totalTransmission > 1.0) totalTransmission = 1.0;
+
+    return -10.0 * std::log10(totalTransmission);
+}
+
+std::vector<PointSource> fromLineToPointSources(const LineSourceSegment *line,
+                                                const double &maxDistanceBetweenPoints) {
+    std::vector<PointSource> results;
+    double totalLen = line->distance();
+    if (totalLen <= 0) return results;
+
+    int n = std::max(1, static_cast<int>(std::ceil(totalLen / maxDistanceBetweenPoints)));
+    results.reserve(n + 1);
+
+    double dx = (line->get_x2() - line->get_x1()) / n;
+    double dy = (line->get_y2() - line->get_y1()) / n;
+    double dz = (line->get_z2() - line->get_z1()) / n;
+    double dw = line->get_Lw_total() - 10.0 * std::log10(n + 1);
+
+    for (int i = 0; i <= n; ++i) {
+        PointSource p;
+        p.set_x(line->get_x1() + i * dx);
+        p.set_y(line->get_y1() + i * dy);
+        p.set_z(line->get_z1() + i * dz);
+        p.set_Lw(dw);
+        results.push_back(p);
     }
     return results;
 }
 
-double attenuation_divergence(const double &distance)
-{
-    double A_div;
-    distance<1 ? A_div=0 : A_div = 20*std::log10(distance) + 11;
-    return A_div;
+double attenuation_divergence(const double &distance) {
+    return (distance < 1.0) ? 0.0 : (20.0 * std::log10(distance) + 11.0);
 }
 
-double attenuation_barrier(const fnm_core::PointSource* const pointSource,
-                           const fnm_core::PointReceiver* const receiver,
-                           const std::vector<const fnm_core::BarrierSegment*> &barrierSegments,
-                           const double &frequency)
-{
-
-    double  z, kmet, C2, C3, lambda, Dz;
-    std::vector<Eigen::Vector3d> diffractionPath;
-
-    diffractionPath =  calculateDiffractionPathPoints(pointSource->get_x(),
-                                                pointSource->get_y(),
-                                                pointSource->get_z(),
-                                                receiver->get_x(),
-                                                receiver->get_y(),
-                                                receiver->get_z(),
-                                                barrierSegments);
-
-    if(diffractionPath.size()<=2){
-        return 0;
-    }
-
-    IsoBarrierPathdistances isoDistances;
-    isoDistances = Iso9613BarrierDistances(diffractionPath);
-
-
-    z = isoDistances.dss + isoDistances.dsr + isoDistances.e- isoDistances.d;
-
-    // correct sign for z according to sightlight (pending)
-
-
-//    z>0 ? kmet = std::pow( euler , -(1/2000)*std::sqrt(diffractionDistance*d/(2*z)) ) : kmet = 1;
-    z>0 ? kmet = std::pow( euler , -(1/2000)*std::sqrt(isoDistances.dss*isoDistances.dsr*isoDistances.d/(2*z)) ) : kmet = 1;
-
-    C2 = 20; // see ISO 9613
-    C3 = 1; // single difraction
-    // C3 for double difraction see equation 15 ISO 9613-2
-
-
-    lambda = c/frequency;
-
-    Dz = 10*std::log10( 3 + (C2/lambda)*C3*z*kmet );
-
-    return Dz;
+double sumdB(const double &Leq1, const double &Leq2) {
+    return 10.0 * std::log10(std::pow(10.0, 0.1 * Leq1) + std::pow(10.0, 0.1 * Leq2));
 }
 
-
-std::tuple<bool, double, double> intersectionBetween2DLineSegments(double p0x, double p0y,
-                                                 double p1x, double p1y,
-                                                 double p2x, double p2y,
-                                                 double p3x, double p3y)
-{
-    // https://www.youtube.com/watch?v=4bIsntTiKfM&list=PL7wAPgl1JVvURU_YF4hHMcsWK98KbnZPs&index=2
-
-    double intersectX, intersectY;
-    double A1, B1, C1, A2, B2, C2, denominator;
-    double rx0, ry0, rx1, ry1;
-
-    A1 = p1y - p0y;
-    B1 = p0x - p1x;
-    C1 = A1 * p0x + B1 * p0y;
-    A2 = p3y - p2y;
-    B2 = p2x - p3x;
-    C2 = A2 * p2x + B2 * p2y;
-    denominator = A1*B2 - A2*B1;
-
-    if(denominator == 0  || areTheseParallelLines(p0x, p0y,p1x, p1y,p2x, p2y,p3x, p3y)){
-        return std::make_tuple(false, 0, 0);
-    }
-
-    intersectX = (B2*C1 - B1*C2)/denominator;
-    intersectY = (A1*C2 - A2*C1)/denominator;
-
-    rx0 = (intersectX - p0x) / (p1x - p0x);
-    ry0 = (intersectY - p0y) / (p1y - p0y);
-    rx1 = (intersectX - p2x) / (p3x - p2x);
-    ry1 = (intersectY - p2y) / (p3y - p2y);
-
-    if(((rx0 >= 0 && rx0 <= 1) || (ry0 >= 0 && ry0 <= 1)) &&
-            ((rx1 >= 0 && rx1 <= 1) || (ry1 >= 0 && ry1 <= 1))) {
-        return std::make_tuple(true, intersectX, intersectY);
-    }
-    else {
-        return std::make_tuple(false, 0, 0);
-    }
-
+double distanceBetweenPoints(double x1, double y1, double z1, double x2, double y2, double z2) {
+    return std::sqrt(std::pow(x2 - x1, 2) + std::pow(y2 - y1, 2) + std::pow(z2 - z1, 2));
 }
 
-bool areTheseParallelLines(double p0x, double p0y, double p1x, double p1y,
-                           double p2x, double p2y, double p3x, double p3y)
-{
-    // Precalculus 7Ed, chapter 1; James Stewart
-    double m1, m2;
-    m1 = (p1y - p0y)/(p1x - p0x);
-    m2 = (p3y - p2y)/(p3x - p2x);
-    return (m1 == m2);
+// Legacy Helpers
+void interpolationValueAt(const double &t1, const double &y1,
+                          const double &t2, double &y2,
+                          const double &t3, const double &y3) {
+    if (std::abs(t3 - t1) < 1e-9) { y2 = y1; return; }
+    y2 = ((t2 - t1) * (y3 - y1) / (t3 - t1)) + y1;
 }
 
-std::vector<Eigen::Vector3d> calculateDiffractionPathPoints(const double &x0, const double &y0, const double &z0,
-                                                                           const double &x1, const double &y1, const double &z1,
-                                                                           const std::vector<const fnm_core::BarrierSegment*> &barrierSegments)
-{
-    std::vector<Eigen::Vector3d> pathPoints;
-    // Reserve memory: start + end + barriers (approx)
-    pathPoints.reserve(barrierSegments.size() + 2);
-
-    std::tuple<bool, double, double> intersection;
-    Eigen::Vector3d startPoint(x0, y0, z0);
-    pathPoints.push_back(startPoint);
-
-    for(auto segment: barrierSegments){
-        intersection = intersectionBetween2DLineSegments(x0,y0,x1,y1,
-                                                         segment->get_x1(),
-                                                         segment->get_y1(),
-                                                         segment->get_x2(),
-                                                         segment->get_y2());
-
-        // take into account point that are positive intersections
-        if(std::get<0>(intersection)){
-            pathPoints.emplace_back(std::get<1>(intersection),
-                                    std::get<2>(intersection),
-                                    segment->get_height());
-        }
-    }
-
-    pathPoints.emplace_back(x1,y1,z1);
-
-    // sort vector according to 2D distance from point x0,y0
-    // Optimization: Compare squared distances to avoid sqrt
-    std::sort(pathPoints.begin() + 1, // Start sorting after the first point (source)
-              pathPoints.end() - 1,   // Don't include the last point (receiver) - wait, barriers need to be sorted between source and receiver
-              [&startPoint](const Eigen::Vector3d &a, const Eigen::Vector3d &b) -> bool{
-        
-        // 2D distance squared: (x-x0)^2 + (y-y0)^2
-        double distA = (a.head<2>() - startPoint.head<2>()).squaredNorm();
-        double distB = (b.head<2>() - startPoint.head<2>()).squaredNorm();
-
-        return distA < distB;
-    });
-    
-    // Note: The original code sorted ALL points including source and receiver based on distance from source.
-    // Since source is at distance 0, it stays first. Receiver is furthest? Not necessarily if path goes back, but usually yes.
-    // To be safe and identical to original behavior, we sort the whole range.
-    std::sort(pathPoints.begin(), pathPoints.end(),
-              [&startPoint](const Eigen::Vector3d &a, const Eigen::Vector3d &b) -> bool{
-        double distA = (a.head<2>() - startPoint.head<2>()).squaredNorm();
-        double distB = (b.head<2>() - startPoint.head<2>()).squaredNorm();
-        return distA < distB;
-    });
-
-    return pathPoints;
+MatrixOfDoubles createMatrixOfDoubles(unsigned int m, unsigned int n) {
+    return MatrixOfDoubles(m, std::vector<double>(n, 0.0));
 }
 
-
-// for this function it is supposed that pathPoints is already sorted
-IsoBarrierPathdistances Iso9613BarrierDistances(const std::vector<Eigen::Vector3d> &pathPoints)
-{
-
-    IsoBarrierPathdistances data;
-
-
-    int lastIndex = pathPoints.size()-1;
-
-    data.d = (pathPoints[0] - pathPoints[lastIndex]).norm();
-
-    data.dss = (pathPoints[0] - pathPoints[1]).norm();
-
-    data.dsr = (pathPoints[lastIndex] - pathPoints[lastIndex-1]).norm();
-    
-    data.e = 0;
-
-    for(int i= 1; i<=lastIndex-2; i++){
-        data.e += (pathPoints[i] - pathPoints[i+1]).norm();
-    }
-
-
-//    qDebug()<<"d: "<<data.d<<" dss: "<<data.dss<<" dsr: "<<data.dsr<<" e: "<<data.e;
-
-    return data;
-
+int intRandom(int min, int max) {
+    static std::mt19937 gen(std::chrono::system_clock::now().time_since_epoch().count());
+    return std::uniform_int_distribution<int>(min, max)(gen);
 }
 
-
-}
-}; // end namespace
+} // namespace NoiseEngine
+} // namespace fnm_core
